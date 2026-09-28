@@ -29,8 +29,8 @@ function highlightActiveLink() {
   const links = document.querySelectorAll('.site-nav a');
   links.forEach((link) => {
     // Compare href path to current path
-    const linkPath = new URL(link.href, window.location.origin).pathname;
-    if (linkPath === currentPath) {
+    const linkUrl = new URL(link.href, window.location.origin);
+    if (linkUrl.origin === window.location.origin && linkUrl.pathname === currentPath) {
       link.setAttribute('aria-current', 'page');
     }
   });
