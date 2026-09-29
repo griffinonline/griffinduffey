@@ -85,7 +85,7 @@ a {
   right: 1.5rem;
   z-index: 2;
   padding: 0.5rem;
-  background: #fff;
+  background: transparent;
   font-size: 0.9rem;
 }
 
