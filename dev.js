@@ -1,6 +1,6 @@
 // Local dev server: builds the site, watches source, rebuilds on save, and
 // auto-refreshes the browser via a tiny SSE injection. Zero dependencies.
-// Run with `npm run dev`. Visit http://localhost:3000.
+// Run with `npm run dev` (or `PORT=4321 npm run dev`). Visit http://localhost:3000.
 //
 // It listens on every interface, so anything else on the same Wi-Fi — a phone,
 // say — can open the LAN address printed at startup.
@@ -12,7 +12,7 @@ const path = require('node:path');
 const http = require('node:http');
 const os = require('node:os');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000; // homebox: Sheaf owns 3000, use PORT=4321
 const HOST = '0.0.0.0';
 const WATCH_DIRS = ['pages', 'partials', 'css', 'js', 'assets'];
 const GOODREADS_RSS = 'https://www.goodreads.com/review/list_rss/43601117?shelf=currently-reading';
