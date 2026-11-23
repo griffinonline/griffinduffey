@@ -345,8 +345,46 @@
     return [['name', ''], ['sub', 'role']];
   }
 
+  // ---------- Featured work tab: case studies + code-built visuals ----------
+  window.CVVisuals = window.CVVisuals || {};
+  function renderFeatured(tab) {
+    sheet.className = 'sheet is-featured';
+    document.body.dataset.tab = tab.id;
+    flat = []; bars = [];
+    const frag = document.createDocumentFragment();
+    (CV.featured || []).forEach((c, i) => {
+      const sec = el('section', 'ft-case');
+      sec.id = c.id;
+      const text = el('div', 'ft-text');
+      text.innerHTML = `<p class="ft-kicker">${rich(c.kicker)}</p>
+        <h2 class="ft-title">${esc(c.title)}</h2>
+        <p class="ft-role"><em>${esc(c.role)}</em></p>
+        ${(c.body || []).map((p) => `<p class="ft-body">${rich(p)}</p>`).join('')}
+        ${c.points ? `<ul class="ft-points">${c.points.map((p) => `<li>${rich(p)}</li>`).join('')}</ul>` : ''}
+        ${c.links ? `<p class="ft-links">${c.links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join('')}</p>` : ''}`;
+      const vis = el('div', 'ft-visuals' + ((c.visuals || []).length > 1 ? ' two' : ''));
+      (c.visuals || []).forEach((v) => {
+        const fig = el('figure', 'ft-visual');
+        const stage = el('div', 'ft-stage');
+        stage.dataset.visual = v.name;
+        fig.append(stage);
+        if (v.caption) fig.append(el('figcaption', '', esc(v.caption)));
+        vis.append(fig);
+        const mount = window.CVVisuals[v.name];
+        if (mount) { try { mount(stage); } catch (err) { console.error(err); } }
+        else stage.append(el('div', 'ft-placeholder', `visual: ${esc(v.name)}`));
+      });
+      sec.append(el('div', 'cell gutter ft-num', String(i + 1)), text, vis);
+      frag.append(sec);
+    });
+    sheet.replaceChildren(frag);
+    intro.hidden = true;
+    tabLinks.forEach((a) => a.classList.toggle('on', a.dataset.tab === tab.id));
+  }
+
   function render() {
     const tab = tabById(state.tab);
+    if (tab.featured) return renderFeatured(tab);
     const table = !!tab.table;
     const tl = state.tl;
     const zoom = state.zoom;

@@ -549,3 +549,35 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 .hat-pop ul { list-style: none; margin: 0; padding: 0; }
 .hat-pop li { padding: 0.12rem 0; }
 .hat-pop li span { color: #888; font-size: 0.875em; }
+
+/* ---------- Featured work tab ---------- */
+body[data-tab='featured'] .top .zoom { visibility: hidden; }
+.sheet.is-featured { display: block; min-width: 0; }
+.ft-case {
+  display: grid;
+  grid-template-columns: var(--gutter) minmax(18rem, 30rem) minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.ft-num { height: auto; align-items: flex-start; padding-top: 0.9rem; }
+.ft-text { padding: 1.1rem 1.3rem 1.4rem; border-right: 1px solid var(--line); white-space: normal; }
+.ft-kicker { color: #777; font-size: 0.875rem; }
+.ft-title { font-size: 1.5rem; line-height: 1.15; margin: 0.35rem 0 0.25rem; font-weight: normal; }
+.ft-role { margin-bottom: 0.8rem; }
+.ft-body { line-height: 1.45; font-size: 1rem; max-width: 62ch; }
+.ft-points { list-style: '– '; padding-left: 1rem; margin: 0.8rem 0; display: grid; gap: 0.3rem; line-height: 1.35; }
+.ft-links { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin-top: 0.9rem; }
+.ft-visuals { display: grid; gap: 0; grid-template-columns: minmax(0, 1fr); }
+.ft-visuals.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ft-visual { margin: 0; border-right: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.ft-stage { position: relative; flex: 1; min-height: 26rem; overflow: hidden; background: #e8e8e8; }
+.ft-visual figcaption { border-top: 1px solid var(--line); padding: 0.3rem 0.6rem; font-size: 0.8125rem; color: #777; }
+.ft-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #999; font-size: 0.875rem; }
+@media (max-width: 1100px) {
+  .ft-case { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+  .ft-visuals { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  .ft-text { border-right: 0; }
+}
+@media (max-width: 720px) {
+  .ft-visuals.two { grid-template-columns: minmax(0, 1fr); }
+  .ft-stage { min-height: 20rem; }
+}

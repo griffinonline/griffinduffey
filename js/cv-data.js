@@ -34,6 +34,60 @@ window.CV = {
   bio: [
     "i design and build websites, tools and the systems behind them, and i'm usually the person on the call with you too. most recently i ran projects and did most of the building at [oratory], which became [MOMENT], making sites for ai and software companies. before that i started votive, a chai company, and built its whole back office. i studied religion and philosophy at clemson and still read philosophy with friends. i genuinely like working with people.",
   ],
+  // ---------- Featured work (landing tab) ----------
+  // Each case: text on the left, visuals on the right. A visual is mounted by
+  // name from window.CVVisuals (js/visuals/<file>.js); missing ones show a
+  // placeholder. [oratory] / [MOMENT] become links.
+  featured: [
+    {
+      id: 'ft-moment',
+      kicker: '[oratory] → [MOMENT] · mar → nov 2026',
+      title: 'brand + site sprints for ai and software companies',
+      role: 'project manager + main builder',
+      body: [
+        "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to 30+ sites.",
+      ],
+      points: [
+        'g360 technologies: an ai security company. project manager and main builder, figma to a live next.js site.',
+        'less: a data workflow tool, and one of the sprints i’m proudest of. ran it end to end.',
+        'tahoe: moved them off webflow into a custom build and launched the tara campaign.',
+      ],
+      links: [['g360technologies.com', 'https://g360technologies.com'], ['less.tech', 'https://less.tech'], ['all 37 projects →', '#moment']],
+      visuals: [{ name: 'g360', caption: 'g360 technologies' }, { name: 'less', caption: 'less' }],
+    },
+    {
+      id: 'ft-sheaf',
+      kicker: 'my own product · 2026 → now',
+      title: 'sheaf: a calm front end for ai coding agents',
+      role: 'designer + builder',
+      body: [
+        "sheaf is how i work every day. it's a web app and server that runs claude code on my home server, so i can start, steer and review agent work from my phone or laptop: chats, a terminal, files, docs, background jobs and notifications. i design it in figma and build it with the agents it runs, which keeps me honest about what actually works. it's in closed beta at sheaf.to.",
+      ],
+      points: [
+        'one bun server and an installable web app, used daily on phone and laptop',
+        'runs on an old macbook on my desk; the laptop is just a window onto it',
+        'a public release with an email-gated download',
+      ],
+      links: [['sheaf.to', 'https://sheaf.to'], ['case study →', '/work-sheaf']],
+      visuals: [{ name: 'sheaf', caption: 'sheaf' }],
+    },
+    {
+      id: 'ft-votive',
+      kicker: 'founder · 2024 → now',
+      title: 'votive: the brand, the store and the back office',
+      role: 'founder, designer + builder',
+      body: [
+        "votive is a non-alcoholic beverage company i started and run: chai concentrate and tea kombuchas, sold to 15+ cafes and shops across the southeast. i made the brand and labels, then built the system behind it so one person can run it: a storefront on cloudflare with stripe as the source of truth, a wholesale portal with net-terms invoices, ups labels that buy themselves through shippo, and an order sheet that keeps itself up to date.",
+      ],
+      points: [
+        'stripe checkout and invoices, webhooks into a google sheet',
+        'shippo live rates at checkout and automatic ups labels',
+        'books from bank csvs with a small command-line tool',
+      ],
+      links: [['drinkvotive.com', 'https://www.drinkvotive.com'], ['case study →', '/work-votive']],
+      visuals: [{ name: 'votive-brand', caption: 'brand' }, { name: 'votive-system', caption: 'orders, stripe + shippo' }],
+    },
+  ],
   // Info rows under the subtitle, next to the photo. [moment] becomes a link.
   facts: [
     ['currently based in', 'greenville, sc'],
@@ -64,6 +118,8 @@ window.CV = {
   // Tabs across the top. Each group pulls a section, a filtered part of a
   // section, or a list of ids. `table: true` = the moment + oratory layout.
   tabs: [
+    // Landing tab: three case studies with code-built visuals (js/visuals/*).
+    { id: 'featured', label: 'featured work', featured: true, groups: [] },
     {
       id: 'overview', label: 'overview',
       groups: [
