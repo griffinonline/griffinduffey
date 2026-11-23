@@ -296,7 +296,11 @@
 
     const colC = el('div', 'top-col c');
     const navRow = row('head');
-    CV.nav.forEach(([label, href]) => navRow.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
+    const navHref0 = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
+    const navLinks = [...(CV.nav || []).filter(([l]) => l !== 'print'),
+      ...(CV.elsewhere || []).filter(([l, h]) => h && h !== '@nav'),
+      ...(CV.nav || []).filter(([l]) => l === 'print')];
+    navLinks.forEach(([label, href]) => navRow.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
     // No zoom control: each tab has its own fixed zoom (tab.zoom, default months).
     const subRow = row('sub', el('div', 'cell fill'));
     if (CV.note) subRow.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
@@ -304,7 +308,7 @@
     // Reading / listening / elsewhere fill the rest of the right column.
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
     const links = (CV.elsewhere || []).map(([l, h]) => [l, h === '@nav' ? navHref(l) : h]).filter(([, h]) => h);
-    const side = el('div', 'cell fill side', `
+    const side = el('div', 'cell fill side', `<div class="side-inner">
       <a class="wg wg-hire" href="${esc(navHref('email'))}">
         <span class="hire-dot" aria-hidden="true"></span>
         <span class="hire-t"><b>open to work</b><span>full-time or projects · say hi →</span></span>
@@ -315,19 +319,20 @@
         <section class="wg wg-read"><p class="wg-h">reading</p>
           ${(CV.reading || []).slice(0, 1).map(([t, a, cover]) => `<div class="book">${cover ? `<img src="${esc(cover)}" alt="${esc(t)}, ${esc(a)}" loading="lazy">` : ''}</div><p class="book-t"><em>${esc(t)}</em> <span>${esc(a)}</span></p>`).join('')}</section>
       </div>
-      <section class="wg wg-links"><p class="wg-h">elsewhere</p>
-        <p class="side-links">${links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join('')}</p></section>`);
+`);
     colC.append(navRow, subRow, row('rest', side));
     loadListening(side.querySelector('.side-listening'));
 
     const upper = el('div', 'top-upper');
     upper.append(colA);
     if (CV.bio && CV.bio.length) {
-      const bio = el('div', 'cell bio', `<div class="bio-text">${CV.bio.map((p) => `<p>${rich(p)}</p>`).join('')}</div>`);
+      const bio = el('div', 'cell bio');
+      const bioIn = el('div', 'bio-inner', `<div class="bio-text">${CV.bio.map((p) => `<p>${rich(p)}</p>`).join('')}</div>`);
+      bio.append(bioIn);
       // Carousel of work artifacts fills the space under the bio text.
       if (CV.artifacts && CV.artifacts.length) {
         const items = CV.artifacts.map(([src, alt]) => `<figure><img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" title="${esc(alt)}"></figure>`).join('');
-        bio.append(el('div', 'artifacts', `<div class="art-track">${items}${items.replace(/<figure>/g, '<figure aria-hidden="true">')}</div>`));
+        bioIn.append(el('div', 'artifacts', `<div class="art-track">${items}${items.replace(/<figure>/g, '<figure aria-hidden="true">')}</div>`));
       }
       upper.append(bio);
     }

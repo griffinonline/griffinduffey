@@ -648,3 +648,38 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
 .hire-t b { font-weight: normal; color: #1d6b39; }
 .hire-t span { color: #666; font-size: 0.75rem; }
 @media (prefers-reduced-motion: reduce) { .hire-dot::after { animation: none; } }
+
+/* ---------- Header fits the name column's height (wide screens) ----------
+   The bio and the right column don't add height: their content sits in an
+   absolutely positioned inner box that fills whatever height the name column
+   sets, and the pieces inside shrink to fit. */
+.bio-inner { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
+.bio-text { font-size: 0.875rem; line-height: 1.38; }
+.side-inner { display: flex; flex-direction: column; gap: 0.35rem; height: 100%; }
+@media (min-width: 1181px) {
+  .cell.bio, .cell.side { position: relative; overflow: hidden; }
+  .cell.bio { padding: 0; }
+  .bio-inner { position: absolute; inset: 0; padding: 0.45rem 0.9rem 0.45rem; }
+  .side-inner { position: absolute; inset: 0; padding: 0.4rem; }
+  .artifacts { flex: 1 1 0; height: auto; min-height: 0; margin-top: 0; }
+  .top-col.a > .trow:last-child { flex: 1 1 auto; }
+}
+.wg-hire { flex: none; padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.wg-row { flex: 1 1 0; min-height: 0; container-type: size; display: flex; gap: 0.35rem; }
+.wg-row .wg { flex: 1 1 0; min-width: 0; padding: 0.25rem 0.35rem; overflow: hidden; }
+.wg-row .wg-h { margin-bottom: 0.15rem; white-space: nowrap; }
+/* squares sized to whatever room is left (width or height, whichever is smaller) */
+.side-listening, .wg-read .book {
+  width: min(calc(50cqw - 1rem), calc(100cqh - 2.6rem)); height: auto; aspect-ratio: 1; flex: none;
+}
+.book-t { font-size: 0.6875rem; }
+@media (max-width: 1180px) {
+  .wg-row { container-type: normal; flex: none; }
+  .wg-row .wg { flex: 1 1 0; }
+  .side-listening, .wg-read .book { width: 100%; }
+}
+/* Nav row (email · x · are.na · print): cells size to their text */
+.top-col.c .trow.head > .cell.nav { width: auto; padding: 0 0.6rem; }
+@media (max-width: 720px) {
+  .side-listening, .wg-read .book { width: min(100%, 8.5rem); }
+}
