@@ -213,3 +213,10 @@ a.case:hover h3 {
     border-top: 1px solid #000;
   }
 }
+
+/* Unreleased work: no image, dashed box */
+.case.unreleased {
+  align-self: start;
+  padding: 0.75rem;
+  border: 1px dashed #000;
+}
