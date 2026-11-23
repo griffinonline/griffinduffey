@@ -29,7 +29,13 @@
 window.CV = {
   portrait: '/assets/cv/griffin-id.jpg', // lo-fi scan, top-left corner cell
   title: 'griffin bennett duffey',
-  subtitle: 'cv: designer, builder, project lead. greenville, sc',
+  subtitle: 'cv: designer, builder, project lead',
+  // Info rows under the subtitle, next to the photo. [moment] becomes a link.
+  facts: [
+    ['currently based in', 'greenville, sc'],
+    ['previously at', '[MOMENT]'],
+    ['likely fit for', 'design engineer · forward-deployed engineer · ai implementation · technical project lead'],
+  ],
   note: 'draft',
   now: '2026-11',
   // Month zoom shows months back to here; older time folds into "earlier".

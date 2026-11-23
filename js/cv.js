@@ -247,7 +247,12 @@
       r3.append(a);
     });
     r3.append(el('div', 'cell fill'));
-    top.append(r1, r2, r3);
+    const facts = (CV.facts || []).map(([label, value]) => {
+      const r = el('div', 'trow fact');
+      r.append(el('div', 'cell gutter'), el('div', 'cell title', `<span class="fact-label">${esc(label)}</span> ${rich(value)}`), el('div', 'cell fill'));
+      return r;
+    });
+    top.append(r1, r2, ...facts, r3);
   }
 
   // ---------- Sheet ----------
@@ -578,6 +583,7 @@
   // ---------- Print version: a plain CV with everything ----------
   const pr = document.getElementById('print-cv');
   pr.innerHTML = `<h1>${esc(CV.title)}</h1><p>${esc(CV.subtitle)}</p>` +
+    (CV.facts || []).map(([l, v]) => `<p>${esc(l)} ${rich(v)}</p>`).join('') +
     CV.sections.map((s) => `<section><h2>${esc(s.name)}</h2>` +
       s.items.map((i) => {
         const extra = i.studio ? `<br>${esc(plain(i.what))}. ${esc(i.studio)}, ${esc(i.type)}${i.stack ? ` (${esc(i.stack)})` : ''}, ${esc(i.status)}.` : `<br>${esc(plain((i.body || [])[0] || ''))}`;
