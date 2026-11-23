@@ -41,9 +41,8 @@ window.CV = {
   elsewhere: [
     ['email', '@nav'], // reuses the email link from nav above
     ['linkedin', ''],  // check: Griffin's LinkedIn URL
-    ['x', ''],         // check: Griffin's X handle
+    ['x', 'https://x.com/griffinonline'],
     ['are.na', 'https://www.are.na/griffin-duffey'],
-    ['instagram', 'https://www.instagram.com/griffinduffey/'],
   ],
   // Bio cell carousel: random work artifacts (slow strip, pauses on hover).
   artifacts: [
