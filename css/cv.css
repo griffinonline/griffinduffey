@@ -71,11 +71,15 @@ h1 { font-size: inherit; font-weight: normal; }
 .trow.sub .title em { font-size: 1rem; }
 
 .top .nav { width: 6rem; }
-.top .zoom { width: 12.5rem; gap: 0.35rem; }
+.top .sw { gap: 0.35rem; }
+.top .zoom { width: 12.5rem; }
+.top .tlsw { width: 10.5rem; }
 .top .note { width: 5.5rem; flex: none; color: #777; font-size: 0.875rem; }
-.zoom-label { color: var(--muted); font-size: 0.875rem; margin-right: 0.15rem; }
-.zoom-sep { color: var(--line); }
-.zoom a.on, .zoom a[aria-current] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+.sw-label { color: var(--muted); font-size: 0.875rem; margin-right: 0.15rem; }
+.sw-sep { color: var(--line); }
+.sw a.on, .sw a[aria-current] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+/* Option b has no chart, so no zoom. */
+body[data-tl='b'] .top .zoom { display: none; }
 
 /* Tabs read like sheet tabs: grey until picked, then the sheet's own grey
    with a green top line. */
@@ -101,38 +105,53 @@ h1 { font-size: inherit; font-weight: normal; }
 }
 .tab:focus-visible { outline: 2px solid var(--select); outline-offset: -2px; }
 
-/* Intro paragraphs on the moment + oratory tab: merged cells. */
+/* Intro on the moment + oratory tab: one paragraph in a merged cell,
+   set larger than the sheet so it reads first. */
 .intro .trow.para { height: auto; }
 .intro .para > .cell { height: auto; }
 .intro .para p.cell {
   flex: 1 1 auto;
   display: block;
   white-space: normal;
-  line-height: 1.35;
-  padding: 0.45rem max(0.5rem, calc(100% - 46rem)) 0.45rem 0.5rem;
+  font-size: 1.375rem;
+  line-height: 1.5;
+  /* ~70ch measure, the rest of the merged cell stays empty */
+  padding: 1.75rem max(2rem, calc(100% - 70ch - 2rem)) 2rem 2rem;
 }
-.intro .para .gutter { align-self: stretch; }
+.intro .para .gutter { align-self: stretch; width: var(--gutter); flex: none; }
 
 /* ---------- Grid ---------- */
 
 .sheet-wrap { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
 
+/* Text columns per timeline style. a: name | role | when.
+   b: name | role | when | length (no chart). c: name | role. */
 .sheet {
-  --textcols: minmax(14rem, 1.6fr) minmax(11rem, 1.3fr);
-  --textmin: 25rem;
+  --textcols: minmax(14rem, 1.4fr) minmax(15rem, 1.5fr) 9.5rem;
+  --textmin: 38.5rem;
   min-height: 60vh;
   min-width: calc(var(--gutter) + var(--textmin) + var(--tlmin, 0rem) + 1rem);
 }
+.sheet.tl-b { --textcols: minmax(16rem, 1.4fr) minmax(18rem, 1.6fr) 11rem 6rem; --textmin: 51rem; }
+.sheet.tl-c { --textcols: minmax(14rem, 1.4fr) minmax(15rem, 1.5fr); --textmin: 29rem; }
+
+/* moment + oratory table: client (+ what) | studio · type | my role |
+   when | [length] | status | see it. */
 .sheet.is-table {
   --month: 2.25rem;
-  --textcols: minmax(7.5rem, 1fr) minmax(11rem, 1.7fr) 4.75rem 7.25rem minmax(10rem, 1.5fr) 6.5rem minmax(10rem, 1.5fr) minmax(8.5rem, 1.1fr);
-  --textmin: 65rem;
+  --textcols: minmax(12rem, 1.3fr) 12.5rem minmax(9.5rem, 0.9fr) 9.75rem minmax(11rem, 1.1fr) minmax(11rem, 1fr);
+  --textmin: 66rem;
+}
+.sheet.is-table.tl-b {
+  --textcols: minmax(15rem, 1.5fr) 12.5rem minmax(12rem, 1.1fr) 8.5rem 4.5rem minmax(13rem, 1.2fr) minmax(11rem, 1fr);
+  --textmin: 76.5rem;
 }
 
 .row {
+  position: relative;
   display: grid;
-  grid-template-columns: var(--gutter) var(--textcols) var(--tl) minmax(1rem, 0.5fr);
-  height: var(--row);
+  grid-template-columns: var(--gutter) var(--textcols) var(--tl,) minmax(1rem, 0.5fr);
+  min-height: var(--row);
   color: inherit;
 }
 .yr, .tail { padding: 0; }
@@ -143,7 +162,6 @@ h1 { font-size: inherit; font-weight: normal; }
 .row.colhead .yr { justify-content: center; }
 .row.yearrow .yr.ylabel { justify-content: flex-start; padding-left: 0.3rem; overflow: visible; color: #555; position: relative; z-index: 1; }
 .row.yearrow .yr:not(.ylabel) { border-right-color: transparent; }
-.row.yearrow .yr.ylabel { border-left: 0; }
 
 /* Month zoom: a darker line where one year ends and the next begins. */
 .z-months .yr.ynew,
@@ -160,100 +178,107 @@ h1 { font-size: inherit; font-weight: normal; }
 .z-months:not(.is-table) .gutter { left: 0; }
 .z-months:not(.is-table) .t-name { left: var(--gutter); }
 
-.row.section .t-name { font-size: 1.0625rem; overflow: visible; }
+.row.section .t-name,
+.row.section .t-client { font-size: 1.0625rem; overflow: visible; }
 
-/* Entries */
+/* Entries. Names and roles wrap to a second line instead of cutting off. */
 .row.entry { cursor: pointer; }
-.row.entry .t-name a.open { color: inherit; }
+.row.entry .cell { height: auto; min-height: var(--row); }
+.row.entry .t-name,
+.row.entry .t-sub {
+  white-space: normal;
+  line-height: 1.15;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  overflow-wrap: normal;
+}
+.row.entry .t-when,
+.row.entry .t-len { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row.entry .t-len { color: #777; }
+.row.entry .nm { display: block; min-width: 0; }
+.row.entry a.open { color: inherit; }
 .row.entry:hover .cell { background: #f6f6f6; }
-.row.entry:hover .t-name a.open { color: var(--link); text-decoration: none; }
-.row.entry .t-name a.open:focus-visible { outline: none; }
-.row.entry:has(a.open:focus-visible) .t-name,
-.row.entry.is-open .t-name { box-shadow: inset 0 0 0 2px var(--select); }
+.row.entry:hover a.open { color: var(--link); text-decoration: none; }
+.row.entry a.open:focus-visible { outline: none; }
+.row.entry:has(a.open:focus-visible) :is(.t-name, .t-client),
+.row.entry.is-open :is(.t-name, .t-client) { box-shadow: inset 0 0 0 2px var(--select); }
 .row.entry .t-sub { color: #444; }
 .muted { color: var(--muted); }
 
-/* Table rows (moment + oratory): text wraps, rows grow. */
-.is-table .row.entry { height: auto; }
+/* ---------- moment + oratory table: room to read ---------- */
+
 .is-table .row.entry .cell {
-  height: auto;
-  min-height: var(--row);
   white-space: normal;
   align-items: flex-start;
-  padding-top: 0.28rem;
-  padding-bottom: 0.28rem;
-  line-height: 1.2;
+  padding: 0.6rem 0.6rem 0.65rem;
+  line-height: 1.3;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 .is-table .row.entry .yr { padding: 0; }
-.is-table .t-see { overflow-wrap: anywhere; }
-.is-table .t-studio,
-.is-table .t-type,
-.is-table .t-when { color: #444; }
-.is-table .t-studio.studio-moment { color: var(--ink); }
+.is-table .row.colhead .t { padding-left: 0.6rem; }
+.is-table .row.section .t-client { padding-left: 0.6rem; }
+.is-table .row.entry .t-client { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+.is-table .c-name { font-weight: 700; }
+.is-table .c-what { font-size: 0.9375rem; color: #555; }
+.is-table .row.entry .t-st { display: block; color: #444; }
+.is-table .t-st .brand,
+.is-table .t-st .ty { white-space: nowrap; }
+.is-table .row.entry .t-status { flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+.is-table .st { font-size: 0.9375rem; letter-spacing: 0.01em; color: #6a6a6a; }
+.is-table .st-live { color: #1d7a3e; }
+.is-table .st-soon { color: #6a6a6a; }
+.is-table .st-note { font-size: 0.875rem; color: #777; }
+.is-table .row.entry .t-see { display: block; }
+.is-table .row.entry .t-when { white-space: nowrap; }
 
-/* ---------- Timeline ---------- */
+/* ---------- Timeline a: filled cells ---------- */
 
 .yr { position: relative; }
-.yr.span::before {
-  content: '';
+.yr.fill-full { background: color-mix(in srgb, var(--tint, #ccc) 55%, var(--bg)); }
+.yr.fill-part { background: color-mix(in srgb, var(--tint, #ccc) 28%, var(--bg)); }
+.row.entry:hover .yr.fill-full,
+.row.entry.is-open .yr.fill-full { background: color-mix(in srgb, var(--tint, #ccc) 80%, var(--bg)); }
+.row.entry:hover .yr.fill-part,
+.row.entry.is-open .yr.fill-part { background: color-mix(in srgb, var(--tint, #ccc) 40%, var(--bg)); }
+.yr .lbl { font-size: 0.75rem; color: #555; padding-left: 0.3rem; white-space: nowrap; }
+.is-table .yr .lbl { padding-top: 0.75rem; }
+
+/* ---------- Timeline c: one labelled bar per entry ---------- */
+
+.bar {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--bar-top, 50%);
-  height: 0.3125rem;
-  transform: translateY(-50%);
-  background: color-mix(in srgb, var(--tint, #ccc) 80%, #fff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint, #ccc) 70%, #000 12%);
+  top: 50%;
+  height: 0.95rem;
+  margin-top: -0.475rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tint, #ccc) 88%, #000 6%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 0.4rem;
+  pointer-events: none;
 }
-.yr.span-end::before { left: 0.3rem; }
-.yr.span-open::before {
-  -webkit-mask-image: linear-gradient(270deg, #000 40%, transparent);
-  mask-image: linear-gradient(270deg, #000 40%, transparent);
-}
-.row.entry:hover .yr.span::before { background: var(--tint, #ccc); }
-
-/* Year-only entries in month zoom: dashed, since the months are a guess. */
-.approx .yr.span::before {
-  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tint, #ccc) 85%, #000 5%) 0 4px, transparent 4px 7px);
-  box-shadow: none;
-}
-.row.entry.approx:hover .yr.span::before {
-  background: repeating-linear-gradient(90deg, var(--tint, #ccc) 0 4px, transparent 4px 7px);
-}
-
-/* Start of an entry (the right end of its bar): a cap, then the site link
-   spilling into the empty older cells, like overflowing text in a sheet. */
-.yr.start { overflow: visible; z-index: 1; gap: 0.3rem; }
-.cap {
-  flex: none;
-  width: 0.5rem;
-  height: 0.5rem;
-  background: var(--tint, #ccc);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint, #ccc) 70%, #000 18%);
-}
-.yr.start .ext,
-.yr.start .lbl {
-  font-size: 0.8125rem;
+.is-table .bar { top: 0.65rem; margin-top: 0; }
+.bar-lbl {
+  font-size: 0.75rem;
+  line-height: 1;
+  color: #1b1b1b;
   white-space: nowrap;
-  background: var(--bg);
-  padding-right: 0.25rem;
+  font-variant-numeric: tabular-nums;
 }
-.yr.start .lbl { color: #555; }
-.row.entry:hover .yr.start .ext,
-.row.entry:hover .yr.start .lbl { background: #f6f6f6; }
-
-.is-table .yr.start { align-items: flex-start; padding-top: 0.5rem; }
-.is-table { --bar-top: 0.75rem; }
-
-.has-thumb > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+/* Label doesn't fit inside: print it just right of the bar. */
+.bar.out .bar-lbl {
+  position: absolute;
+  left: calc(100% + 0.3rem);
+  color: #444;
 }
-.row.entry:hover .has-thumb > img { filter: contrast(1.08) saturate(1.2); }
-.is-table .has-thumb > img { height: var(--row); }
+.approx .bar { background: color-mix(in srgb, var(--tint, #ccc) 50%, var(--bg)); }
+.row.entry:hover .bar,
+.row.entry.is-open .bar { background: color-mix(in srgb, var(--tint, #ccc) 80%, #000 18%); }
+/* Hidden under the sticky name column while scrolling sideways. */
+.z-months:not(.is-table) .bar { z-index: 2; }
 
 /* ---------- Viewer: image left (only when there is one), comment right ---------- */
 
@@ -293,6 +318,7 @@ h1 { font-size: inherit; font-weight: normal; }
 .comment .c-sub { margin-top: 0.15rem; }
 .comment .c-facts { color: #444; }
 .comment .c-stack { color: #666; }
+.comment .c-len { color: #666; }
 .comment .c-nav { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 0.6rem; }
 .comment .c-nav button,
 .comment-close {
@@ -341,58 +367,55 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   .trow.tabs, .trow.tabs > .cell { height: 2.25rem; }
   .intro .para p.cell { padding-right: 0.5rem; font-size: 1rem; }
 
-  /* Year zoom: names + a short date cell; the timeline folds away. */
-  .sheet { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; }
-  .sheet .t-sub { display: none; }
-  .z-years .row .yr,
-  .z-years .row .tail { display: none; }
-  .z-years .row { grid-template-columns: var(--gutter) minmax(0, 1fr) 4.75rem; }
-  .z-years .row.entry .m-when {
+  /* Phones: no chart in any style. Names + the dates as text. */
+  .top .sw { display: none; }
+  .sheet,
+  .sheet.tl-b,
+  .sheet.tl-c { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; }
+  .sheet .row .yr,
+  .sheet .row .tail,
+  .sheet .bar,
+  .sheet .row.yearrow { display: none; }
+  .sheet:not(.is-table) .t-sub,
+  .sheet:not(.is-table) .t-when,
+  .sheet:not(.is-table) .t-len { display: none; }
+  .sheet:not(.is-table) .row { grid-template-columns: var(--gutter) minmax(0, 1fr) auto; }
+  .sheet:not(.is-table) .row.entry .m-when {
     display: flex;
     justify-content: flex-end;
     font-size: 0.8125rem;
     color: #444;
+    white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
-  .z-years .row.colhead:not(.yearrow) { display: none; }
-
-  /* Month zoom: names stay, months scroll sideways. */
-  .z-months:not(.is-table) { --textcols: 9.5rem; min-width: calc(var(--gutter) + 9.5rem + var(--tlmin) + 1rem); }
-  .z-months:not(.is-table) .t-name { white-space: nowrap; }
+  .sheet:not(.is-table) .row.colhead { display: none; }
+  .z-months:not(.is-table) .gutter,
+  .z-months:not(.is-table) .t-name { position: static; }
+  .intro .para p.cell { font-size: 1.125rem; padding: 1.1rem 1rem 1.25rem; }
 
   /* moment + oratory: each row stacks into a little card. */
-  .sheet.is-table { min-width: 0; }
-  .is-table .row,
-  .is-table.z-months .row { grid-template-columns: var(--gutter) minmax(0, 1fr); height: auto; }
-  .is-table .row .yr,
-  .is-table .row .tail,
+  .is-table .row { grid-template-columns: var(--gutter) minmax(0, 1fr); }
   .is-table .row .m-when,
   .is-table .row.colhead { display: none; }
-  .is-table .row .t:not(.t-name) { display: none; }
+  .is-table .row .t:not(.t-client) { display: none; }
   .is-table .row.entry .t { display: flex; border-right: 0; }
-  .is-table .row.entry .gutter { grid-row: span 8; align-items: flex-start; padding-top: 0.5rem; }
+  .is-table .row.entry .gutter { grid-row: span 8; align-items: flex-start; padding-top: 0.6rem; }
   .is-table .row.entry .t:not(.t-see) { border-bottom-color: transparent; }
   .is-table .row.entry .cell.t { padding-top: 0.12rem; padding-bottom: 0.12rem; min-height: 0; }
-  .is-table .row.entry .t-name { padding-top: 0.45rem; font-size: 1.0625rem; }
-  .is-table .row.entry .t-see { padding-bottom: 0.5rem; }
-  .is-table .row.entry .t-studio,
-  .is-table .row.entry .t-type,
-  .is-table .row.entry .t-when,
-  .is-table .row.entry .t-status,
-  .is-table .row.entry .t-see { font-size: 0.9375rem; }
-  .is-table .row.entry .t-studio::before,
-  .is-table .row.entry .t-type::before,
-  .is-table .row.entry .t-when::before,
-  .is-table .row.entry .t-status::before,
-  .is-table .row.entry .t-see::before {
+  .is-table .row.entry .t-client { padding-top: 0.6rem; }
+  .is-table .row.entry .t-see { padding-bottom: 0.65rem; }
+  .is-table .row.entry .t:not(.t-client) { font-size: 0.9375rem; flex-direction: row; gap: 0; }
+  .is-table .row.entry .t-st { display: block; }
+  .is-table .row.entry .t-st::before { display: inline-block; }
+  .is-table .row.entry .t:not(.t-client)::before {
     content: attr(data-label);
     flex: none;
-    width: 4.5rem;
+    width: 6.25rem;
+    white-space: nowrap;
     color: #888;
   }
-  .is-table .row.entry .t-sub { display: flex; color: #333; }
+  .is-table .row.entry .t-status .st-note { display: none; }
   .is-table .row.section .gutter { grid-row: auto; }
-  body[data-tab='moment'] .top .zoom { display: none; }
 
   .viewer-media {
     top: 0; left: 0; right: 0; bottom: auto;

@@ -7,6 +7,8 @@
 //   /cv#moment&zoom=years a tab at a zoom
 //   /cv#moment/tahoe      a tab with an entry open
 //   /cv#tahoe             an entry (opens in a tab that has it)
+//   /cv#overview&tl=c     a timeline style: a filled cells (default),
+//                         b dates as text (no chart), c labelled bars
 (function () {
   const CV = window.CV;
   const top = document.getElementById('top');
@@ -57,23 +59,89 @@
     return { from, to, open, approx: true };
   }
 
-  // "mar 2026", "jun–oct 2026", "oct 2026–now", or the years text.
+  // Dates as text, always earliest → latest: "jun → oct 2026",
+  // "2021 → 2023", "oct 2026 → now", "mar 2026".
   function whenOf(item) {
-    if (!item.start) return item.years || String(item.year);
+    if (!item.start) {
+      const t = String(item.years || item.year);
+      return t.replace(/\s*[–-]\s*/, ' → ');
+    }
     const r = rangeOf(item);
-    const a = `${MONTHS[mOf(r.from)]}`, ay = yOf(r.from);
-    if (r.open) return `${a} ${ay}–now`;
+    const a = MONTHS[mOf(r.from)], ay = yOf(r.from);
+    if (r.open) return `${a} ${ay} → now`;
     if (r.to === r.from) return `${a} ${ay}`;
     const b = MONTHS[mOf(r.to)], by = yOf(r.to);
-    return ay === by ? `${a}–${b} ${ay}` : `${a} ${ay}–${b} ${by}`;
+    return ay === by ? `${a} → ${b} ${ay}` : `${a} ${ay} → ${b} ${by}`;
   }
-  // Short label for the phone cell and the "earlier" column: "21–23", "24–now".
+  // Short label for the "earlier" column: "21–23", "24–now".
   function shortOf(item) {
     const r = rangeOf(item);
     const a = String(yOf(r.from)).slice(2);
     if (r.open) return `${a}–now`;
     const b = String(yOf(r.to)).slice(2);
     return a === b ? (item.start ? `${MONTHS[mOf(r.from)]} ${a}` : a) : `${a}–${b}`;
+  }
+  // Label printed in a bar (option c): "jun–oct", "oct–now", "2021–23".
+  function barLabel(item) {
+    const r = rangeOf(item);
+    if (!item.start) {
+      if (/ongoing/i.test(item.years || '')) return 'ongoing';
+      const a = yOf(r.from);
+      if (r.open) return `${a}–now`;
+      const b = yOf(r.to);
+      return a === b ? String(a) : `${a}–${String(b).slice(2)}`;
+    }
+    const a = MONTHS[mOf(r.from)], ay = yOf(r.from);
+    if (r.open) return `${a}–now`;
+    if (r.to === r.from) return a;
+    const b = MONTHS[mOf(r.to)], by = yOf(r.to);
+    return ay === by ? `${a}–${b}` : `${a} ${String(ay).slice(2)}–${b} ${String(by).slice(2)}`;
+  }
+  // "5 mo", "2 yrs". Blank for one-off years and "ongoing".
+  function lengthOf(item) {
+    const r = rangeOf(item);
+    if (!item.start) {
+      if (/ongoing/i.test(item.years || '')) return '';
+      const n = yOf(r.to) - yOf(r.from);
+      return n < 1 ? '' : n === 1 ? '1 yr' : `${n} yrs`;
+    }
+    const n = r.to - r.from + 1;
+    if (n < 12) return `${n} mo`;
+    const y = Math.round(n / 12);
+    return y === 1 ? '1 yr' : `${y} yrs`;
+  }
+
+  // Inline brand links: [oratory] / [moment] tokens in the data, keeping
+  // whatever case the data wrote them in (the sheet lowercases it all).
+  const BRANDS = { oratory: 'https://oratory.co', moment: 'https://moment.so' };
+  const TOKEN = /\[(oratory|moment)\]/gi;
+  const brandLink = (w) => `<a class="ext brand" href="${BRANDS[w.toLowerCase()]}" target="_blank" rel="noopener noreferrer">${esc(w)}</a>`;
+  const rich = (s) => esc(s).replace(TOKEN, (_, w) => brandLink(w));
+  const plain = (s) => String(s == null ? '' : s).replace(TOKEN, '$1');
+  // A row's name: the first part opens the entry; any later brand token
+  // is its own link ("MOMENT (formerly Oratory)").
+  function nameHtml(title, href) {
+    const t = String(title);
+    TOKEN.lastIndex = 0;
+    const first = TOKEN.exec(t);
+    let cut = t.length;
+    if (first) {
+      const second = TOKEN.exec(t);
+      cut = second ? second.index : t.length;
+      if (first.index === 0 && !second) cut = t.length;
+    }
+    TOKEN.lastIndex = 0;
+    const head = `<a class="open" href="${href}">${esc(plain(t.slice(0, cut)))}</a>`;
+    return cut < t.length ? `${head}${rich(t.slice(cut))}` : head;
+  }
+  // "early phase: i set up kickoff…" → tag "early phase" + note.
+  function statusHtml(s) {
+    const t = String(s || '');
+    const m = t.match(/^([^:(]+?)\s*(?::\s*|\()(.*?)\)?$/);
+    const tag = (m ? m[1] : t).trim();
+    const note = m ? m[2].trim() : '';
+    const k = /^live/.test(tag) ? 'live' : /soon/.test(tag) ? 'soon' : 'other';
+    return `<span class="st st-${k}">${esc(tag)}</span>${note ? `<span class="st-note">${esc(note)}</span>` : ''}`;
   }
 
   // Groups for a tab: [{ label, color, items, table }].
@@ -94,12 +162,16 @@
   const tabHas = (tab, id) => groupsFor(tab).some((g) => g.items.some((i) => i.id === id));
 
   // ---------- State + hash ----------
-  const state = { tab: null, zoom: null, item: null };
+  // tl = timeline style: a filled cells, b dates as text, c labelled bars.
+  const TLS = ['a', 'b', 'c'];
+  const DEFAULT_TL = 'a';
+  const state = { tab: null, zoom: null, tl: DEFAULT_TL, item: null };
   const defaultZoom = (tab) => tab.zoom || 'years';
-  function hashFor(tabId, itemId, zoom) {
+  function hashFor(tabId, itemId, zoom, tl = state.tl) {
     const tab = tabById(tabId);
     let h = '#' + tabId + (itemId ? '/' + itemId : '');
     if (zoom && zoom !== defaultZoom(tab)) h += '&zoom=' + zoom;
+    if (tl && tl !== DEFAULT_TL) h += '&tl=' + tl;
     return h;
   }
   function parse() {
@@ -116,12 +188,26 @@
     }
     tab = tab || CV.tabs[0];
     const zoom = params.zoom === 'months' || params.zoom === 'years' ? params.zoom : defaultZoom(tab);
-    return { tab: tab.id, zoom, item };
+    const tl = TLS.includes(params.tl) ? params.tl : DEFAULT_TL;
+    return { tab: tab.id, zoom, tl, item };
   }
 
-  // ---------- Header: title, nav, zoom, tabs (not part of the grid) ----------
+  // ---------- Header: title, nav, zoom, timeline switch, tabs ----------
   const tabLinks = [];
   const zoomLinks = {};
+  const tlLinks = {};
+  function switcher(cls, label, keys, store, attr) {
+    const z = el('div', 'cell sw ' + cls);
+    z.append(el('span', 'sw-label', label));
+    keys.forEach((k, i) => {
+      if (i) z.append(el('span', 'sw-sep', '|'));
+      const a = el('a', '', k);
+      a.dataset[attr] = k;
+      store[k] = a;
+      z.append(a);
+    });
+    return z;
+  }
   function buildTop() {
     const r1 = el('div', 'trow head');
     r1.append(el('div', 'cell gutter'), el('h1', 'cell title', esc(CV.title)), el('div', 'cell fill'));
@@ -129,16 +215,8 @@
 
     const r2 = el('div', 'trow sub');
     r2.append(el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`), el('div', 'cell fill'));
-    const z = el('div', 'cell zoom');
-    z.append(el('span', 'zoom-label', 'zoom'));
-    ['years', 'months'].forEach((k, i) => {
-      if (i) z.append(el('span', 'zoom-sep', '|'));
-      const a = el('a', '', k);
-      a.dataset.zoom = k;
-      zoomLinks[k] = a;
-      z.append(a);
-    });
-    r2.append(z);
+    r2.append(switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
+    r2.append(switcher('tlsw', 'timeline', TLS, tlLinks, 'tl'));
     if (CV.note) r2.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
 
     const r3 = el('nav', 'trow tabs');
@@ -157,6 +235,7 @@
 
   // ---------- Sheet ----------
   let flat = [];
+  let bars = [];
 
   // Timeline columns for the items in view: [{ lo, hi, label, cls }].
   function columnsFor(items, zoom) {
@@ -175,32 +254,41 @@
     return cols;
   }
 
-  const TABLE_COLS = [
-    ['name', 'client'], ['what', 'what it was'], ['studio', 'studio'], ['type', 'type'],
-    ['sub', 'my role'], ['when', 'when'], ['status', 'status'], ['see', 'see it'],
-  ];
-  const SHEET_COLS = [['name', ''], ['sub', 'role']];
+  function textColsFor(table, tl) {
+    if (table) {
+      return [
+        ['client', 'client'], ['st', 'studio · type'], ['sub', 'my role'], ['when', 'when'],
+        ...(tl === 'b' ? [['len', 'length']] : []),
+        ['status', 'status'], ['see', 'see it'],
+      ];
+    }
+    if (tl === 'a') return [['name', ''], ['sub', 'role'], ['when', 'when']];
+    if (tl === 'b') return [['name', ''], ['sub', 'role'], ['when', 'when'], ['len', 'length']];
+    return [['name', ''], ['sub', 'role']];
+  }
 
   function render() {
     const tab = tabById(state.tab);
     const table = !!tab.table;
+    const tl = state.tl;
     const zoom = state.zoom;
     const groups = groupsFor(tab);
     const all = groups.flatMap((g) => g.items);
-    const cols = columnsFor(all, zoom);
-    const textCols = table ? TABLE_COLS : SHEET_COLS;
+    const cols = tl === 'b' ? [] : columnsFor(all, zoom);
+    const textCols = textColsFor(table, tl);
 
     // Timeline template; the text columns live in CSS (they change on phones).
-    const tlMin = zoom === 'years' ? cols.length * 3.25
+    const tlMin = !cols.length ? 0 : zoom === 'years' ? cols.length * 3.25
       : cols.reduce((a, c) => a + (c.cls === 'earlier' ? 4.25 : table ? 2.25 : 2.5), 0);
-    const tl = zoom === 'years'
+    const tlTpl = !cols.length ? '' : zoom === 'years'
       ? `repeat(${cols.length}, minmax(3.25rem, 1fr))`
       : cols.map((c) => (c.cls === 'earlier' ? '4.25rem' : 'var(--month)')).join(' ');
-    sheet.style.setProperty('--tl', tl);
+    sheet.style.setProperty('--tl', tlTpl);
     sheet.style.setProperty('--tlmin', tlMin + 'rem');
-    sheet.className = `sheet z-${zoom}${table ? ' is-table' : ''}`;
+    sheet.className = `sheet z-${zoom} tl-${tl}${table ? ' is-table' : ''}`;
     document.body.dataset.tab = tab.id;
     document.body.dataset.zoom = zoom;
+    document.body.dataset.tl = tl;
 
     // Row builder: gutter + text cells + timeline cells + tail + phone cell.
     function row({ cls = '', num = '', texts = [], swatch } = {}) {
@@ -221,7 +309,7 @@
     const frag = document.createDocumentFragment();
 
     // Column labels. Month zoom gets a year row above the month row.
-    if (zoom === 'months') {
+    if (zoom === 'months' && cols.length) {
       const yr = row({ cls: 'colhead yearrow' });
       const yc = yr.querySelectorAll('.yr');
       let lastY = null;
@@ -236,6 +324,7 @@
     frag.append(head);
 
     flat = [];
+    bars = [];
     let n = 0;
     groups.forEach((g) => {
       frag.append(row({ cls: 'section', swatch: g.color, texts: [`<em>${esc(g.label)}</em>`] }));
@@ -243,70 +332,77 @@
         n += 1;
         const href = hashFor(tab.id, item.id, zoom);
         const see = item.see
-          ? esc(item.see)
-          : item.site ? `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0])} ↗</a>`
+          ? `<span class="muted">${esc(item.see)}</span>`
+          : item.site ? `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0])}&nbsp;↗</a>`
           : '<span class="muted">walkthrough on request</span>';
+        const studio = item.studio ? brandLink(item.studio === 'moment' ? 'MOMENT' : 'Oratory') : '';
         const vals = {
-          name: `<a class="open" href="${href}">${esc(item.title)}</a>`,
-          sub: esc(item.sub), what: esc(item.what), studio: esc(item.studio), type: esc(item.type),
-          when: esc(whenOf(item)), status: esc(item.status), see,
+          name: `<span class="nm">${nameHtml(item.title, href)}</span>`,
+          client: `<span class="c-name">${nameHtml(item.title, href)}</span><span class="c-what">${rich(item.what)}</span>`,
+          st: `${studio}<span class="dot"> · </span><span class="ty">${esc(item.type)}</span>`,
+          sub: rich(item.sub), when: esc(whenOf(item)), len: esc(lengthOf(item)),
+          status: statusHtml(item.status), see,
         };
         const r = row({ cls: 'entry', num: n, texts: textCols.map(([k]) => vals[k]) });
         r.dataset.id = item.id;
         r.dataset.href = href;
-        const sc = r.querySelector('.t-studio');
-        if (sc && item.studio) sc.classList.add('studio-' + item.studio);
+        r.style.setProperty('--tint', g.color);
 
-        // Timeline: overlap of the entry's months with each column.
         const rg = rangeOf(item);
         const yc = r.querySelectorAll('.yr');
-        const hit = cols.map((c) => rg.from <= c.hi && rg.to >= c.lo);
-        const L = hit.indexOf(true), R = hit.lastIndexOf(true);
-        if (L >= 0) {
-          r.style.setProperty('--tint', g.color);
-          if (rg.approx && zoom === 'months') r.classList.add('approx');
-          for (let i = L; i < R; i++) {
-            yc[i].classList.add('span');
-            if (i === L) yc[i].classList.add(rg.open ? 'span-open' : 'span-end');
-          }
-          const s = yc[R];
-          s.classList.add('start');
-          if (L === R && rg.open) s.classList.add('start-open');
-          if (item.img) {
-            s.classList.add('has-thumb');
-            const img = el('img');
-            img.src = item.img; img.alt = ''; img.loading = 'lazy';
-            s.append(img);
-          } else {
-            s.append(el('i', 'cap'));
-            if (cols[R].cls === 'earlier') s.append(el('span', 'lbl', esc(shortOf(item))));
-            else if (item.site && !table) {
-              s.insertAdjacentHTML('beforeend', `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0])} ↗</a>`);
+        if (cols.length && rg.approx && zoom === 'months') r.classList.add('approx');
+
+        if (tl === 'a') {
+          // Filled cells: full tint where the item covers the column,
+          // lighter where it only covers part of it.
+          cols.forEach((c, i) => {
+            const lo = Math.max(rg.from, c.lo), hi = Math.min(rg.to, c.hi);
+            if (lo > hi) return;
+            let full;
+            if (c.cls === 'earlier') full = true;
+            else if (zoom === 'months') full = !rg.approx;
+            else {
+              const avail = Math.min(c.hi, NOW) - c.lo + 1;
+              full = rg.approx || hi - lo + 1 >= avail;
             }
+            yc[i].classList.add('fill', full ? 'fill-full' : 'fill-part');
+            if (c.cls === 'earlier') yc[i].append(el('span', 'lbl', esc(shortOf(item))));
+          });
+        } else if (tl === 'c') {
+          const L = cols.findIndex((c) => rg.from <= c.hi && rg.to >= c.lo);
+          if (L >= 0) {
+            const bar = el('div', 'bar');
+            const lbl = el('span', 'bar-lbl', esc(barLabel(item)));
+            bar.append(lbl);
+            r.append(bar);
+            // Single unit: one month (month data) or one year (year data).
+            const single = item.start ? rg.from === rg.to : yOf(rg.from) === yOf(rg.to) && !rg.open;
+            bars.push({ bar, lbl, row: r, cells: yc, rg, single });
           }
         }
-        // Phone-only cell (year zoom): when, plus the link if there is one.
-        const m = el('div', 'cell m-when', esc(shortOf(item)));
-        r.append(m);
+        // Phone-only cell: the dates as text.
+        r.append(el('div', 'cell m-when', esc(whenOf(item))));
         frag.append(r);
         flat.push({ item, color: g.color, rowEl: r });
       });
       frag.append(row({ cls: 'blank' }));
     });
-    for (let i = 0; i < (table ? 4 : 18); i++) frag.append(row({ cls: 'blank' }));
+    for (let i = 0; i < (table ? 4 : 14); i++) frag.append(row({ cls: 'blank' }));
     sheet.replaceChildren(frag);
+    layoutBars();
 
-    // Intro (moment tab): merged cells above the sheet.
+    // Intro (moment tab): one paragraph in merged cells above the sheet.
     intro.replaceChildren();
     intro.hidden = !tab.intro;
-    (tab.intro || []).forEach((p) => {
+    if (tab.intro) {
       const r = el('div', 'trow para');
-      r.append(el('div', 'cell gutter'), el('p', 'cell', esc(p)));
+      r.append(el('div', 'cell gutter'), el('p', 'cell', rich(tab.intro)));
       intro.append(r);
-    });
+    }
 
     tabLinks.forEach((a) => {
       const on = a.dataset.tab === tab.id;
+      a.href = hashFor(a.dataset.tab, null, null);
       a.classList.toggle('on', on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
@@ -315,8 +411,47 @@
       a.classList.toggle('on', k === zoom);
       if (k === zoom) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
     });
+    Object.entries(tlLinks).forEach(([k, a]) => {
+      a.href = hashFor(tab.id, null, zoom, k);
+      a.classList.toggle('on', k === tl);
+      if (k === tl) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
     wrap.scrollLeft = 0;
   }
+
+  // Option c: place each bar over its columns. Year columns are split into
+  // twelfths (newest month on the left) so a jun–oct bar sits inside 2026.
+  function layoutBars() {
+    if (!bars.length) return;
+    const cols = columnsFor(flat.map((f) => f.item), state.zoom);
+    const zoom = state.zoom;
+    bars.forEach(({ bar, lbl, cells, rg, single }) => {
+      if (!cells.length || !cells[0].offsetWidth) return;
+      const edge = (m, side) => {
+        const i = cols.findIndex((c) => m >= c.lo && m <= c.hi);
+        const c = cols[i], cell = cells[i];
+        const x = cell.offsetLeft, w = cell.offsetWidth;
+        if (zoom === 'years' && c.cls !== 'earlier') {
+          const k = c.hi - m;
+          return x + (side === 'l' ? k : k + 1) * (w / 12);
+        }
+        return side === 'l' ? x : x + w;
+      };
+      const pad = 2;
+      let left = edge(rg.to, 'l') + pad;
+      let width = Math.max(edge(rg.from, 'r') - pad - left, 10);
+      bar.classList.remove('out');
+      bar.style.left = left + 'px';
+      bar.style.width = width + 'px';
+      const need = lbl.scrollWidth + 12;
+      if (need > width) {
+        if (single) bar.style.width = need + 'px';
+        else bar.classList.add('out');
+      }
+    });
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(() => layoutBars()).observe(sheet);
+  if (document.fonts) document.fonts.ready.then(layoutBars);
 
   // Row click anywhere (but on a real link) opens the entry.
   sheet.addEventListener('click', (e) => {
@@ -350,13 +485,14 @@
     }
     const links = (item.links || []).map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`);
     const facts = item.studio
-      ? `<p class="c-facts">${esc(item.studio)} · ${esc(item.type)}<br>${esc(item.status)}${item.see ? '<br>' + esc(item.see) : !item.site ? '<br>walkthrough on request' : ''}</p>`
+      ? `<p class="c-facts">${brandLink(item.studio === 'moment' ? 'MOMENT' : 'Oratory')} · ${esc(item.type)}<br>${esc(item.status)}${item.see ? '<br>' + esc(item.see) : !item.site ? '<br>walkthrough on request' : ''}</p>`
       : '';
+    const len = lengthOf(item);
     commentBody.innerHTML = `
-      <h2 id="comment-title">${esc(item.title)}</h2>
-      <p class="c-sub"><em>${esc(item.sub)}</em><br>${esc(whenOf(item))}</p>
+      <h2 id="comment-title">${rich(item.title)}</h2>
+      <p class="c-sub"><em>${rich(item.sub)}</em><br>${esc(whenOf(item))}${len ? ` <span class="c-len">· ${esc(len)}</span>` : ''}</p>
       ${facts}
-      ${(item.body || []).map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${(item.body || []).map((p) => `<p>${rich(p)}</p>`).join('')}
       ${item.stack ? `<p class="c-stack">${esc(item.stack)}</p>` : ''}
       ${links.length ? `<p class="c-links">${links.join('<br>')}</p>` : ''}
       <p class="c-nav"><button type="button" data-step="-1">&larr; prev</button><button type="button" data-step="1">next &rarr;</button></p>`;
@@ -393,7 +529,7 @@
       return;
     }
     const next = parse();
-    const changed = next.tab !== state.tab || next.zoom !== state.zoom;
+    const changed = next.tab !== state.tab || next.zoom !== state.zoom || next.tl !== state.tl;
     Object.assign(state, next);
     if (changed) { current = -1; render(); }
     if (state.item) open(state.item, { focus: !changed });
@@ -419,8 +555,8 @@
   pr.innerHTML = `<h1>${esc(CV.title)}</h1><p>${esc(CV.subtitle)}</p>` +
     CV.sections.map((s) => `<section><h2>${esc(s.name)}</h2>` +
       s.items.map((i) => {
-        const extra = i.studio ? `<br>${esc(i.what)}. ${esc(i.studio)}, ${esc(i.type)}, ${esc(i.status)}.` : `<br>${esc((i.body || [])[0] || '')}`;
-        return `<div class="p-item"><span class="p-years">${esc(whenOf(i))}</span><div><strong>${esc(i.title)}</strong>, ${esc(i.sub)}${extra}</div></div>`;
+        const extra = i.studio ? `<br>${esc(plain(i.what))}. ${esc(i.studio)}, ${esc(i.type)}, ${esc(i.status)}.` : `<br>${esc(plain((i.body || [])[0] || ''))}`;
+        return `<div class="p-item"><span class="p-years">${esc(whenOf(i))}</span><div><strong>${esc(plain(i.title))}</strong>, ${esc(plain(i.sub))}${extra}</div></div>`;
       }).join('') +
       `</section>`).join('');
 

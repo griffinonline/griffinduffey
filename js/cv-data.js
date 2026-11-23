@@ -22,6 +22,8 @@
 //
 // moment + oratory entries also carry the table columns:
 //   what, studio ('oratory' | 'moment'), type, status, see.
+//   [oratory] / [moment] anywhere in text = an inline link (oratory.co,
+//   moment.so); the case written is the case shown.
 //   No `see` = "walkthrough on request".
 
 window.CV = {
@@ -50,11 +52,10 @@ window.CV = {
     },
     {
       id: 'moment', label: 'moment + oratory', table: true, zoom: 'months',
-      intro: [
-        'oratory was a small studio in greenville making brands and websites for ai and software companies. in the fall of 2026 it became MOMENT. that was a rebrand after the berlin studio PERMANENT took a stake, not a second studio. MOMENT sold 4-week brand + site sprints (6 weeks at first) to ai and software companies.',
-        'my title was project manager. in practice i was the main ai-assisted builder and the client contact on most of these projects: scoping, timelines, client calls, reviews, building pages, QA and the handoff. between projects i built the tools the studio ran on.',
-        'i was there from march to november 2026, when MOMENT reset the team. the projects that were just starting then say how far i got. click any row for more.',
-      ],
+      // One paragraph, [oratory] / [moment] become links (see cv.js `rich`).
+      // check: "in the fall of 2026" (the rebrand) and "march to november
+      // 2026" (my dates there) aren't confirmed yet.
+      intro: '[oratory] was a design studio making brands and websites for ai and software companies. in the fall of 2026 it became [MOMENT], a rebrand, not a second studio, selling short brand + site sprints. my title was project manager, but i was the main ai-assisted builder and client contact on most of these projects, and i built the studio\'s internal tools. i was there from march to november 2026, when the team reset. projects still starting then say how far i got.',
       groups: [
         { section: 'moment + oratory', label: 'client projects', kind: 'client' },
         { section: 'moment + oratory', label: 'studio tools + sales', kind: 'internal' },
@@ -94,10 +95,10 @@ window.CV = {
       items: [
         {
           // check: "fall of 2026" for the rebrand is from memory ("announced ~sept").
-          id: 'moment-job', title: 'MOMENT (formerly Oratory)', sub: 'Project manager, builder & client lead', year: 2026,
+          id: 'moment-job', title: '[MOMENT] (formerly [Oratory])', sub: 'Project manager, builder & client lead', year: 2026,
           start: '2026-03', end: '2026-11',
           body: [
-            'A small studio making brands and websites for AI and software companies. Oratory became MOMENT in the fall of 2026.',
+            'A design studio making brands and websites for AI and software companies. [Oratory] became [MOMENT] in the fall of 2026.',
             'My title was project manager. I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
             'Between client work I built the tools the studio ran on: a project dashboard, an ops system that reads scope and timelines from Slack and the repos, the intake and launch docs, and sales decks.',
           ],
@@ -186,9 +187,9 @@ window.CV = {
         },
         {
           id: 'emdash', title: 'Emdash', sub: 'Project manager', year: 2026, start: '2026-10', end: '2026-11',
-          what: 'the first MOMENT brand + site sprint', studio: 'moment', type: 'sprint',
+          what: 'the first [MOMENT] brand + site sprint', studio: 'moment', type: 'sprint',
           status: 'early phase: i wrote the intake and ran the first weeks',
-          body: ['The first MOMENT brand and site sprint. I wrote the client intake it ran on (a long and a short version) and was on it until I left.'],
+          body: ['The first [MOMENT] brand and site sprint. I wrote the client intake it ran on (a long and a short version) and was on it until I left.'],
           links: [],
         },
         {
@@ -403,7 +404,7 @@ window.CV = {
         {
           id: 'intake', title: 'Client intake + launch doc', sub: 'Writer & developer', year: 2026, start: '2026-10', kind: 'internal',
           what: 'intake forms (long + short) and the delivery terms for sprints', studio: 'moment', type: 'internal tool', status: 'internal',
-          body: ['The client intake for MOMENT sprints, in a long contract-driven version and a short 17-question one, plus the launch doc that set out delivery terms.'],
+          body: ['The client intake for [MOMENT] sprints, in a long contract-driven version and a short 17-question one, plus the launch doc that set out delivery terms.'],
           links: [['case study', '/work-studio-tools']],
         },
         {
