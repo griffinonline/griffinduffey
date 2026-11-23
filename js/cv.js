@@ -303,8 +303,8 @@
     const fit = () => {
       const pp = parseFloat(getComputedStyle(top).getPropertyValue('--pp')) * 16 || 6;
       const h = upper.offsetHeight + r3.offsetHeight;
-      // Clamp so the photo can never run away (72px to 120px wide).
-      if (window.innerWidth > 720 && h) top.style.setProperty('--pw', Math.max(72, Math.min(120, (h - 2 * pp) / 1.47)) + 'px');
+      // Safety bounds only; the text column width is fixed, so this settles in one pass.
+      if (window.innerWidth > 720 && h) top.style.setProperty('--pw', Math.max(72, Math.min(240, (h - 2 * pp) / 1.47)) + 'px');
       else top.style.removeProperty('--pw');
     };
     fit();
