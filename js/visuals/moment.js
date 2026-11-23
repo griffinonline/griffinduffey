@@ -378,23 +378,25 @@ window.CVVisuals = window.CVVisuals || {};
     meta: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="#0866ff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M3 15.5c0-4 2-7.5 4.5-7.5 3 0 5.5 8 9 8 2 0 3.5-1.5 3.5-4s-1.5-4-3.5-4C13 8 10.5 16 7 16c-2.4 0-4-.5-4-.5"/></svg>',
     mailchimp: '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#191919"/><path d="M8 15c0-4 1.5-7 4-7s4 2 4 4.5-1.5 3.5-3 3.5c-1 0-1.5-.6-1.5-1.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>',
   };
-  // Hero pipeline rows in a 400x190 coordinate box (x in px of the box, y row centre).
+  // Hero pipeline rows (y = row centre, % of the canvas height). Each row is a
+  // flex line (source, nodes, tail) so the gaps hold at any width; the packets
+  // run along the wire and pass under the pills.
   const PIPE = [
-    { y: 34, src: 'snowflake', nodes: [['Filter', 'filter', 'beige', 150], ['Calculate', 'calc', 'blue', 290]], end: 345 },
-    { y: 95, src: 'sheets', nodes: [['Group by', 'group', 'mint', 210]], end: 385 },
-    { y: 156, src: 'shopify', nodes: [['Create rows', 'rows', 'beige', 130], ['IF Column', 'ifcol', 'blue', 280]], end: 345 },
+    { y: 18, src: 'snowflake', nodes: [['Filter', 'filter', 'beige'], ['Calculate', 'calc', 'blue']] },
+    { y: 50, src: 'sheets', nodes: [['Group by', 'group', 'mint']] },
+    { y: 82, src: 'shopify', nodes: [['Create rows', 'rows', 'beige'], ['IF Column', 'ifcol', 'blue']] },
   ];
   // "Get the data" panel: sources wiring into Combine, in a 300x250 box.
   const GET = [
-    ['mailchimp', 92, 34], ['hubspot', 52, 79], ['snowflake', 78, 124], ['qb', 60, 169], ['meta', 86, 214],
+    ['mailchimp', 80, 34], ['hubspot', 44, 79], ['snowflake', 68, 124], ['qb', 50, 169], ['meta', 74, 214],
   ];
-  const CX = 168, CY = 124; // Combine port
+  const CX = 150, CY = 124; // Combine port
   const BUDGET = [
     ['Acme Corp', 84200, 91450], ['Capsule Co', 53100, 58900], ['Prestige WW', 29400, 33250],
     ['Umbrella Co', 128600, 131800], ['Initech', 47900, 52300],
   ];
   function getPath(x, y) {
-    const sx = x + 10, mx = 146, d = Math.abs(y - CY);
+    const sx = x + 10, mx = 128, d = Math.abs(y - CY);
     if (d < 1) return `M${sx} ${y}H${CX}`;
     const r = Math.min(16, d / 2), dir = y < CY ? 1 : -1;
     return `M${sx} ${y}H${mx - r}Q${mx} ${y} ${mx} ${y + dir * r}V${CY - dir * r}Q${mx} ${CY} ${mx + r} ${CY}H${CX}`;
@@ -418,14 +420,12 @@ window.CVVisuals = window.CVVisuals || {};
       </section>
       <section class="l-pipe" data-k="pipe">
         <div class="l-canvas l-dots">
-          <svg class="l-wires" viewBox="0 0 400 190" preserveAspectRatio="none" aria-hidden="true">
-            ${PIPE.map((r) => `<path d="M40 ${r.y}H${r.end}" />`).join('')}
-          </svg>
-          ${PIPE.map((r, ri) => `
-            <span class="l-src" style="left:${(4 / 400) * 100}%;top:${(r.y / 190) * 100}%">${SRC[r.src]}<i class="l-port"></i></span>
-            ${r.nodes.map(([label, ic, tone, x], ni) => `<span class="l-node l-${tone}" data-row="${ri}" data-x="${x}" style="left:${(x / 400) * 100}%;top:${(r.y / 190) * 100}%"><i class="l-dot"></i>${L_ICONS[ic]}${label}<i class="l-dot"></i></span>`).join('')}
-            <i class="l-packet" data-row="${ri}" style="top:${(r.y / 190) * 100}%"></i>
-            <i class="l-packet" data-row="${ri}" style="top:${(r.y / 190) * 100}%"></i>`).join('')}
+          ${PIPE.map((r) => `
+            <div class="l-row" style="top:${r.y}%"><i class="l-line"></i><i class="l-packet"></i><i class="l-packet"></i>
+              <span class="l-src">${SRC[r.src]}<i class="l-port"></i></span>
+              ${r.nodes.map(([label, ic, tone]) => `<span class="l-node l-${tone}"><i class="l-dot"></i>${L_ICONS[ic]}${label}<i class="l-dot"></i></span>`).join('')}
+              <i class="l-tail"></i>
+            </div>`).join('')}
         </div>
         <div class="l-peach l-dots">
           <div class="l-out"><span class="l-out-h">${L_ICONS.db}Output</span><b class="l-count">0</b><span class="l-out-s">rows ready</span></div>
@@ -469,7 +469,7 @@ window.CVVisuals = window.CVVisuals || {};
         </div>
       </section>
       <section class="l-pills-sec"><div class="l-board">
-        ${['Append', 'Group by', 'Replace', 'Columns', 'Combine', 'Cumulative', 'Pivot', 'Create rows', 'Loop', 'Transpose', 'Date Transform', 'Directions', 'Describe', 'Transform', 'Stack'].map((p, i) => `<span class="l-bp l-${['sand', 'mint', 'beige', 'blue', 'lilacp'][i % 5]}" style="transform:rotate(${[-14, 18, 22, -10, 25, 0, 0, -12, 0, 6, -16, 0, 0, 0, 0][i]}deg)"><i class="l-dot"></i>${p}<i class="l-dot"></i></span>`).join('')}
+        ${['Append', 'Group by', 'Replace', 'Columns', 'Combine', 'Cumulative', 'Pivot', 'Create rows', 'Loop', 'Transpose', 'Date Transform', 'Directions', 'Describe', 'Transform', 'Stack'].map((p, i) => `<span class="l-bp l-${['sand', 'mint', 'beige', 'blue', 'lilacp'][i % 5]}" style="transform:rotate(${[-8, 9, 10, -6, 11, 0, 0, -7, 0, 5, -8, 0, 0, 0, 0][i]}deg)"><i class="l-dot"></i>${p}<i class="l-dot"></i></span>`).join('')}
       </div></section>`,
     scroll: (c) => {
       const pipe = c.pos.pipe ? c.pos.pipe.y : 300;
@@ -480,7 +480,7 @@ window.CVVisuals = window.CVVisuals || {};
     },
     cursor: [
       { t: 0.8, at: [620, 380] }, { t: 1.8, at: 'cta' }, { t: 3.0, at: 'cta', ax: 0.75 },
-      { t: 4.4, at: 'pipe', ax: 0.82, ay: 0.55 }, { t: 6.4, at: 'pipe', ax: 0.8, ay: 0.6 },
+      { t: 4.4, at: 'pipe', ax: 0.9, ay: 0.84 }, { t: 6.4, at: 'pipe', ax: 0.88, ay: 0.88 },
       { t: 8.6, at: 'tabget', ax: 0.9, ay: 2.2 }, { t: 10.0, at: 'tabref' }, { t: 11.2, at: 'tabref', ax: 0.65, ay: 3 },
       { t: 13.4, at: 'tabref', ax: 0.7, ay: 3.4 }, { t: 14.4, at: [640, 300] },
     ],
@@ -488,8 +488,10 @@ window.CVVisuals = window.CVVisuals || {};
     clicks: [L.tab],
     init(c) {
       c.cta = c.q('.l-cta');
-      c.packets = c.qa('.l-pipe .l-packet');
-      c.nodes = c.qa('.l-pipe .l-node');
+      c.prow = c.qa('.l-pipe .l-row').map((row) => ({
+        row, src: row.querySelector('.l-src'), packets: Array.from(row.querySelectorAll('.l-packet')),
+        nodes: Array.from(row.querySelectorAll('.l-node')),
+      }));
       c.count = c.q('.l-count');
       c.draws = c.qa('.l-draw');
       c.srcw = c.qa('.l-srcw');
@@ -505,23 +507,29 @@ window.CVVisuals = window.CVVisuals || {};
       c.enter = c.q('.l-enter');
     },
     measure(c) {
-      c.pipeK = (c.q('.l-canvas').offsetWidth || 400) / 400;
+      // wire span + pill extents per row, in unscaled canvas px
+      c.prow.forEach((r) => {
+        r.a = r.src.offsetLeft + r.src.offsetWidth;
+        r.b = r.row.offsetWidth;
+        r.box = r.nodes.map((n) => [n.offsetLeft, n.offsetLeft + n.offsetWidth]);
+      });
       c.tabBox = c.tabs.map((el) => [el.offsetLeft, el.offsetWidth]);
     },
     frame(c, t) {
       on(c.cta, 'is-hover', t > 1.75 && t < 3.1);
-      // hero pipeline: packets travel each row; nodes glow as a packet passes
-      const k = c.pipeK || 1;
-      const hits = new Set();
-      c.packets.forEach((p, i) => {
-        const r = +p.dataset.row, row = PIPE[r];
-        const ph = ((t * 0.42 + r * 0.33 + (i % 2) * 0.5) % 1);
-        const x = 40 + (row.end - 40) * ph;
-        p.style.transform = `translate3d(${(x * k).toFixed(1)}px,0,0)`;
-        p.style.opacity = Math.min(1, Math.min(ph, 1 - ph) * 12).toFixed(2);
-        row.nodes.forEach(([, , , nx]) => { if (Math.abs(x - nx - 30) < 34) hits.add(r + ':' + nx); });
+      // hero pipeline: packets run along each wire (under the pills); a pill glows while one passes through
+      c.prow.forEach((r, ri) => {
+        if (r.a == null) return;
+        const lit = r.nodes.map(() => false);
+        r.packets.forEach((p, i) => {
+          const ph = ((t * 0.42 + ri * 0.33 + i * 0.5) % 1);
+          const x = r.a + (r.b - r.a) * ph;
+          p.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
+          p.style.opacity = Math.min(1, Math.min(ph, 1 - ph) * 12).toFixed(2);
+          r.box.forEach(([x0, x1], j) => { if (x > x0 - 4 && x < x1 + 4) lit[j] = true; });
+        });
+        r.nodes.forEach((n, j) => on(n, 'lit', lit[j]));
       });
-      c.nodes.forEach((n) => on(n, 'lit', hits.has(n.dataset.row + ':' + n.dataset.x)));
       txt(c.count, Math.round(1204 * ease(seg(t, 3.6, 6.2)) * (1 - ease(seg(t, 14.6, 15.3)))).toLocaleString('en-US'));
       // Get the data: wires draw in, then Combine goes solid
       c.draws.forEach((d, i) => {

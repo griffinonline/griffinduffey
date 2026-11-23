@@ -1,17 +1,17 @@
 // Featured-work visuals: votive. Registers window.CVVisuals[name] = (el) => { ... }.
 //
-//  votive-brand   the V✦TIVE mark printed in two riso passes on cream stock,
-//                 next to the half-gallon chai jug and two kombucha bottles.
-//                 One stepped 8fps clock (nothing tweens: every frame is a new
-//                 "print"), three ink runs per ~10s loop.
+//  votive-brand   real brand files, not redraws: the 3d-scan spin of the
+//                 half-gallon jug, the drinkvotive.com nav logo animation, and
+//                 a slow cycle through labels, stickers, merch and wordmarks.
 //  votive-system  the back office: wholesale checkout → Stripe (invoice on net
 //                 terms, or card) → /api/webhook → the "Votive Orders" sheet,
 //                 Shippo buying the UPS label, and invoice.paid flipping the
 //                 row to PAID. Columns mirror scripts/orders-sheet.gs in
 //                 votive-site. Cafe names and amounts are made up.
 //
-// Both draw on a fixed design canvas scaled to the stage, pause off-screen and
-// in hidden tabs, and render one still frame for prefers-reduced-motion.
+// Both pause off-screen and in hidden tabs and show one still frame for
+// prefers-reduced-motion. votive-system draws on a fixed design canvas scaled
+// to the stage; votive-brand lazy-loads its images when the stage gets close.
 window.CVVisuals = window.CVVisuals || {};
 (() => {
   const A = '/assets/visuals/votive/';
@@ -84,134 +84,84 @@ window.CVVisuals = window.CVVisuals || {};
     else node.style[key] = val;
   }
   const h = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
-  // Deterministic per-frame noise so loops repeat exactly.
-  const hash = (n) => { let x = (n * 374761393 + 668265263) >>> 0; x = ((x ^ (x >>> 13)) * 1274126177) >>> 0; return ((x ^ (x >>> 16)) >>> 0) / 4294967296; };
-  // Paper texture, drawn once into a small canvas: sparse ink specks (fine)
-  // or soft blotches of uneven coverage (coarse). Seeded, so it never changes.
-  const texCache = {};
-  function texture(kind) {
-    if (texCache[kind]) return texCache[kind];
-    const n = kind === 'fine' ? 220 : 64, c = document.createElement('canvas');
-    c.width = c.height = n;
-    const x = c.getContext('2d'), img = x.createImageData(n, n), d = img.data;
-    for (let i = 0; i < n * n; i++) {
-      const r = hash(i + (kind === 'fine' ? 11 : 977));
-      if (kind === 'fine') { d[i * 4] = 60; d[i * 4 + 1] = 42; d[i * 4 + 2] = 26; d[i * 4 + 3] = r > 0.93 ? 50 + (r - 0.93) * 2000 : 0; }
-      else { d[i * 4] = d[i * 4 + 1] = 250; d[i * 4 + 2] = 240; d[i * 4 + 3] = r * 120; }
-    }
-    x.putImageData(img, 0, 0);
-    return (texCache[kind] = `url(${c.toDataURL()})`);
-  }
 
   // ======================================================================
   // votive-brand
   // ======================================================================
-  const RUNS = [
-    { a: '#9F5841', b: '#FFB511', name: 'brick + sunflower', line: 'chai concentrate, spiced + fermented' },
-    { a: '#3D5588', b: '#FF48B0', name: 'federal blue + fluorescent pink', line: 'single-origin tea kombucha' },
-    { a: '#00838A', b: '#FF6C2F', name: 'teal + orange', line: 'poured in 15+ cafes across the southeast' },
+  // Griffin's real Votive files (from the are.na design archive), not redraws:
+  // the 3d-scan spin of the half-gallon jug, the drinkvotive.com nav logo, and
+  // a slow cycle through labels, stickers, merch and wordmarks.
+  const PIECES = [
+    { src: 'label-chai.webp', cap: 'label · chai concentrate', w: 2375, h: 2750 },
+    { src: 'hat-spin.webp', still: 'hat-spin-still.webp', cap: '3d scan · hat', w: 414, h: 400 },
+    { src: 'sticker-bottle.webp', cap: 'bottle sticker', w: 3750, h: 6000 },
+    { src: 'label-white-peony.webp', cap: 'label · white peony', w: 3750, h: 6000 },
+    { src: 'merch-shirt.webp', cap: 'merch · tee', w: 5872, h: 5600 },
+    { src: 'wordmark-stacked.webp', cap: 'wordmark · stacked', w: 500, h: 500 },
+    { src: 'merch-hoodie.webp', cap: 'merch · hoodie', w: 2700, h: 3279 },
+    { src: 'wordmark-star.webp', cap: 'wordmark · v✦tive', w: 1002, h: 1196 },
+    { src: 'wordmark-color.webp', cap: 'wordmark · overprint', w: 1120, h: 1120 },
+    { src: 'wordmark-chalk.webp', cap: 'wordmark · chalk', w: 774, h: 996 },
   ];
-  const RUN_STEPS = 27, STEPS = 80, FPS = 8;
-
-  const JUG = `<svg class="vv-jug" viewBox="0 0 112 196" aria-hidden="true">
-    <defs><clipPath id="vvJugClip"><path d="M30 16H60V26C60 34 70 40 90 46C104 50 108 58 108 70V184C108 191 103 196 96 196H16C9 196 4 191 4 184V70C4 54 14 44 24 38C28 35 30 30 30 26Z"/></clipPath></defs>
-    <path d="M30 16H60V26C60 34 70 40 90 46C104 50 108 58 108 70V184C108 191 103 196 96 196H16C9 196 4 191 4 184V70C4 54 14 44 24 38C28 35 30 30 30 26Z" fill="#efe6d4"/>
-    <g clip-path="url(#vvJugClip)"><rect class="vv-chai" x="0" y="58" width="112" height="140" fill="#8C4A2F"/>
-      <rect x="10" y="62" width="7" height="122" fill="#fff" opacity=".18"/></g>
-    <path d="M73 62C84 62 92 66 93 74V106C93 111 89 113 85 111L78 107C74 105 72 101 72 97Z" fill="#F2EADB" stroke="#1a1a1a" stroke-width="1.6"/>
-    <path d="M30 16H60V26C60 34 70 40 90 46C104 50 108 58 108 70V184C108 191 103 196 96 196H16C9 196 4 191 4 184V70C4 54 14 44 24 38C28 35 30 30 30 26Z" fill="none" stroke="#1a1a1a" stroke-width="1.8"/>
-    <rect x="28" y="2" width="34" height="15" rx="2.5" fill="#f7f3ea" stroke="#1a1a1a" stroke-width="1.6"/>
-    <path d="M28 7H62M28 11H62" stroke="#1a1a1a" stroke-width=".7" opacity=".5"/>
-    <rect x="13" y="114" width="70" height="68" fill="#F2EADB" stroke="#1a1a1a" stroke-width=".8"/>
-    <path class="vv-flag" d="M17 120L33 120L30 130L36 130L22 150L24 136L17 136Z" fill="var(--a)"/>
-    <image href="${A}logo-silhouette.svg" x="38" y="118" width="38" height="46"/>
-    <text x="48" y="172" text-anchor="middle" class="vv-tiny">chai tea concentrate</text>
-    <path d="M18 176H78" stroke="#1a1a1a" stroke-width=".5" opacity=".6"/>
-  </svg>`;
-  const bottle = (liquid, tea, i) => `<svg class="vv-bottle" viewBox="0 0 40 170" aria-hidden="true">
-    <defs><clipPath id="vvB${i}"><path d="M15 6H25V40C25 52 36 58 36 72V162C36 166 33 170 29 170H11C7 170 4 166 4 162V72C4 58 15 52 15 40Z"/></clipPath></defs>
-    <path d="M15 6H25V40C25 52 36 58 36 72V162C36 166 33 170 29 170H11C7 170 4 166 4 162V72C4 58 15 52 15 40Z" fill="#e9e2d2"/>
-    <g clip-path="url(#vvB${i})"><rect x="0" y="48" width="40" height="124" fill="${liquid}"/>
-      <rect x="8" y="58" width="3" height="104" fill="#fff" opacity=".28"/></g>
-    <path d="M15 6H25V40C25 52 36 58 36 72V162C36 166 33 170 29 170H11C7 170 4 166 4 162V72C4 58 15 52 15 40Z" fill="none" stroke="#1a1a1a" stroke-width="1.6"/>
-    <path d="M13 1H27V7H13Z" fill="var(--b)" stroke="#1a1a1a" stroke-width="1.4"/>
-    <rect x="4" y="94" width="32" height="48" fill="#F2EADB" stroke="#1a1a1a" stroke-width=".8"/>
-    <rect x="4" y="94" width="32" height="7" fill="var(--a)"/>
-    <image href="${A}logo-silhouette.svg" x="11" y="104" width="18" height="22"/>
-    <text x="20" y="134" text-anchor="middle" class="vv-tiny">${tea}</text>
-    <text x="20" y="139.5" text-anchor="middle" class="vv-tiny vv-tinier">kombucha</text>
-  </svg>`;
+  const HOLD = 3400; // ms per piece in the cycle
 
   window.CVVisuals['votive-brand'] = function (el) {
-    const { cvs, cleanup } = setup(el, 'brand');
-    cvs.innerHTML = `
-      <div class="vv-top"><span class="vv-run">v✦tive · run 01/03</span><span class="vv-inkname"></span></div>
-      <div class="vv-sun"></div>
-      <div class="vv-logo" role="img" aria-label="Votive logo">
-        <div class="vv-ink vv-sil"></div><div class="vv-ink vv-fil"></div>
-        <svg class="vv-spark" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0 -10C.8 -2 2 -.8 10 0C2 .8 .8 2 0 10C-.8 2 -2 .8 -10 0C-2 -.8 -.8 -2 0 -10Z"/></svg>
+    if (el._vvDestroy) el._vvDestroy();
+    el.classList.add('v-votive', 'v-votive-brand');
+    const still = reduce();
+    const pad = (n) => String(n).padStart(2, '0');
+    el.innerHTML = `
+      <div class="vb-cell vb-hero">
+        <img class="vb-anim" data-src="jug-spin.webp" data-still="jug-spin-still.webp" width="296" height="640" alt="3d scan of the votive half-gallon chai jug, turning">
+        <span class="vb-cap">3d scan · half-gallon chai</span>
       </div>
-      <div class="vv-shelf">
-        <div class="vv-prod vv-p0">${JUG}</div>
-        <div class="vv-prod vv-p1">${bottle('#C98A2B', 'oolong', 1)}</div>
-        <div class="vv-prod vv-p2">${bottle('#9DA33A', 'sencha', 2)}</div>
+      <div class="vb-cell vb-nav">
+        <img class="vb-anim" data-src="nav-logo.webp" data-still="nav-logo-still.webp" width="365" height="400" alt="votive logo animation from the drinkvotive.com nav">
+        <span class="vb-cap">nav logo · drinkvotive.com</span>
       </div>
-      <div class="vv-ground"></div>
-      <div class="vv-foot"><span class="vv-line"></span><span class="vv-place">greenville, sc</span></div>
-      `;
-    // Texture covers the whole stage, not just the design canvas.
-    const g1 = h('div', 'vv-grain'), g2 = h('div', 'vv-wear');
-    g1.style.backgroundImage = texture('fine');
-    g2.style.backgroundImage = texture('coarse');
-    el.append(g2, g1);
-    const sun = cvs.querySelector('.vv-sun');
-    const sil = cvs.querySelector('.vv-sil'), fil = cvs.querySelector('.vv-fil');
-    const spark = cvs.querySelector('.vv-spark');
-    const prods = [...cvs.querySelectorAll('.vv-prod')];
-    const runEl = cvs.querySelector('.vv-run'), inkEl = cvs.querySelector('.vv-inkname'), lineEl = cvs.querySelector('.vv-line');
+      <div class="vb-cell vb-cycle">
+        ${PIECES.map((p, i) => `<img class="vb-piece${p.still ? ' vb-anim' : ''}" data-src="${p.src}"${p.still ? ` data-still="${p.still}"` : ''} width="${p.w}" height="${p.h}" alt="${p.cap}" data-i="${i}">`).join('')}
+        <span class="vb-cap"><span class="vb-capt"></span><span class="vb-n"></span></span>
+      </div>`;
+    const pieces = [...el.querySelectorAll('.vb-piece')];
+    const capt = el.querySelector('.vb-capt'), num = el.querySelector('.vb-n');
+    const cleanup = [];
+    let near = false, onScreen = false, cur = -1;
 
-    let lastStep = -1;
-    function draw(f) {
-      const r = Math.min(2, Math.floor(f / RUN_STEPS)), k = f - r * RUN_STEPS, run = RUNS[r];
-      put(cvs, '--a', run.a);
-      put(cvs, '--b', run.b);
-      put(runEl, 'text', `v✦tive · run 0${r + 1}/03`);
-      put(inkEl, 'text', run.name);
-      // Reprint: the sheet goes back through the press, inks land misregistered and settle.
-      const settle = [[0, 0, 0], [16, -9, 0.4], [7, -4, 0.8], [3, -2, 1]][k] || null;
-      const jx = Math.round((hash(f * 3 + 1) - 0.5) * 4), jy = Math.round((hash(f * 3 + 2) - 0.5) * 3);
-      const fx = Math.round((hash(f * 5 + 7) - 0.5) * 2.4), fy = Math.round((hash(f * 5 + 9) - 0.5) * 2.4);
-      const [sx, sy, op] = settle || [jx, jy, 1];
-      put(sil, 'transform', `translate(${sx + 4}px, ${sy + 3}px)`);
-      put(sil, 'opacity', String(k === 0 ? 0 : op));
-      put(fil, 'transform', `translate(${settle ? -sx / 2 : fx}px, ${settle ? sy / 2 : fy}px)`);
-      put(fil, 'opacity', String(k === 0 ? 0.15 : Math.min(1, op + 0.15)));
-      // The second ink: a flat disc, printed in its own (looser) pass.
-      put(sun, 'transform', `translate(${settle ? sx * 1.4 : Math.round((hash(f * 7 + 3) - 0.5) * 5)}px, ${settle ? -sy : Math.round((hash(f * 7 + 4) - 0.5) * 4)}px)`);
-      put(sun, 'opacity', String(k === 0 ? 0 : settle ? op * 0.9 : 0.9));
-      // Products hop once per run, one after another, on whole frames.
-      prods.forEach((p, i) => {
-        const d = k - (7 + i * 2);
-        const y = d === 0 ? -9 : d === 1 ? -4 : d === 2 ? 1 : 0;
-        const rot = d === 0 ? (i % 2 ? 3 : -3) : d === 1 ? (i % 2 ? -1 : 1) : 0;
-        put(p, 'transform', `translate(0, ${y}px) rotate(${rot}deg)`);
-      });
-      // The star in the mark catches the light.
-      const sp = [0.3, 0.85, 1.1, 0.7, 0.3][k - 15];
-      put(spark, 'transform', sp ? `scale(${sp}) rotate(${(k - 15) * 12}deg)` : 'scale(0)');
-      // Copy line types out like a label printer, two characters a frame.
-      const n = Math.max(0, (k - 4) * 2);
-      put(lineEl, 'text', run.line.slice(0, n));
-      put(lineEl, 'class', 'vv-line' + (n < run.line.length && k > 3 ? ' typing' : ''));
+    // Animated pieces show their first frame (a still webp) until they're on
+    // screen, and go back to it when they leave, so nothing animates unseen.
+    const srcFor = (img) => A + (still || !onScreen ? img.dataset.still || img.dataset.src : img.dataset.src);
+    const load = (img) => { const s = srcFor(img); if (img.getAttribute('src') !== s) img.src = s; };
+    function show(i) {
+      if (i === cur) return;
+      cur = i;
+      pieces.forEach((p, k) => p.classList.toggle('on', k === i));
+      put(capt, 'text', PIECES[i].cap);
+      put(num, 'text', `${pad(i + 1)}/${pad(PIECES.length)}`);
+      // Fetch the current piece and the next one; the rest wait their turn.
+      if (near) { load(pieces[i]); load(pieces[(i + 1) % pieces.length]); }
     }
+    function refresh() {
+      if (!near) return;
+      el.querySelectorAll('.vb-hero img, .vb-nav img').forEach(load);
+      pieces.forEach((p, k) => { if (p.getAttribute('src') || k === cur || k === (cur + 1) % pieces.length) load(p); });
+    }
+    show(0);
 
-    if (reduce()) { el.classList.add('vv-still'); draw(RUN_STEPS - 4); return; }
-    loop(el, (t) => {
-      const f = Math.floor(t / (1000 / FPS)) % STEPS;
-      if (f !== lastStep) { lastStep = f; draw(f); }
-    }, cleanup);
+    const vis = (on) => { onScreen = on; refresh(); };
+    if (window.IntersectionObserver) {
+      // Lazy-load when the stage gets close; animate only while it's visible.
+      const ioNear = new IntersectionObserver((es) => { if (es[es.length - 1].isIntersecting && !near) { near = true; refresh(); ioNear.disconnect(); } }, { rootMargin: '400px' });
+      const ioOn = new IntersectionObserver((es) => vis(es[es.length - 1].isIntersecting), { rootMargin: '40px' });
+      ioNear.observe(el); ioOn.observe(el);
+      cleanup.push(() => { ioNear.disconnect(); ioOn.disconnect(); });
+    } else { near = true; vis(true); }
+
+    if (still) el.classList.add('vv-still');
+    else loop(el, (t) => show(Math.floor(t / HOLD) % PIECES.length), cleanup);
     el._vvDestroy = () => { cleanup.forEach((fn) => fn()); el._vvDestroy = null; };
   };
+
 
   // ======================================================================
   // votive-system

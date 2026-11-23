@@ -264,7 +264,7 @@
 .v-less .l-hero-side p { font-size: 12px; line-height: 1.55; color: var(--muted); max-width: 330px; }
 
 .v-less .l-dots { background-image: radial-gradient(circle, rgba(25, 25, 25, 0.09) 0.8px, transparent 1.1px); background-size: 10px 10px; }
-.v-less .l-pipe { display: grid; grid-template-columns: 64% 36%; height: 200px; border-top: 1px solid #dcdcdc; border-bottom: 1px solid #dcdcdc; }
+.v-less .l-pipe { display: grid; grid-template-columns: minmax(0, 1fr) 150px; height: 200px; border-top: 1px solid #dcdcdc; border-bottom: 1px solid #dcdcdc; }
 .v-less .l-canvas { position: relative; background-color: var(--cream); margin: 0; }
 .v-less .l-wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .v-less .l-wires path { fill: none; stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -288,13 +288,23 @@
 .v-less .l-sand { background: var(--sand-l); color: #522e1f; }
 .v-less .l-lilacp { background: var(--lilac-l); color: #3f3052; }
 .v-less .l-node.lit { box-shadow: 0 0 0 3px rgba(25, 25, 25, 0.08), 0 4px 10px -4px rgba(0,0,0,.25); transform: translateY(-50%) scale(1.06); }
-.v-less .l-packet {
-  position: absolute; left: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%;
-  background: #f5a524; box-shadow: 0 0 0 2px rgba(245, 165, 36, 0.25); z-index: 2; opacity: 0;
+/* hero pipeline rows: flex lines so pills keep even gaps; the wire runs behind
+   them out to the canvas edge (towards Output) and packets ride it under the pills */
+.v-less .l-row {
+  position: absolute; left: 12px; right: 0; transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.v-less .l-row > .l-src, .v-less .l-row > .l-node { position: relative; transform: none; }
+.v-less .l-row > .l-node.lit { transform: scale(1.06); }
+.v-less .l-line { position: absolute; left: 24px; right: 0; top: 50%; height: 1px; margin-top: -0.5px; background: var(--ink); z-index: 0; }
+.v-less .l-tail { flex: none; width: 4px; }
+.v-less .l-row .l-packet {
+  position: absolute; left: 0; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%;
+  background: #f5a524; box-shadow: 0 0 0 2px rgba(245, 165, 36, 0.25); z-index: 0; opacity: 0;
 }
 .v-less .l-peach { position: relative; background-color: #fbd59e; display: grid; place-items: center; }
 .v-less .l-out {
-  display: grid; gap: 1px; background: #fff; border-radius: 10px; padding: 10px 14px 11px; min-width: 112px;
+  display: grid; gap: 1px; background: #fff; border-radius: 10px; padding: 10px 13px 11px; min-width: 104px;
   box-shadow: 0 8px 20px -12px rgba(82, 46, 31, 0.5);
 }
 .v-less .l-out-h { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: #844b32; }
@@ -364,7 +374,7 @@
 
 .v-less .l-pills-sec { padding: 0 22px 40px; }
 .v-less .l-board {
-  display: flex; flex-wrap: wrap; gap: 6px 4px; justify-content: center; padding: 22px 10px; border-radius: 10px;
+  display: flex; flex-wrap: wrap; gap: 12px 6px; justify-content: center; padding: 24px 8px; border-radius: 10px;
   background-color: #2b2b2b; background-image: radial-gradient(circle, rgba(255,255,255,.12) 0.8px, transparent 1.1px); background-size: 9px 9px;
 }
 .v-less .l-bp { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 99px; font-size: 10.5px; }
@@ -381,6 +391,13 @@
 .v-less .narrow .l-panels { height: 230px; }
 .v-less .narrow .l-hero { padding-top: 20px; }
 .v-less .narrow .l-hero h1 { font-size: 31px; }
+.v-less .narrow .l-pipe { grid-template-columns: minmax(0, 1fr) 116px; }
+.v-less .narrow .l-row { left: 10px; gap: 14px; }
+.v-less .narrow .l-row > .l-src { gap: 7px; padding: 5px 7px 5px 9px; font-size: 12px; }
+.v-less .narrow .l-line { left: 20px; }
+.v-less .narrow .l-row > .l-node { font-size: 10.5px; gap: 4px; padding: 5px 6px; }
+.v-less .narrow .l-out { min-width: 0; padding: 9px 11px 10px; }
+.v-less .narrow .l-count { font-size: 21px; }
 
 /* The input reserves the full prompt's height (invisible ghost text), and the
    typed text sits on top of it, so the box never grows while typing. */
