@@ -119,18 +119,7 @@
   // A row's name: the first part opens the entry; any later brand token
   // is its own link ("MOMENT (formerly Oratory)").
   function nameHtml(title, href) {
-    const t = String(title);
-    TOKEN.lastIndex = 0;
-    const first = TOKEN.exec(t);
-    let cut = t.length;
-    if (first) {
-      const second = TOKEN.exec(t);
-      cut = second ? second.index : t.length;
-      if (first.index === 0 && !second) cut = t.length;
-    }
-    TOKEN.lastIndex = 0;
-    const head = `<a class="open" href="${href}">${esc(plain(t.slice(0, cut)))}</a>`;
-    return cut < t.length ? `${head}${rich(t.slice(cut))}` : head;
+    return `<a class="open" href="${href}">${esc(plain(title))}</a>`;
   }
   // "early phase: i set up kickoff…" → tag "early phase" + note.
   function statusHtml(s) {
@@ -207,6 +196,51 @@
         '</ul>').join('') + '</div>';
   }
 
+  // ---------- Hats: "likely fit for" titles with a hover card of fitting work ----------
+  const hatsHtml = () => (CV.hats || []).map((h, i) =>
+    `<span class="hat" tabindex="0" data-hat="${i}">${esc(h.label)}</span>`).join('<span class="hat-sep"> · </span>');
+  const hatPop = el('div', 'hat-pop');
+  hatPop.hidden = true;
+  document.body.append(hatPop);
+  let hatTimer = null, hatOn = null;
+  function showHat(span) {
+    clearTimeout(hatTimer);
+    const h = CV.hats[+span.dataset.hat];
+    if (!h) return;
+    hatOn = span;
+    const items = h.ids.map((id) => byId.get(id) && byId.get(id).item).filter(Boolean);
+    hatPop.innerHTML = `<p class="hp-title">${esc(h.label)}</p><p class="hp-blurb">${esc(h.blurb)}</p><ul>` +
+      items.map((it) => `<li><a href="#${esc(it.id)}">${esc(plain(it.title))}</a> <span>${esc(plain(it.sub || ''))}</span></li>`).join('') + '</ul>';
+    hatPop.hidden = false;
+    const r = span.getBoundingClientRect();
+    const w = hatPop.offsetWidth;
+    hatPop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+    const cellBottom = (span.closest('.cell') || span).getBoundingClientRect().bottom;
+    hatPop.style.top = (cellBottom - 1) + 'px';
+  }
+  function hideHatSoon() {
+    clearTimeout(hatTimer);
+    hatTimer = setTimeout(() => { hatPop.hidden = true; hatOn = null; }, 160);
+  }
+  document.addEventListener('mouseover', (e) => {
+    const span = e.target.closest && e.target.closest('.hat');
+    if (span) showHat(span);
+    else if (e.target.closest && e.target.closest('.hat-pop')) clearTimeout(hatTimer);
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest && (e.target.closest('.hat') || e.target.closest('.hat-pop'))) hideHatSoon();
+  });
+  document.addEventListener('focusin', (e) => { if (e.target.classList && e.target.classList.contains('hat')) showHat(e.target); });
+  document.addEventListener('focusout', (e) => { if (e.target.classList && e.target.classList.contains('hat')) hideHatSoon(); });
+  // Touch: tap a title to toggle its card; tap a work item to open it.
+  document.addEventListener('click', (e) => {
+    const span = e.target.closest('.hat');
+    if (span) { if (hatOn === span && !hatPop.hidden) { hatPop.hidden = true; hatOn = null; } else showHat(span); return; }
+    if (e.target.closest('.hat-pop a')) { hatPop.hidden = true; hatOn = null; return; }
+    if (!e.target.closest('.hat-pop')) { hatPop.hidden = true; hatOn = null; }
+  });
+  window.addEventListener('scroll', () => { if (!hatPop.hidden) { hatPop.hidden = true; hatOn = null; } }, true);
+
   // ---------- Header: title, nav, zoom, timeline switch, tabs ----------
   const tabLinks = [];
   const zoomLinks = {};
@@ -236,7 +270,7 @@
       row('head', corner, el('h1', 'cell title', esc(CV.title))),
       row('sub', el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`)),
       ...facts.map(([label, value]) => row('fact', el('div', 'cell gutter'),
-        el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${rich(value)}</span>`))),
+        el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${value === '@hats' ? hatsHtml() : rich(value)}</span>`))),
     );
 
     const colC = el('div', 'top-col c');
@@ -364,16 +398,17 @@
       g.items.forEach((item) => {
         n += 1;
         const href = hashFor(tab.id, item.id, zoom);
+        // Cells are plain text; links live in the popup card.
         const see = item.see
           ? `<span class="muted">${esc(item.see)}</span>`
-          : item.site ? `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0]).replace(/\./g, '<wbr>.')}&nbsp;↗</a>`
+          : item.site ? `<span>${esc(item.site[0]).replace(/\./g, '<wbr>.')}</span>`
           : '<span class="muted">walkthrough on request</span>';
-        const studio = item.studio ? brandLink(item.studio === 'moment' ? 'MOMENT' : 'Oratory') : '';
+        const studio = item.studio ? esc(item.studio === 'moment' ? 'MOMENT' : 'Oratory') : '';
         const vals = {
           name: `<span class="nm">${nameHtml(item.title, href)}</span>`,
-          client: `<span class="c-name">${nameHtml(item.title, href)}</span><span class="c-what">${rich(item.what)}</span>`,
+          client: `<span class="c-name">${nameHtml(item.title, href)}</span><span class="c-what">${esc(plain(item.what))}</span>`,
           st: `${studio}<span class="dot"> · </span><span class="ty">${esc(item.type)}</span>${item.stack ? `<span class="stk">${esc(item.stack)}</span>` : ''}`,
-          sub: rich(item.sub) + (item.also ? `<span class="also">${esc(item.also)}</span>` : ''), when: esc(whenOf(item)), len: esc(lengthOf(item)),
+          sub: esc(plain(item.sub)) + (item.also ? `<span class="also">${esc(item.also)}</span>` : ''), when: esc(whenOf(item)), len: esc(lengthOf(item)),
           status: statusHtml(item.status), see,
         };
         const r = row({ cls: 'entry', num: n, texts: textCols.map(([k]) => vals[k]) });
@@ -520,11 +555,15 @@
     const facts = item.studio
       ? `<p class="c-facts">${brandLink(item.studio === 'moment' ? 'MOMENT' : 'Oratory')} · ${esc(item.type)}<br>${esc(item.status)}${item.see ? '<br>' + esc(item.see) : !item.site ? '<br>walkthrough on request' : ''}</p>`
       : '';
+    const siteLink = item.site && !(item.links || []).some(([, h]) => h === item.site[1])
+      ? `<p class="c-site"><a href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0])} ↗</a></p>`
+      : '';
     const len = lengthOf(item);
     commentBody.innerHTML = `
       <h2 id="comment-title">${rich(item.title)}</h2>
       <p class="c-sub"><em>${rich(item.sub)}</em>${item.also ? `<br><span class="c-also">${esc(item.also)}</span>` : ''}<br>${esc(whenOf(item))}${len ? ` <span class="c-len">· ${esc(len)}</span>` : ''}</p>
       ${facts}
+      ${siteLink}
       ${(item.body || []).map((p) => `<p>${rich(p)}</p>`).join('')}
       ${booksHtml(item)}
       ${item.stack ? `<p class="c-stack">built with ${esc(item.stack)}</p>` : ''}

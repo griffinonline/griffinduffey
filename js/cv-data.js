@@ -38,7 +38,18 @@ window.CV = {
   facts: [
     ['currently based in', 'greenville, sc'],
     ['previously at', '[MOMENT]'],
-    ['likely fit for', 'design engineer · forward-deployed engineer · ai implementation · technical project lead'],
+    ['likely fit for', '@hats'],
+  ],
+  // The 'likely fit for' titles. Hovering one shows the work that fits it.
+  hats: [
+    { label: 'design engineer', blurb: 'figma to production: real sites with a cms, forms and deploys.',
+      ids: ['allobrain', 'g360', 'handled', 'suppli', 'less', 'musubi', 'devinci', 'throw', 'votive-site', 'wescarroll'] },
+    { label: 'forward-deployed engineer', blurb: 'sitting with a client, finding the real problem, shipping the fix.',
+      ids: ['tahoe', 'allobrain', 'g360', 'nps-prism', 'votive-back-office', 'handoff-checklist'] },
+    { label: 'ai implementation', blurb: 'putting ai to work inside a team or a business.',
+      ids: ['sheaf', 'pm-app', 'oratory-ops', 'intake', 'votive-back-office', 'money-mode'] },
+    { label: 'technical project lead', blurb: 'scope, timelines, client calls and the handoff.',
+      ids: ['moment-job', 'tahoe', 'nps-prism', 'scite', 'qase', 'netbird', 'emdash'] },
   ],
   note: 'draft',
   now: '2026-11',

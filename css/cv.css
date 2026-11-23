@@ -471,7 +471,7 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
    from the name row down through the tabs. Header rows stay normal height;
    the photo is sized to their total. Photo aspect ~1.47 (606x891). */
 .top { --pp: 0.4rem; --tabsh: 1.75rem; --nfacts: 3;
-  --ph: calc(var(--row) * 1.25 + var(--row) * (1 + var(--nfacts)) + var(--tabsh));
+  --ph: calc(var(--row) * 1.25 + var(--row) * (1 + var(--nfacts)));
   --pw: calc((var(--ph) - 2 * var(--pp)) / 1.47); }
 .top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
 .top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; }
@@ -533,3 +533,21 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   .top-upper { position: relative; }
   .cell.bio { padding-left: 0.6rem; font-size: 0.875rem; }
 }
+
+/* Tabs run from the far left, under the photo */
+.top .trow.tabs > .gutter { width: var(--gutter); }
+
+/* "likely fit for" titles: hover (or tap) for a card of fitting work */
+.hat { cursor: help; text-decoration: underline dotted; text-decoration-color: #aaa; text-underline-offset: 0.2em; }
+.hat:hover, .hat:focus-visible { color: var(--link); text-decoration-color: currentColor; outline: none; }
+.hat-pop {
+  position: fixed; z-index: 60; max-width: 22rem; min-width: 15rem;
+  background: #fff; border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 0.6rem 0.8rem 0.7rem; font-size: 0.9375rem; line-height: 1.35; font-style: normal;
+  white-space: normal;
+}
+.hat-pop .hp-title { font-style: italic; }
+.hat-pop .hp-blurb { color: #666; margin: 0.15rem 0 0.45rem; }
+.hat-pop ul { list-style: none; margin: 0; padding: 0; }
+.hat-pop li { padding: 0.12rem 0; }
+.hat-pop li span { color: #888; font-size: 0.875em; }
