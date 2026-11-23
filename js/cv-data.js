@@ -92,6 +92,7 @@ window.CV = {
   facts: [
     ['currently based in', 'greenville, sc'],
     ['previously at', '[MOMENT]'],
+    ['skills', 'figma · web dev (next.js, astro, sanity) · ai-assisted building · client success · project leadership · brand + identity · integrations + automations'],
     ['likely fit for', '@hats'],
   ],
   // The 'likely fit for' titles. Hovering one shows the work that fits it.

@@ -470,7 +470,7 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 /* Top-left corner: scanned ID photo + signature, filling the corner column
    from the name row down through the tabs. Header rows stay normal height;
    the photo is sized to their total. Photo aspect ~1.47 (606x891). */
-.top { --pp: 0.4rem; --tabsh: 1.75rem; --nfacts: 3;
+.top { --pp: 0.4rem; --tabsh: 1.75rem; --nfacts: 4;
   --ph: calc(var(--row) * 1.25 + var(--row) * (1 + var(--nfacts)) + var(--tabsh));
   --pw: calc((var(--ph) - 2 * var(--pp)) / 1.47); }
 .top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
