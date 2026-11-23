@@ -467,11 +467,16 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 .comment .c-books ul { list-style: none; margin: 0; padding: 0; }
 .comment .c-books li { padding: 0.12rem 0; line-height: 1.3; }
 
-/* Top-left corner: scanned ID photo hangs over the header rows like a pasted-in picture */
-.top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; }
-.top .gutter.corner a { position: absolute; top: 0; left: 0; width: var(--gutter); display: block; line-height: 0; }
-.top .gutter.corner img {
-  width: 100%; height: auto; display: block;
-  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  background: #fff;
+/* Top-left corner: scanned ID photo + signature. The header's first column
+   widens to hold it (with a little padding) and the title row grows so the
+   photo fits the three header rows exactly. Photo aspect ~1.47 (606x891). */
+.top { --pw: 5.5rem; --pp: 0.45rem; --tabsh: 1.75rem; --ph: calc(var(--pw) * 1.47 + 2 * var(--pp)); }
+.top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
+.trow.head, .trow.head > .cell { height: calc(var(--ph) - var(--row) - var(--tabsh)); }
+.trow.head > .cell { align-items: flex-end; padding-bottom: 0.3rem; }
+.top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; align-items: flex-start; }
+.top .gutter.corner a { position: absolute; top: var(--pp); left: var(--pp); width: var(--pw); display: block; line-height: 0; }
+.top .gutter.corner img { width: 100%; height: auto; display: block; outline: 1px solid var(--line); }
+@media (max-width: 720px) {
+  .top { --pw: 3.75rem; --tabsh: 2.25rem; }
 }
