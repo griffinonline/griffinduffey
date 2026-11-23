@@ -36,6 +36,7 @@ window.CV = {
   ],
   // Right-hand header column: what i'm reading (static, update by hand; the
   // Goodreads feed is dead) + Last.fm listening (live) + links elsewhere.
+  bookCall: '', // check: Griffin's cal.com (or similar) booking link; empty = email fallback
   reading: [['2666', 'roberto bolaño', '/assets/cv/book-2666.webp']], // cover: Open Library (Griffin's Anagrama edition)
   lastfm: { user: 'griffinduffey', key: '9a77942fe3dca583972d56be9e7629b5' },
   elsewhere: [

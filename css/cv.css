@@ -717,3 +717,11 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
 .sq .book { display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .sq .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 .cell.hire .hire-t { font-size: 0.9375rem; }
+
+/* Book a call: a solid little button cell at the end of the open-to-work row */
+.top-col.c .trow.sub > .cell.book-call {
+  flex: none; padding: 0 0.75rem; justify-content: center; text-decoration: none;
+  background: #1d6b39; color: #fff; font-size: 0.875rem; border-right-color: #1d6b39;
+}
+.top-col.c .trow.sub > .cell.book-call:hover { background: #155a2e; text-decoration: none; }
+.cell.book-call .ext-mark { color: #cfe8d7; }

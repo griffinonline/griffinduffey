@@ -305,7 +305,14 @@
     navRow.querySelectorAll('a.nav').forEach((a, k) => { const h = navLinks[k][1]; a.href = h; if (/^https?:/.test(h)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } });
     // "open to work" takes the second row (no zoom control any more).
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
-    const subRow = row('sub', el('a', 'cell hire', `<span class="hire-dot" aria-hidden="true"></span><span class="hire-t">open to work</span><span class="hire-s">full-time or projects · say hi →</span>`));
+    const subRow = row('sub', el('a', 'cell hire', `<span class="hire-dot" aria-hidden="true"></span><span class="hire-t">open to work</span><span class="hire-s">full-time or projects</span>`));
+    // Book a call: its own cell at the end of the row. Until CV.bookCall is set
+    // (cal.com link), it falls back to an email asking for a call.
+    const callHref = CV.bookCall || (navHref('email').split('?')[0] + '?subject=call');
+    const call = el('a', 'cell book-call', `book a call${CV.bookCall ? '<span class="ext-mark">↗</span>' : ''}`);
+    call.href = callHref;
+    if (CV.bookCall) { call.target = '_blank'; call.rel = 'noopener noreferrer'; }
+    subRow.append(call);
     subRow.querySelector('a.hire').href = navHref('email');
     // Listening + reading: two plain cells side by side under that.
     const side = el('div', 'cell fill side', `<div class="side-inner">
