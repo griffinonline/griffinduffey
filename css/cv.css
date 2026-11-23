@@ -223,8 +223,14 @@ body[data-tl='b'] .top .zoom { display: none; }
 .is-table .c-name { font-weight: 700; }
 .is-table .c-what { font-size: 0.9375rem; color: #555; }
 .is-table .row.entry .t-st { display: block; color: #444; }
-.is-table .t-st .brand,
-.is-table .t-st .ty { white-space: nowrap; }
+.is-table .t-st .brand { white-space: nowrap; }
+/* The type moves to its own line as a unit, and only wraps if it can't fit there. */
+.is-table .t-st .ty { display: inline-block; max-width: 100%; }
+/* Second lines: how the site was built (under the type), extra role (under my role). */
+.is-table .t-st .stk,
+.is-table .t-sub .also { display: block; margin-top: 0.15rem; font-size: 0.875rem; color: #777; }
+.is-table .row.entry .t-sub { display: block; }
+.comment .c-also { color: #666; }
 .is-table .row.entry .t-status { flex-direction: column; align-items: flex-start; gap: 0.1rem; }
 .is-table .st { font-size: 0.9375rem; letter-spacing: 0.01em; color: #6a6a6a; }
 .is-table .st-live { color: #1d7a3e; }
@@ -405,8 +411,15 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   .is-table .row.entry .t-client { padding-top: 0.6rem; }
   .is-table .row.entry .t-see { padding-bottom: 0.65rem; }
   .is-table .row.entry .t:not(.t-client) { font-size: 0.9375rem; flex-direction: row; gap: 0; }
-  .is-table .row.entry .t-st { display: block; }
-  .is-table .row.entry .t-st::before { display: inline-block; }
+  .is-table .row.entry .t-st,
+  .is-table .row.entry .t-sub { display: block; padding-left: 6.85rem; text-indent: -6.25rem; }
+  .is-table .row.entry .t-st::before,
+  .is-table .row.entry .t-sub::before { display: inline-block; text-indent: 0; }
+  .is-table .t-st .ty { text-indent: 0; }
+  .is-table .t-st .stk,
+  .is-table .t-sub .also { display: inline; margin: 0; font-size: inherit; }
+  .is-table .t-st .stk::before,
+  .is-table .t-sub .also::before { content: ' · '; }
   .is-table .row.entry .t:not(.t-client)::before {
     content: attr(data-label);
     flex: none;

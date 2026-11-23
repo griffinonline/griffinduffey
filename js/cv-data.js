@@ -168,229 +168,291 @@ window.CV = {
       color: '#b9a4ff',
       items: [
         {
+          // check: stack unknown; not public yet.
           // check: Ravera is unannounced, so the product isn't named here.
           // check: confirm Griffin ran the 11/3 kickoff.
           // check: contract paper was Oratory's; branded MOMENT from 11/2.
           id: 'vitally', title: 'Vitally', sub: 'Project manager', year: 2026, start: '2026-11',
-          what: 'site for a new vitally product, brand by studio freight', studio: 'moment', type: 'site build',
+          what: 'site for a new vitally product, brand by studio freight', studio: 'moment', type: 'brand + site sprint',
           status: 'started: i ran kickoff and the first week before i left', see: 'not public yet',
           body: ['Website for a new Vitally product, with the brand by Studio Freight. I ran the kickoff, gathered the client\'s positioning and product UI into one place, and set up the stack conversation. I left a week in.'],
           links: [],
         },
         {
+          // check: stack unknown; I left before the build.
           // check: confirm how much of NetBird's kickoff Griffin ran.
           id: 'netbird', title: 'NetBird', sub: 'Project manager, research', year: 2026, start: '2026-10', end: '2026-11',
-          what: 'brand + site for an open-source networking company', studio: 'moment', type: 'sprint',
+          what: 'brand + site for an open-source networking company', studio: 'moment', type: 'brand + site sprint',
           status: 'early phase: i set up kickoff and ran the first weeks',
           body: ['Brand and website sprint, the first run on the 4-week model. I set up the project hub, booked the reviews and gathered inspiration and product UI for the team. I left before the build.'],
           links: [],
         },
         {
+          // check: stack unknown; I left before the build.
           id: 'emdash', title: 'Emdash', sub: 'Project manager', year: 2026, start: '2026-10', end: '2026-11',
-          what: 'the first [MOMENT] brand + site sprint', studio: 'moment', type: 'sprint',
+          what: 'the first [MOMENT] brand + site sprint', studio: 'moment', type: 'brand + site sprint',
           status: 'early phase: i wrote the intake and ran the first weeks',
           body: ['The first [MOMENT] brand and site sprint. I wrote the client intake it ran on (a long and a short version) and was on it until I left.'],
           links: [],
         },
         {
+          // check: default.com (11/23) is Next.js + Sanity, but the only repo is a static preview; can't tell if the MOMENT homepage shipped. Stack left blank.
           // check: status after Sept; oratory-ops still had it active.
           id: 'default', title: 'Default', sub: 'Project manager', year: 2026, start: '2026-08',
-          what: 'brand + homepage', studio: 'moment', type: 'brand + homepage', status: 'handed off',
+          what: 'brand + homepage', studio: 'moment', type: 'brand + site sprint', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
           id: 'allobrain', title: 'AlloBrain', sub: 'Project manager + main builder', year: 2026, start: '2026-08', end: '2026-09',
-          what: 'site for an ai contact-center platform', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for an ai contact-center platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['allobrain.com', 'https://www.allobrain.com'], featured: true,
           body: [
             'Marketing site for an AI contact-center platform. Built the site and its Sanity setup, ran motion prototypes for the review calls, and handed it off so a non-technical owner can keep editing it with AI.',
           ],
           links: [['allobrain.com', 'https://www.allobrain.com'], ['case study', '/work-allobrain']],
-          stack: 'Astro, Sanity, Vercel',
+          stack: 'custom · astro · sanity',
         },
         {
           id: 'g360', title: 'G360 Technologies', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-09',
-          what: 'site for an ai security company', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for an ai security company', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['g360technologies.com', 'https://www.g360technologies.com'], featured: true,
           body: ['Site for an AI security company (PromptVault, Repo Audit). Others committed too, but I did most of the development, built from the Figma file, then handed the domain, DNS and services over to the client.'],
           links: [['g360technologies.com', 'https://www.g360technologies.com'], ['case study', '/work-g360']],
+          stack: 'custom · next.js',
         },
         {
+          // npsprism.com on 11/23 is still the old site (no Next.js), so the Oratory build isn't live yet. Stack from the repo.
           id: 'nps-prism', title: 'NPS Prism (Bain)', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-10',
-          what: 'site for bain\'s cx benchmarking product', studio: 'oratory', type: 'site build', status: 'launching soon',
+          what: 'site for bain\'s cx benchmarking product', studio: 'oratory', type: 'brand + site sprint', status: 'launching soon',
           body: [
             'Marketing site for Bain\'s customer-experience benchmarking product. Only the homepage was designed, so I skinned every interior page from wireframes using the homepage\'s system, plus Sanity, forms and handoff docs. About 158 of roughly 190 commits.',
           ],
           links: [],
-          stack: 'Next.js, Tailwind, Sanity',
+          stack: 'custom · next.js · sanity',
         },
         {
+          // scite.ai on 11/23 is still the old react app (not the Next.js build), so not live yet. Stack from ~/coding/oratory/scite-oratory.
           id: 'scite', title: 'Scite', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-08',
-          what: 'site for an ai research assistant', studio: 'oratory', type: 'site build', status: 'launching soon',
+          what: 'site for an ai research assistant', studio: 'oratory', type: 'brand + site sprint', status: 'launching soon',
           body: ['New marketing site for an AI research assistant.'],
           links: [],
+          also: 'design + imagery support',
+          stack: 'custom · next.js',
         },
         {
+          // check: stack + site unknown.
           id: 'sol', title: 'Sol', sub: 'Project manager', year: 2026, start: '2026-06',
-          what: 'brand + homepage', studio: 'oratory', type: 'brand + homepage', status: 'handed off',
+          what: 'brand + homepage', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
-          // check: itshandled.ai was still on Framer in October; confirm the live site is the build.
+          // itshandled.ai checked 11/23: Next.js on Vercel, matches the oratorydesign/itshandled-marketing-site repo.
           id: 'handled', title: 'Handled', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
-          what: 'brand + site for an ai teammate for cpg brands', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'brand + site for an ai teammate for cpg brands', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['itshandled.ai', 'https://www.itshandled.ai'],
           body: ['Brand and site for an AI teammate made for consumer packaged goods. Worked through batched client feedback and kept changes small and on brand.'],
           links: [['itshandled.ai', 'https://www.itshandled.ai']],
+          also: 'design + imagery support',
+          stack: 'custom · next.js',
         },
         {
+          // Stack from tahoebio/tahoe-marketing-site (Next.js + Sanity on Cloudflare); the live HTML keeps the old Webflow export markup.
           id: 'tahoe', title: 'Tahoe', sub: 'Project manager; facilitated the move off Webflow into a custom build', year: 2026, start: '2026-06', end: '2026-10',
           what: 'site for a biology ai lab, plus the tara launch', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
           site: ['tahoelabs.ai', 'https://tahoelabs.ai'], featured: true,
           body: ['Site for a biology AI lab. Moved it off Webflow into a custom build, set up the staging-to-production flow and Sanity content, and launched the Tara campaign page.'],
           links: [['tahoelabs.ai', 'https://tahoelabs.ai'], ['case study', '/work-tahoe']],
-          stack: 'Sanity, Cloudflare',
+          also: 'design + imagery support',
+          stack: 'custom · next.js · sanity',
         },
         {
           // check: the client planned its own go-live for 11/9; confirm it's live.
           id: 'suppli', title: 'Suppli', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
-          what: 'site for a credit platform for the physical economy', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for a credit platform for the physical economy', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['gosuppli.com', 'https://www.gosuppli.com'],
           body: ['Site for a credit platform for the physical economy. Built pages and Sanity content, worked the client punchlist down, and handed the repo over.'],
           links: [['gosuppli.com', 'https://www.gosuppli.com']],
-          stack: 'Next.js, Sanity, Vercel',
+          also: 'design + imagery support',
+          stack: 'custom · next.js · sanity',
         },
         {
+          // check: productschool.com (11/23) shows the refresh's hero ("The learning platform for AI builders"), but on Product School's own Next.js + Contentful site; confirm how much of the refresh shipped.
           id: 'product-school', title: 'Product School', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-08',
-          what: 'site refresh', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'site refresh', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['productschool.com', 'https://productschool.com'],
           body: ['Site refresh.'],
-          links: [],
+          links: [['productschool.com', 'https://productschool.com']],
+          stack: 'custom · next.js',
         },
         {
+          // arrows.to (11/23) is Astro; the oratorydesign arrows repos are Next.js/Vite, so the client may have rebuilt it.
           // check: arrows.to is inferred from the client's email domain.
           id: 'arrows', title: 'Arrows', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-07',
-          what: 'site for a sales deal-playbook tool', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for a sales deal-playbook tool', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['arrows.to', 'https://arrows.to'],
           body: ['Marketing site for a sales deal-playbook tool.'],
           links: [['arrows.to', 'https://arrows.to']],
+          stack: 'custom · astro',
         },
         {
+          // check: magentrix.com (11/23) is a Webflow site; no Oratory repo, so confirm it's the Oratory homepage.
           id: 'magentrix', title: 'Magentrix', sub: 'Project manager', year: 2026, start: '2026-05',
-          what: 'brand + homepage', studio: 'oratory', type: 'brand + homepage', status: 'handed off',
+          what: 'brand + homepage', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['magentrix.com', 'https://www.magentrix.com'],
           body: ['Brand and homepage.'],
-          links: [],
+          links: [['magentrix.com', 'https://www.magentrix.com']],
+          stack: 'webflow',
         },
         {
           // check: less.tech is inferred from the client's email domain.
           // check: Griffin called it "Feature Less"; oratory-ops names the client "Less".
           id: 'less', title: 'Less', sub: 'Project manager', year: 2026, start: '2026-05',
-          what: 'site for a data workflow tool', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for a data workflow tool', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['less.tech', 'https://www.less.tech'], featured: true,
           body: ['Marketing site for a data workflow tool.'],
           links: [['less.tech', 'https://www.less.tech']],
+          stack: 'custom · next.js',
         },
         {
+          // check: stack unknown (blindzebra.com is a sports site, not clearly the client).
           id: 'blind-zebra', title: 'Blind Zebra', sub: 'Project manager', year: 2026, start: '2026-05',
-          what: 'ongoing site work', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'ongoing site work', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Ongoing site work, billed hourly.'],
           links: [],
         },
         {
+          // check: commodityai.com (11/23) is Next.js on Vercel, but there's no Oratory repo for it; confirm before marking it live. Stack left blank.
           id: 'commodityai', title: 'CommodityAI', sub: 'Project manager', year: 2026, start: '2026-05',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
+          // flowgenlabs.com (11/23): Next.js; oratory-ops says custom build in the client's FlowGenLabs/flowgenlabs-marketing repo.
           id: 'flowgen', title: 'Flowgen', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['flowgenlabs.com', 'https://flowgenlabs.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['flowgenlabs.com', 'https://flowgenlabs.com']],
+          stack: 'custom · next.js',
         },
         {
+          // productpartners.com (11/23): Next.js on Vercel, same title as the oratorydesign/product-partners-marketing repo.
           id: 'product-partners', title: 'Product Partners', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['productpartners.com', 'https://productpartners.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['productpartners.com', 'https://productpartners.com']],
+          stack: 'custom · next.js',
         },
         {
+          // Stack from the oratorydesign/karumi-marketing repo.
           // karumi.com now says the company has closed, so no link.
           id: 'karumi', title: 'Karumi', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off (company has since closed)',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off (company has since closed)',
           body: ['Marketing site. The company has since closed.'],
           links: [],
+          stack: 'custom · next.js',
         },
         {
-          id: 'kyckr', title: 'Kyckr', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          // check: kyckr.com (11/23) is Framer; no Oratory repo, so confirm it's the Oratory build.
+          id: 'kyckr', title: 'Kyckr', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['kyckr.com', 'https://www.kyckr.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['kyckr.com', 'https://www.kyckr.com']],
+          stack: 'framer',
         },
         {
+          // Stack: live Next.js (11/23) + the oratorydesign/umony-marketing repo (Sanity).
           // check: umony.com is inferred from the client's email domain.
           id: 'umony', title: 'Umony', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'site for a communications compliance platform', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for a communications compliance platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['umony.com', 'https://www.umony.com'],
           body: ['Marketing site for a communications compliance platform.'],
           links: [['umony.com', 'https://www.umony.com']],
+          stack: 'custom · next.js · sanity',
         },
         {
+          // musubilabs.ai sits behind a Vercel bot check; stack from the oratorydesign/musubi-marketing repo.
           // check: musubilabs.ai is inferred from the client's email domain.
-          id: 'musubi', title: 'Musubi', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'live',
+          id: 'musubi', title: 'Musubi', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['musubilabs.ai', 'https://www.musubilabs.ai'], featured: true,
           body: ['Marketing site.'],
           links: [['musubilabs.ai', 'https://www.musubilabs.ai']],
+          stack: 'custom · next.js · sanity',
         },
         {
+          // Stack: live Next.js (11/23) + the oratorydesign/qase-marketing repo (Sanity).
           // check: qase.io is inferred from the client's email domain.
           id: 'qase', title: 'Qase', sub: 'Project manager', year: 2026, start: '2026-04', end: '2026-05',
-          what: 'site for a test management platform', studio: 'oratory', type: 'site build', status: 'live',
+          what: 'site for a test management platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['qase.io', 'https://qase.io'], featured: true,
           body: ['Marketing site for a test management platform.'],
           links: [['qase.io', 'https://qase.io']],
+          stack: 'custom · next.js · sanity',
         },
         {
-          id: 'passetto', title: 'Passetto', sub: 'Project manager', year: 2026, start: '2026-04',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          // check: passetto.com (11/23) is Webflow (B2B SaaS marketing measurement); confirm it's the Oratory build.
+          id: 'passetto', title: 'Passetto', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['passetto.com', 'https://www.passetto.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['passetto.com', 'https://www.passetto.com']],
+          stack: 'webflow',
         },
         {
+          // check: neuron7.ai (11/23) is Webflow; confirm it's the Oratory build.
           id: 'neuron7', title: 'Neuron7', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['neuron7.ai', 'https://www.neuron7.ai'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['neuron7.ai', 'https://www.neuron7.ai']],
+          stack: 'webflow',
         },
         {
+          // check: advancehq.com (11/23, Slack channel #advancehq-oratory-ext) is Framer; confirm it's the Oratory build.
           id: 'advance', title: 'Advance', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['advancehq.com', 'https://advancehq.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['advancehq.com', 'https://advancehq.com']],
+          stack: 'framer',
         },
         {
+          // articlegalaxy.com (11/23): Next.js + Sanity on Vercel, same stack as the oratorydesign/article-galaxy-marketing-site repo.
           id: 'article-galaxy', title: 'Article Galaxy', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['articlegalaxy.com', 'https://www.articlegalaxy.com'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['articlegalaxy.com', 'https://www.articlegalaxy.com']],
+          stack: 'custom · next.js · sanity',
         },
         {
+          // revvue.ai (11/23) is Framer; oratory-ops has a #switch-framer-revvue channel and ownership moved to the client in June.
           id: 'revvue', title: 'RevVue', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['revvue.ai', 'https://www.revvue.ai'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['revvue.ai', 'https://www.revvue.ai']],
+          stack: 'framer',
         },
         {
-          id: 'neurawork', title: 'Neurawork', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          // check: neurawork.ai (11/23, German AI consultancy) is Framer; confirm it's the Oratory build.
+          id: 'neurawork', title: 'Neurawork', sub: 'Project manager + builder', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
+          site: ['neurawork.ai', 'https://neurawork.ai'],
           body: ['Marketing site.'],
-          links: [],
+          links: [['neurawork.ai', 'https://neurawork.ai']],
+          stack: 'framer',
         },
         {
+          // check: two Tenzos exist (tenzo.ai, AI recruiter, Next.js; gotenzo.com, restaurant analytics, Webflow); not sure which is the client. Stack + link left blank.
           id: 'tenzo', title: 'Tenzo', sub: 'Project manager', year: 2026, start: '2026-03',
-          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
+          what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },

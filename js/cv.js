@@ -333,14 +333,14 @@
         const href = hashFor(tab.id, item.id, zoom);
         const see = item.see
           ? `<span class="muted">${esc(item.see)}</span>`
-          : item.site ? `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0])}&nbsp;↗</a>`
+          : item.site ? `<a class="ext" href="${esc(item.site[1])}"${ext(item.site[1])}>${esc(item.site[0]).replace(/\./g, '<wbr>.')}&nbsp;↗</a>`
           : '<span class="muted">walkthrough on request</span>';
         const studio = item.studio ? brandLink(item.studio === 'moment' ? 'MOMENT' : 'Oratory') : '';
         const vals = {
           name: `<span class="nm">${nameHtml(item.title, href)}</span>`,
           client: `<span class="c-name">${nameHtml(item.title, href)}</span><span class="c-what">${rich(item.what)}</span>`,
-          st: `${studio}<span class="dot"> · </span><span class="ty">${esc(item.type)}</span>`,
-          sub: rich(item.sub), when: esc(whenOf(item)), len: esc(lengthOf(item)),
+          st: `${studio}<span class="dot"> · </span><span class="ty">${esc(item.type)}</span>${item.stack ? `<span class="stk">${esc(item.stack)}</span>` : ''}`,
+          sub: rich(item.sub) + (item.also ? `<span class="also">${esc(item.also)}</span>` : ''), when: esc(whenOf(item)), len: esc(lengthOf(item)),
           status: statusHtml(item.status), see,
         };
         const r = row({ cls: 'entry', num: n, texts: textCols.map(([k]) => vals[k]) });
@@ -490,10 +490,10 @@
     const len = lengthOf(item);
     commentBody.innerHTML = `
       <h2 id="comment-title">${rich(item.title)}</h2>
-      <p class="c-sub"><em>${rich(item.sub)}</em><br>${esc(whenOf(item))}${len ? ` <span class="c-len">· ${esc(len)}</span>` : ''}</p>
+      <p class="c-sub"><em>${rich(item.sub)}</em>${item.also ? `<br><span class="c-also">${esc(item.also)}</span>` : ''}<br>${esc(whenOf(item))}${len ? ` <span class="c-len">· ${esc(len)}</span>` : ''}</p>
       ${facts}
       ${(item.body || []).map((p) => `<p>${rich(p)}</p>`).join('')}
-      ${item.stack ? `<p class="c-stack">${esc(item.stack)}</p>` : ''}
+      ${item.stack ? `<p class="c-stack">built with ${esc(item.stack)}</p>` : ''}
       ${links.length ? `<p class="c-links">${links.join('<br>')}</p>` : ''}
       <p class="c-nav"><button type="button" data-step="-1">&larr; prev</button><button type="button" data-step="1">next &rarr;</button></p>`;
     viewer.hidden = false;
@@ -543,6 +543,13 @@
     if (b) step(Number(b.dataset.step));
   });
   media.addEventListener('click', closeAndClean);
+  // A click anywhere outside the popup closes it. Rows and links are left
+  // alone: a row opens its own entry, a link navigates.
+  document.addEventListener('click', (e) => {
+    if (current < 0 || viewer.hidden) return;
+    if (e.target.closest('#viewer, .row.entry, a, button')) return;
+    closeAndClean();
+  });
   document.addEventListener('keydown', (e) => {
     if (current < 0) return;
     if (e.key === 'Escape') closeAndClean();
@@ -555,8 +562,8 @@
   pr.innerHTML = `<h1>${esc(CV.title)}</h1><p>${esc(CV.subtitle)}</p>` +
     CV.sections.map((s) => `<section><h2>${esc(s.name)}</h2>` +
       s.items.map((i) => {
-        const extra = i.studio ? `<br>${esc(plain(i.what))}. ${esc(i.studio)}, ${esc(i.type)}, ${esc(i.status)}.` : `<br>${esc(plain((i.body || [])[0] || ''))}`;
-        return `<div class="p-item"><span class="p-years">${esc(whenOf(i))}</span><div><strong>${esc(plain(i.title))}</strong>, ${esc(plain(i.sub))}${extra}</div></div>`;
+        const extra = i.studio ? `<br>${esc(plain(i.what))}. ${esc(i.studio)}, ${esc(i.type)}${i.stack ? ` (${esc(i.stack)})` : ''}, ${esc(i.status)}.` : `<br>${esc(plain((i.body || [])[0] || ''))}`;
+        return `<div class="p-item"><span class="p-years">${esc(whenOf(i))}</span><div><strong>${esc(plain(i.title))}</strong>, ${esc(plain(i.sub))}${i.also ? `, ${esc(i.also)}` : ''}${extra}</div></div>`;
       }).join('') +
       `</section>`).join('');
 
