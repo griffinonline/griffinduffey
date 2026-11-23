@@ -2,40 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV — Griffin Duffey</title>
-  <meta name="description" content="CV of Griffin Bennett Duffey: project lead, designer and builder. MOMENT and Oratory projects, Votive, research and education.">
-  <link rel="icon" type="image/png" href="/assets/fav.png">
-  <link rel="apple-touch-icon" href="/assets/webclip.png">
-  <link rel="stylesheet" href="/css/cv.css">
-  <link rel="stylesheet" href="/css/visuals/moment.css">
-  <link rel="stylesheet" href="/css/visuals/sheaf.css">
-  <link rel="stylesheet" href="/css/visuals/votive.css">
+  <title>Griffin Duffey</title>
+  <!-- The CV is the homepage now; keep old /cv links (and their #tab/item hashes) working. -->
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="/">
+  <script>location.replace('/' + location.hash);</script>
+  <meta http-equiv="refresh" content="0; url=/">
 </head>
-<body class="cv">
-  <header class="top" id="top"></header>
-  <section class="intro" id="intro" hidden></section>
-  <main class="sheet-wrap" id="sheet-wrap">
-    <div class="sheet" id="sheet" aria-label="CV"></div>
-  </main>
-
-  <div class="viewer" id="viewer" hidden>
-    <figure class="viewer-media" id="viewer-media" hidden></figure>
-    <aside class="comment" id="comment" role="dialog" aria-modal="false" aria-labelledby="comment-title">
-      <button class="comment-close" id="comment-close" type="button" aria-label="Close">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3l14 14M17 3L3 17" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <div id="comment-body"></div>
-    </aside>
-  </div>
-
-  <article class="print-cv" id="print-cv" aria-hidden="true"></article>
-
-  <script src="/js/cv-data.js"></script>
-  <!-- Featured-work visuals: each file registers window.CVVisuals[name] = (el) => {} -->
-  <script src="/js/visuals/moment.js"></script>
-  <script src="/js/visuals/sheaf.js"></script>
-  <script src="/js/visuals/votive.js"></script>
-  <script src="/js/cv.js"></script>
-</body>
+<body><a href="/">griffin duffey</a></body>
 </html>

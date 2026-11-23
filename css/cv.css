@@ -504,7 +504,7 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 .top-upper { display: flex; align-items: stretch; }
 .top-col { display: flex; flex-direction: column; }
 /* Text width is fixed (photo column added on top), so wrapping can't feed back into the photo size */
-.top-col.a { flex: 0 0 calc(var(--pw) + 2 * var(--pp) + clamp(22rem, 32vw, 30rem)); min-width: 0; }
+.top-col.a { flex: 0 0 calc(var(--pw) + 2 * var(--pp) + clamp(24rem, 34vw, 34rem)); min-width: 0; }
 .top-col.a .trow > .title { flex: 1 1 auto; border-right-color: var(--line); padding-right: 0.6rem; }
 /* Long info rows (e.g. likely fit for) wrap instead of widening the column */
 .top-col.a .trow.fact, .top-col.a .trow.fact > .cell { height: auto; min-height: var(--row); }
@@ -582,3 +582,42 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
   .ft-visuals.two { grid-template-columns: minmax(0, 1fr); }
   .ft-stage { min-height: 20rem; }
 }
+
+/* Bio cell: text on top, a slow strip of work artifacts filling the rest */
+.cell.bio { display: flex; flex-direction: column; gap: 0.6rem; }
+.artifacts { flex: none; height: 5.5rem; margin-top: auto; overflow: hidden; position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.art-track { display: flex; gap: 0.6rem; height: 100%; width: max-content; animation: art-scroll 60s linear infinite; }
+.artifacts:hover .art-track { animation-play-state: paused; }
+.art-track figure { margin: 0; height: 100%; flex: none; }
+.art-track img { height: 100%; width: auto; display: block; border: 1px solid var(--line); background: #fff; }
+@keyframes art-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .art-track { animation: none; } }
+
+/* Right column: reading / listening / elsewhere */
+.cell.side { display: block; white-space: normal; padding: 0.45rem 0.6rem; font-size: 0.875rem; line-height: 1.35; overflow: hidden; }
+.side .side-h { color: #888; font-size: 0.75rem; margin-top: 0.45rem; }
+.side .side-h:first-child { margin-top: 0; }
+.side ul { list-style: none; margin: 0.1rem 0 0; padding: 0; }
+.side li { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side .muted { color: #999; }
+.side-links { margin-top: 0.1rem; }
+@media (max-width: 720px) {
+  .top-col.c .trow.rest { display: flex; }
+  .artifacts { height: 5rem; flex: none; }
+}
+
+/* Layout lock (no feedback loops): name column = photo + fixed text width,
+   bio = fixed width, the right column takes whatever is left. The photo's
+   size can only change the right column, which never changes the height. */
+.cell.bio { flex: 0 0 clamp(20rem, 30vw, 34rem); align-items: stretch; }
+.artifacts { width: 100%; min-width: 0; }
+.top-col.c { flex: 1 1 auto; min-width: 18rem; }
+.top-col.c .trow.head, .top-col.c .trow.sub { justify-content: flex-end; }
+@media (max-width: 1180px) {
+  .cell.bio { flex: 1 1 100%; }
+}
+/* The last info row stretches so the name column has no blank gap under it */
+.top-col.a > .trow:last-child { flex: 1 1 auto; }
+.top-col.a > .trow:last-child > .cell { height: auto; align-items: flex-start; }

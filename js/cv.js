@@ -241,6 +241,26 @@
   });
   window.addEventListener('scroll', () => { if (!hatPop.hidden) { hatPop.hidden = true; hatOn = null; } }, true);
 
+  // Last.fm: top albums this week (falls back to the latest track).
+  async function loadListening(ul) {
+    const lf = CV.lastfm;
+    if (!lf || !ul) return;
+    const api = (method, extra) => fetch(`https://ws.audioscrobbler.com/2.0/?method=${method}&user=${lf.user}&api_key=${lf.key}&format=json&${extra}`).then((r) => r.json());
+    try {
+      const d = await api('user.gettopalbums', 'period=7day&limit=3');
+      let rows = ((d.topalbums || {}).album || []).map((a) => [a.name, a.artist && a.artist.name, a.url]);
+      if (!rows.length) {
+        const r = await api('user.getrecenttracks', 'limit=1');
+        rows = ((r.recenttracks || {}).track || []).slice(0, 1).map((t) => [t.name, t.artist && t.artist['#text'], t.url]);
+      }
+      ul.innerHTML = rows.length
+        ? rows.map(([n, a, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer"><em>${esc(n)}</em></a>, ${esc(a || '')}</li>`).join('')
+        : '<li class="muted">nothing lately</li>';
+    } catch (e) {
+      ul.innerHTML = '<li class="muted">last.fm is quiet</li>';
+    }
+  }
+
   // ---------- Header: title, nav, zoom, timeline switch, tabs ----------
   const tabLinks = [];
   const zoomLinks = {};
@@ -279,11 +299,30 @@
     const subRow = row('sub', switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
     if (CV.note) subRow.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
     // One stretchy blank cell fills the rest of the column next to the fact rows.
-    colC.append(navRow, subRow, row('rest', el('div', 'cell fill')));
+    // Reading / listening / elsewhere fill the rest of the right column.
+    const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
+    const links = (CV.elsewhere || []).map(([l, h]) => [l, h === '@nav' ? navHref(l) : h]).filter(([, h]) => h);
+    const side = el('div', 'cell fill side', `
+      <p class="side-h">reading</p>
+      <ul class="side-reading">${(CV.reading || []).map(([t, a]) => `<li><em>${esc(t)}</em>, ${esc(a)}</li>`).join('')}</ul>
+      <p class="side-h">listening</p>
+      <ul class="side-listening"><li class="muted">…</li></ul>
+      <p class="side-h">elsewhere</p>
+      <p class="side-links">${links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join(' · ')}</p>`);
+    colC.append(navRow, subRow, row('rest', side));
+    loadListening(side.querySelector('.side-listening'));
 
     const upper = el('div', 'top-upper');
     upper.append(colA);
-    if (CV.bio && CV.bio.length) upper.append(el('div', 'cell bio', CV.bio.map((p) => `<p>${rich(p)}</p>`).join('')));
+    if (CV.bio && CV.bio.length) {
+      const bio = el('div', 'cell bio', `<div class="bio-text">${CV.bio.map((p) => `<p>${rich(p)}</p>`).join('')}</div>`);
+      // Carousel of work artifacts fills the space under the bio text.
+      if (CV.artifacts && CV.artifacts.length) {
+        const items = CV.artifacts.map(([src, alt]) => `<figure><img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" title="${esc(alt)}"></figure>`).join('');
+        bio.append(el('div', 'artifacts', `<div class="art-track">${items}${items.replace(/<figure>/g, '<figure aria-hidden="true">')}</div>`));
+      }
+      upper.append(bio);
+    }
     upper.append(colC);
 
     const r3 = el('nav', 'trow tabs');

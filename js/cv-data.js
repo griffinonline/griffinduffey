@@ -34,6 +34,31 @@ window.CV = {
   bio: [
     "i design and build websites, tools and the systems behind them, and i'm usually the person on the call with you too. most recently i ran projects and did most of the building at [oratory], which became [MOMENT], making sites for ai and software companies. before that i started votive, a chai company, and built its whole back office. i studied religion and philosophy at clemson and still read philosophy with friends. i genuinely like working with people.",
   ],
+  // Right-hand header column: what i'm reading (static, update by hand; the
+  // Goodreads feed is dead) + Last.fm listening (live) + links elsewhere.
+  reading: [['2666', 'roberto bolaño']],
+  lastfm: { user: 'griffinduffey', key: '9a77942fe3dca583972d56be9e7629b5' },
+  elsewhere: [
+    ['email', '@nav'], // reuses the email link from nav above
+    ['linkedin', ''],  // check: Griffin's LinkedIn URL
+    ['x', ''],         // check: Griffin's X handle
+    ['are.na', 'https://www.are.na/griffin-duffey'],
+    ['instagram', 'https://www.instagram.com/griffinduffey/'],
+  ],
+  // Bio cell carousel: random work artifacts (slow strip, pauses on hover).
+  artifacts: [
+    ['/assets/visuals/votive/label-chai.webp', 'votive chai label'],
+    ['/assets/visuals/votive/wordmark-star.webp', 'votive wordmark'],
+    ['/assets/visuals/votive/merch-shirt.webp', 'votive tee'],
+    ['/assets/visuals/votive/sticker-bottle.webp', 'bottle sticker'],
+    ['/assets/visuals/votive/label-white-peony.webp', 'white peony label'],
+    ['/assets/visuals/votive/wordmark-color.webp', 'votive wordmark, color'],
+    ['/assets/visuals/votive/merch-hoodie.webp', 'votive hoodie'],
+    ['/assets/visuals/votive/wordmark-stacked.webp', 'stacked wordmark'],
+    ['/assets/visuals/votive/jug-spin-still.webp', '3d scan, half-gallon chai'],
+    ['/assets/visuals/votive/wordmark-chalk.webp', 'chalk wordmark'],
+  ],
+
   // ---------- Featured work (landing tab) ----------
   // Each case: text on the left, visuals on the right. A visual is mounted by
   // name from window.CVVisuals (js/visuals/<file>.js); missing ones show a
@@ -68,7 +93,7 @@ window.CV = {
         'runs on an old macbook on my desk; the laptop is just a window onto it',
         'a public release with an email-gated download',
       ],
-      links: [['sheaf.to', 'https://sheaf.to'], ['case study →', '/work-sheaf']],
+      links: [['sheaf.to', 'https://sheaf.to']],
       visuals: [{ name: 'sheaf', caption: 'sheaf' }],
     },
     {
@@ -84,7 +109,7 @@ window.CV = {
         'shippo live rates at checkout and automatic ups labels',
         'books from bank csvs with a small command-line tool',
       ],
-      links: [['drinkvotive.com', 'https://www.drinkvotive.com'], ['case study →', '/work-votive']],
+      links: [['drinkvotive.com', 'https://www.drinkvotive.com']],
       visuals: [{ name: 'votive-brand', caption: 'brand' }, { name: 'votive-system', caption: 'orders, stripe + shippo' }],
     },
   ],
@@ -111,7 +136,6 @@ window.CV = {
   // Month zoom shows months back to here; older time folds into "earlier".
   monthsFrom: '2024-01',
   nav: [
-    ['home', '/'],
     ['email', 'mailto:griffinbennettduffey@gmail.com?subject=work'],
     ['print', '#print'],
   ],
@@ -289,7 +313,7 @@ window.CV = {
           body: [
             'Marketing site for an AI contact-center platform. Built the site and its Sanity setup, ran motion prototypes for the review calls, and handed it off so a non-technical owner can keep editing it with AI.',
           ],
-          links: [['allobrain.com', 'https://www.allobrain.com'], ['case study', '/work-allobrain']],
+          links: [['allobrain.com', 'https://www.allobrain.com']],
           stack: 'custom · astro · sanity',
         },
         {
@@ -297,7 +321,7 @@ window.CV = {
           what: 'site for an ai security company', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['g360technologies.com', 'https://www.g360technologies.com'], featured: true,
           body: ['Site for an AI security company (PromptVault, Repo Audit). Others committed too, but I did most of the development, built from the Figma file, then handed the domain, DNS and services over to the client.'],
-          links: [['g360technologies.com', 'https://www.g360technologies.com'], ['case study', '/work-g360']],
+          links: [['g360technologies.com', 'https://www.g360technologies.com']],
           stack: 'custom · next.js',
         },
         {
@@ -342,7 +366,7 @@ window.CV = {
           what: 'site for a biology ai lab, plus the tara launch', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
           site: ['tahoelabs.ai', 'https://tahoelabs.ai'], featured: true,
           body: ['Site for a biology AI lab. Moved it off Webflow into a custom build, set up the staging-to-production flow and Sanity content, and launched the Tara campaign page.'],
-          links: [['tahoelabs.ai', 'https://tahoelabs.ai'], ['case study', '/work-tahoe']],
+          links: [['tahoelabs.ai', 'https://tahoelabs.ai']],
           also: 'design + imagery support',
           stack: 'custom · next.js · sanity',
         },
@@ -546,7 +570,7 @@ window.CV = {
           id: 'intake', title: 'Client intake + launch doc', sub: 'Writer & developer', year: 2026, start: '2026-10', kind: 'internal',
           what: 'intake forms (long + short) and the delivery terms for sprints', studio: 'moment', type: 'internal tool', status: 'internal',
           body: ['The client intake for [MOMENT] sprints, in a long contract-driven version and a short 17-question one, plus the launch doc that set out delivery terms.'],
-          links: [['case study', '/work-studio-tools']],
+          links: [],
         },
         {
           id: 'sales-decks', title: 'Sales decks', sub: 'Designer', year: 2026, start: '2026-09', end: '2026-10', kind: 'internal',
@@ -559,14 +583,14 @@ window.CV = {
           id: 'oratory-ops', title: 'Studio ops system', sub: 'Developer', year: 2026, start: '2026-09', end: '2026-10', kind: 'internal',
           what: 'measures scope and timelines from repos + slack', studio: 'oratory', type: 'internal tool', status: 'internal (retired)',
           body: ['Measures each project\'s scope and timeline from its repo and Slack instead of asking people to update a tracker. Also held the client intake forms and launch docs.'],
-          links: [['case study', '/work-studio-tools']],
+          links: [],
           stack: 'Next.js, Vercel, Claude',
         },
         {
           id: 'pm-app', title: 'Studio PM app', sub: 'Designer & main developer', year: 2026, start: '2026-04', end: '2026-08', kind: 'internal',
           what: 'project dashboard that replaced coda', studio: 'oratory', type: 'internal tool', status: 'internal (retired)',
           body: ['A project dashboard for the studio to replace Coda: projects, timelines and client intake, wired into Slack with AI status rollups. Started with a teammate, then mostly mine.'],
-          links: [['case study', '/work-studio-tools']],
+          links: [],
           stack: 'Laravel, Inertia, React, Tailwind, Neon',
         },
       ],
@@ -629,7 +653,7 @@ window.CV = {
             'A front end for AI coding agents that runs on your own machine and works from a phone. In beta.',
           ],
           site: ['sheaf.to', 'https://sheaf.to'],
-          links: [['sheaf.to', 'https://sheaf.to'], ['case study', '/work-sheaf']],
+          links: [['sheaf.to', 'https://sheaf.to']],
           stack: 'Bun, TypeScript, SQLite, vanilla JS PWA',
         },
         {
@@ -672,7 +696,7 @@ window.CV = {
         {
           id: 'votive-back-office', title: 'Votive back office', sub: 'Builder', year: 2025, years: '2025–now',
           body: ['The books, wholesale orders, payroll and shipping, run from a rules-driven ledger and a small command-line tool, with Stripe, Gusto and Shippo wired in.'],
-          links: [['case study', '/work-votive']],
+          links: [],
           stack: 'Python, Stripe, Gusto, Shippo, Google Sheets',
         },
         {
