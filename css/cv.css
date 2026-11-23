@@ -717,3 +717,34 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
 .sq .book { display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .sq .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 .cell.hire .hire-t { font-size: 0.9375rem; }
+
+/* ---------- "open to work" tag after the name (variants a-d) ---------- */
+.name-cell { gap: 0.6rem; overflow: visible; }
+.nm-t { flex: none; }
+.otw { text-decoration: none; white-space: nowrap; }
+.otw:hover { text-decoration: none; }
+/* a: green pill with a pulsing dot */
+.otw-pill { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8125rem; color: #1d6b39;
+  background: #e6f4ea; border: 1px solid #a9d6b6; border-radius: 999px; padding: 0.08rem 0.55rem 0.1rem 0.45rem; }
+.otw-pill:hover { background: #d8eedf; border-color: #2f9e56; }
+.otw-pill .hire-dot { width: 0.45rem; height: 0.45rem; }
+/* b: the sentence continues: "griffin bennett duffey is open to work →" */
+.otw-text { color: #1d6b39; font-style: italic; background: linear-gradient(#c8ecd3, #c8ecd3) 0 88% / 100% 0.35em no-repeat; padding: 0 0.1rem; }
+.otw-text .otw-arrow { display: inline-block; animation: otw-nudge 2.4s ease-in-out infinite; }
+.otw-text:hover { color: var(--link); }
+@keyframes otw-nudge { 0%, 70%, 100% { transform: none; } 80% { transform: translateX(3px); } 90% { transform: none; } }
+/* c: spreadsheet comment: green corner flag on the cell + a note bubble */
+.tag-c { position: relative; box-shadow: inset 0 0 0 2px #2f9e56; background: #f1f8f3; }
+.otw-note { position: relative; display: inline-flex; align-items: center; }
+.otw-flag { position: absolute; top: -0.32rem; right: -0.65rem; width: 0; height: 0; border-top: 0.55rem solid #2f9e56; border-left: 0.55rem solid transparent; }
+.tag-c .otw-flag { position: fixed; } /* placed by the cell corner below */
+.tag-c::after { content: ''; position: absolute; top: 0; right: 0; border-top: 0.6rem solid #2f9e56; border-left: 0.6rem solid transparent; }
+.otw-bubble { font-size: 0.8125rem; color: #1d6b39; background: #fff; border: 1px solid #a9d6b6; padding: 0.05rem 0.45rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.tag-c .otw-flag { display: none; }
+/* d: a slow ticker filling the rest of the name row */
+.tag-d .otw-ticker { flex: 1 1 auto; min-width: 0; overflow: hidden; font-size: 0.8125rem; color: #1d6b39; background: #eef7f1; align-self: stretch; display: flex; align-items: center;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.otw-track { display: flex; width: max-content; animation: otw-tick 18s linear infinite; }
+.otw-ticker:hover .otw-track { animation-play-state: paused; }
+@keyframes otw-tick { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .otw-track, .otw-text .otw-arrow { animation: none; } }
