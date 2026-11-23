@@ -227,7 +227,7 @@
     const r1 = el('div', 'trow head');
     // Corner cell: Griffin's scanned ID photo + signature, hanging down over the header rows.
     const corner = el('div', 'cell gutter corner',
-      CV.portrait ? `<a href="${esc(CV.portrait)}" target="_blank" rel="noopener"><img src="${esc(CV.portrait)}" alt="griffin duffey, scanned photo and signature"></a>` : '');
+      CV.portrait ? `<span class="portrait"><img src="${esc(CV.portrait)}" alt="griffin duffey, scanned photo and signature"></span>` : '');
     r1.append(corner, el('h1', 'cell title', esc(CV.title)), el('div', 'cell fill'));
     CV.nav.forEach(([label, href]) => r1.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
 

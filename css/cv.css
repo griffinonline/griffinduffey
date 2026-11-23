@@ -475,7 +475,18 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   --pw: calc((var(--ph) - 2 * var(--pp)) / 1.47); }
 .top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
 .top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; }
-.top .gutter.corner a { position: absolute; top: var(--pp); left: var(--pp); width: var(--pw); display: block; line-height: 0; }
+.top .gutter.corner .portrait {
+  position: absolute; top: var(--pp); left: var(--pp); width: var(--pw); display: block; line-height: 0;
+  transform-origin: top left;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), box-shadow 220ms ease;
+}
+/* Hover: the photo lifts out a bit bigger, then folds back in */
+@media (hover: hover) {
+  .top .gutter.corner .portrait:hover { transform: scale(1.8); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .top .gutter.corner .portrait { transition: none; }
+}
 .top .gutter.corner img { width: 100%; height: auto; display: block; outline: 1px solid var(--line); }
 /* Stack the corner column's cells into one: no lines under the photo */
 .top .trow:not(.head) > .gutter { border-top: 0; }
