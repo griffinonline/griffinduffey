@@ -1,0 +1,215 @@
+/* ---------- Work front door (/work) + case studies ----------
+   Builds on style.css: same narrow type, hairlines, vertical group labels. */
+
+.work {
+  gap: 3rem;
+}
+
+.draft-flag {
+  justify-self: start;
+  padding: 0.2rem 0.5rem;
+  background: #ffe14d;
+  font-size: 0.8rem;
+}
+
+/* Anchor line */
+.work-hero h1 {
+  max-width: 34ch;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.work-sub {
+  max-width: 52ch;
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.work-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.work-cta a,
+.work-cta a:visited {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid #000;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.work-cta a:hover {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.work-cta.below {
+  margin-top: 1rem;
+}
+
+/* Three doors / ways to work: columns with hairlines between */
+.lenses {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid #000;
+}
+
+/* Wraps a block + something under it inside one labelled group */
+.group-stack {
+  flex: 1;
+  min-width: 0;
+}
+
+.lens {
+  padding: 0.75rem 1rem 1rem 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lens + .lens {
+  padding-left: 1rem;
+  border-left: 1px solid #000;
+}
+
+.page-content a.lens,
+.page-content a.lens:visited,
+.page-content a.case,
+.page-content a.case:visited {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+a.lens:hover h2,
+a.case:hover h3 {
+  color: #ff1d21;
+}
+
+.lens h2,
+.case h3 {
+  font-size: 1.1rem;
+  font-weight: normal;
+}
+
+.lens p,
+.case p {
+  margin-top: 0.35rem;
+  line-height: 1.4;
+}
+
+/* Selected work grid */
+.cases {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 2rem 1.25rem;
+}
+
+.case-img {
+  aspect-ratio: 4 / 3;
+  margin-bottom: 0.6rem;
+  border: 1px solid #000;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.5px), #bbb, transparent calc(50% + 0.5px)),
+    linear-gradient(to top left, transparent calc(50% - 0.5px), #bbb, transparent calc(50% + 0.5px)),
+    #eee;
+}
+
+.case-role {
+  opacity: 0.6;
+}
+
+/* How I work */
+.work-list {
+  flex: 1;
+  display: grid;
+  gap: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.work-list strong {
+  font-weight: bold;
+}
+
+.work-also {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  padding: 2.5rem 0;
+}
+
+/* ---------- Case study page ---------- */
+
+.case-page {
+  max-width: 46rem;
+}
+
+.case-head h1 {
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-top: 0.75rem;
+  opacity: 0.7;
+}
+
+.case-page .case-img {
+  margin: 0;
+}
+
+.case-body h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.25rem;
+}
+
+.case-body p,
+.case-body li {
+  font-size: 1rem;
+  line-height: 1.45;
+  max-width: 60ch;
+}
+
+.case-body p + p {
+  margin-top: 0.6rem;
+}
+
+.case-body ul {
+  display: grid;
+  gap: 0.4rem;
+  padding-left: 1rem;
+  list-style: '– ';
+}
+
+.case-next {
+  padding-top: 1rem;
+  border-top: 1px solid #000;
+}
+
+@media (max-width: 768px) {
+  .lenses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lens,
+  .lens + .lens {
+    padding: 0.75rem 0;
+    border-left: 0;
+  }
+
+  .lens + .lens {
+    border-top: 1px solid #000;
+  }
+}

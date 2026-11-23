@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votive back office — Griffin Duffey</title>
+  <meta name="description" content="The system behind a bootstrapped chai company: wholesale ordering, net-terms invoices, shipping labels, and an order sheet that keeps itself up to date.">
+  <link rel="icon" type="image/png" href="/assets/fav.png">
+  <link rel="apple-touch-icon" href="/assets/webclip.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/work.css">
+</head>
+<body>
+  <div class="page-layout">
+    <aside class="site-nav" data-include="/partials/nav.html"></aside>
+
+    <main class="page-content work case-page">
+      <p class="draft-flag">draft case study: check every fact before it goes live</p>
+
+      <header class="case-head">
+        <p><a href="/work">← work</a></p>
+        <h1>the back office behind a chai company</h1>
+        <p class="case-meta">
+          <span>votive</span>
+          <span>founder · designer + builder</span>
+          <span>2024–now</span>
+          <span><a href="https://www.drinkvotive.com/" target="_blank" rel="noopener noreferrer">drinkvotive.com</a></span>
+        </p>
+      </header>
+
+      <div class="case-img" aria-hidden="true"></div>
+
+      <section class="case-body">
+        <h2>the problem</h2>
+        <p>votive is a non-alcoholic beverage company i started and run on my own: chai concentrate and single-origin tea kombuchas, sold to 15+ cafes and shops across the southeast. no investors, no ops team. every order meant an invoice, a shipping label, a row in a spreadsheet, and a reminder to chase payment.</p>
+        <p>the off-the-shelf options (shopify plus a stack of wholesale apps) cost a monthly fee per piece and still didn't do net-terms invoicing the way cafes actually pay.</p>
+      </section>
+
+      <section class="case-body">
+        <h2>what i built</h2>
+        <ul>
+          <li><strong>a storefront with no platform fee.</strong> astro on cloudflare, with stripe as the source of truth for money. card data never touches the site.</li>
+          <li><strong>a wholesale portal.</strong> cafes log in, order by the case, and see live ups rates at checkout.</li>
+          <li><strong>"bill me later."</strong> wholesale accounts can skip the card and get a real stripe invoice on net terms, emailed automatically.</li>
+          <li><strong>labels that buy themselves.</strong> once an order is paid or invoiced, the ups label is purchased and linked in the order sheet.</li>
+          <li><strong>an order sheet that keeps itself up to date.</strong> every order lands in google sheets, itemized, and flips from unpaid to paid when the money arrives.</li>
+          <li><strong>books from bank csvs.</strong> a small command-line tool turns bank exports into a categorized, tax-ready ledger.</li>
+        </ul>
+      </section>
+
+      <section class="case-body">
+        <h2>how it went</h2>
+        <p>orders that used to take [x minutes] of copy-paste now take zero: the cafe orders, stripe bills them, the label is waiting, and the sheet is already right. [add: hours saved per month, fees avoided vs shopify, any cafe quote.]</p>
+        <p>i built it for my own business with my own money on the line. it's the same kind of system i can build for yours.</p>
+      </section>
+
+      <section class="case-body">
+        <h2>stack</h2>
+        <p>astro · cloudflare workers · stripe (checkout, invoices, webhooks) · shippo + ups · google sheets api · python</p>
+      </section>
+
+      <p class="case-next"><a href="/work">next: back to all work →</a></p>
+    </main>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
