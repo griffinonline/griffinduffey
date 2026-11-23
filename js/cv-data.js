@@ -75,7 +75,7 @@ window.CV = {
       points: [
         'g360 technologies: an ai security company. project manager and main builder, figma to a live next.js site.',
         'less: a data workflow tool, and one of the sprints i’m proudest of. ran it end to end.',
-        'tahoe: moved them off webflow into a custom build and launched the tara campaign.',
+        'tahoe: designed and built the launch page for tara, their data tool for ai agents: the visuals, the layout, the story.',
       ],
       links: [['g360technologies.com', 'https://g360technologies.com'], ['less.tech', 'https://less.tech'], ['all 37 projects →', '#moment']],
       visuals: [{ name: 'g360', caption: 'g360 technologies' }, { name: 'less', caption: 'less' }],
@@ -362,12 +362,12 @@ window.CV = {
         },
         {
           // Stack from tahoebio/tahoe-marketing-site (Next.js + Sanity on Cloudflare); the live HTML keeps the old Webflow export markup.
-          id: 'tahoe', title: 'Tahoe', sub: 'Project manager; facilitated the move off Webflow into a custom build', year: 2026, start: '2026-06', end: '2026-10',
-          what: 'site for a biology ai lab, plus the tara launch', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
-          site: ['tahoelabs.ai', 'https://tahoelabs.ai'], featured: true,
-          body: ['Site for a biology AI lab. Moved it off Webflow into a custom build, set up the staging-to-production flow and Sanity content, and launched the Tara campaign page.'],
-          links: [['tahoelabs.ai', 'https://tahoelabs.ai']],
-          also: 'design + imagery support',
+          id: 'tahoe', title: 'Tahoe', sub: 'Project manager + design lead on the Tara launch', year: 2026, start: '2026-06', end: '2026-10',
+          what: 'the tara launch page for a biology ai lab', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
+          site: ['tahoelabs.ai/tara', 'https://www.tahoelabs.ai/tara'], featured: true,
+          body: ['My main contribution was the launch of Tara, which connects the AI agents people already use to Tahoe’s frontier-scale biology datasets. I designed and built the Tara page: the visuals, layout and story, from concept to launch day.', 'Around it I ran the project and helped move the main site off Webflow into a custom build with Sanity content.'],
+          links: [['tahoelabs.ai/tara', 'https://www.tahoelabs.ai/tara'], ['tahoelabs.ai', 'https://tahoelabs.ai']],
+          also: 'design, visuals + build of the tara page',
           stack: 'custom · next.js · sanity',
         },
         {
