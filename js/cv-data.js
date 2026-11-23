@@ -719,7 +719,7 @@ window.CV = {
       color: '#7fded3',
       items: [
         {
-          id: 'reading-group', title: 'Reading group', sub: 'Member', year: 2022, start: '2022-09', end: 'now',
+          id: 'reading-group', title: 'Reading group', sub: 'Member', year: 2020, years: '2020–now', // check: start month (Griffin: 'started in 2020 i believe')
           body: ['A small group reading mostly continental philosophy, psychoanalysis and critical theory, one book at a time. Also films, making music, and resisting despair.'],
           links: [],
           // From Griffin's Goodreads export (11/23); Griffin confirmed which were group reads.
@@ -739,6 +739,7 @@ window.CV = {
             { t: "Tractatus Logico-Philosophicus", a: "Ludwig Wittgenstein", d: '2024-04' },
             { t: "Critique of Pure Reason", a: "Immanuel Kant", d: '2024-04' },
             { t: "On Suicide Bombing", a: "Talal Asad", d: '2023-10' },
+            { t: "Discipline and Punish", a: "Michel Foucault", d: '2023-08' }, // a reread, with the group
             { t: "Anti-Oedipus: Capitalism and Schizophrenia", a: "Gilles Deleuze", d: '2023-07' },
             { t: "Beyond the Pleasure Principle", a: "Sigmund Freud", d: '2023-06' },
             { t: "The Arabic Freud", a: "Omnia El Shakry", d: '2023-05' },
@@ -754,6 +755,9 @@ window.CV = {
             { t: "The Lacanian Subject", a: "Bruce Fink", d: '2022-11' },
             { t: "The Origin of Capitalism: A Longer View", a: "Ellen Meiksins Wood", d: '2022-11' },
             { t: "A Clinical Introduction to Lacanian Psychoanalysis", a: "Bruce Fink", d: '2022-09' },
+            { t: "The State and Revolution", a: "Vladimir Lenin", d: '2021-03' },
+            { t: "Reform or Revolution", a: "Rosa Luxemburg", d: '2021-03' },
+            { t: "The Jakarta Method", a: "Vincent Bevins", d: '2021-01' },
           ],
         },
         {
