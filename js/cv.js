@@ -298,6 +298,17 @@
     });
     r3.append(el('div', 'cell fill'));
     top.append(upper, r3);
+    // Size the photo to the header's real height (rows can wrap), so it always
+    // runs from the top edge down through the tabs.
+    const fit = () => {
+      const pp = parseFloat(getComputedStyle(top).getPropertyValue('--pp')) * 16 || 6;
+      const h = upper.offsetHeight + r3.offsetHeight;
+      if (window.innerWidth > 720 && h) top.style.setProperty('--pw', ((h - 2 * pp) / 1.47) + 'px');
+      else top.style.removeProperty('--pw');
+    };
+    fit();
+    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(upper);
+    if (document.fonts) document.fonts.ready.then(fit);
   }
 
   // ---------- Sheet ----------
