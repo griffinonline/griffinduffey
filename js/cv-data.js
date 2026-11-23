@@ -145,7 +145,7 @@ window.CV = {
     // Landing tab: three case studies with code-built visuals (js/visuals/*).
     { id: 'featured', label: 'featured work', featured: true, groups: [] },
     {
-      id: 'overview', label: 'overview',
+      id: 'overview', label: 'overview', zoom: 'years',
       groups: [
         { section: 'work' },
         { label: 'selected projects', color: '#b9a4ff', featured: true },
@@ -183,7 +183,7 @@ window.CV = {
       ],
     },
     {
-      id: 'research', label: 'research + education',
+      id: 'research', label: 'research + education', zoom: 'years',
       groups: [{ section: 'education' }, { section: 'research & writing' }, { section: 'teaching & community' }],
     },
     { id: 'everything', label: 'everything', all: true },

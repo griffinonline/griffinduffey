@@ -297,7 +297,8 @@
     const colC = el('div', 'top-col c');
     const navRow = row('head');
     CV.nav.forEach(([label, href]) => navRow.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
-    const subRow = row('sub', switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
+    // No zoom control: each tab has its own fixed zoom (tab.zoom, default months).
+    const subRow = row('sub', el('div', 'cell fill'));
     if (CV.note) subRow.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
     // One stretchy blank cell fills the rest of the column next to the fact rows.
     // Reading / listening / elsewhere fill the rest of the right column.
