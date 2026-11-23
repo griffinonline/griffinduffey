@@ -300,26 +300,20 @@
     const navLinks = [...(CV.nav || []).filter(([l]) => l !== 'print'),
       ...(CV.elsewhere || []).filter(([l, h]) => h && h !== '@nav'),
       ...(CV.nav || []).filter(([l]) => l === 'print')];
-    navLinks.forEach(([label, href]) => navRow.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
-    // No zoom control: each tab has its own fixed zoom (tab.zoom, default months).
-    const subRow = row('sub', el('div', 'cell fill'));
-    if (CV.note) subRow.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
-    // One stretchy blank cell fills the rest of the column next to the fact rows.
-    // Reading / listening / elsewhere fill the rest of the right column.
+    // Links row: equal sheet cells, like column headers you can click.
+    navLinks.forEach(([label, href]) => navRow.append(el('a', 'cell nav', `${esc(label)}${/^https?:/.test(href) ? '<span class="ext-mark">↗</span>' : ''}`, { href })));
+    navRow.querySelectorAll('a.nav').forEach((a, k) => { const h = navLinks[k][1]; a.href = h; if (/^https?:/.test(h)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } });
+    // "open to work" takes the second row (no zoom control any more).
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
-    const links = (CV.elsewhere || []).map(([l, h]) => [l, h === '@nav' ? navHref(l) : h]).filter(([, h]) => h);
+    const subRow = row('sub', el('a', 'cell hire', `<span class="hire-dot" aria-hidden="true"></span><span class="hire-t">open to work</span><span class="hire-s">full-time or projects · say hi →</span>`));
+    subRow.querySelector('a.hire').href = navHref('email');
+    // Listening + reading: two plain cells side by side under that.
     const side = el('div', 'cell fill side', `<div class="side-inner">
-      <a class="wg wg-hire" href="${esc(navHref('email'))}">
-        <span class="hire-dot" aria-hidden="true"></span>
-        <span class="hire-t"><b>open to work</b><span>full-time or projects · say hi →</span></span>
-      </a>
-      <div class="wg-row">
-        <section class="wg wg-listen"><p class="wg-h">listening <span>this month</span></p>
-          <ul class="side-listening"><li class="muted">…</li></ul></section>
-        <section class="wg wg-read"><p class="wg-h">reading</p>
-          ${(CV.reading || []).slice(0, 1).map(([t, a, cover]) => `<div class="book">${cover ? `<img src="${esc(cover)}" alt="${esc(t)}, ${esc(a)}" loading="lazy">` : ''}</div><p class="book-t"><em>${esc(t)}</em> <span>${esc(a)}</span></p>`).join('')}</section>
-      </div>
-`);
+      <section class="sc sc-listen"><p class="sc-h">listening <span>this month</span></p>
+        <div class="sq"><ul class="side-listening"><li class="muted">…</li></ul></div></section>
+      <section class="sc sc-read"><p class="sc-h">reading</p>
+        ${(CV.reading || []).slice(0, 1).map(([t, a, cover]) => `<div class="sq"><div class="book">${cover ? `<img src="${esc(cover)}" alt="${esc(t)}, ${esc(a)}" loading="lazy">` : ''}</div></div><p class="book-t"><em>${esc(t)}</em> <span>${esc(a)}</span></p>`).join('')}</section>
+    </div>`);
     colC.append(navRow, subRow, row('rest', side));
     loadListening(side.querySelector('.side-listening'));
 

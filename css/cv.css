@@ -683,3 +683,37 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
 @media (max-width: 720px) {
   .side-listening, .wg-read .book { width: min(100%, 8.5rem); }
 }
+
+/* ---------- Right column as sheet cells (replaces the floating widgets) ---------- */
+.top-col.c .trow.head > .cell.nav {
+  flex: 1 1 0; width: auto; padding: 0 0.4rem; justify-content: center;
+  color: var(--ink); font-size: 0.9375rem; text-decoration: none;
+}
+.top-col.c .trow.head > .cell.nav:hover { background: #fff; color: var(--link); text-decoration: none; }
+.ext-mark { font-size: 0.7em; color: #999; margin-left: 0.15em; }
+.top-col.c .trow.sub > .cell.hire {
+  flex: 1 1 auto; gap: 0.45rem; padding: 0 0.6rem; color: inherit; text-decoration: none;
+  background: #f1f8f3;
+}
+.cell.hire:hover { background: #e7f4eb; text-decoration: none; }
+.cell.hire:hover .hire-s { color: var(--link); }
+.cell.hire .hire-t { color: #1d6b39; font-style: italic; }
+.cell.hire .hire-s { color: #777; font-size: 0.8125rem; overflow: hidden; text-overflow: ellipsis; }
+.cell.side { padding: 0; }
+.side-inner { flex-direction: row; gap: 0; padding: 0 !important; }
+.sc { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 0.3rem 0.45rem 0.35rem; border-right: 1px solid var(--line); }
+.sc:last-child { border-right: 0; }
+.sc-h { color: #888; font-size: 0.6875rem; margin-bottom: 0.25rem; white-space: nowrap; }
+.sc-h span { color: #aaa; }
+.sq { flex: 1 1 0; min-height: 0; container-type: size; display: flex; justify-content: center; align-items: flex-start; }
+.sq .side-listening, .sq .book { width: min(100cqw, 100cqh); height: auto; aspect-ratio: 1; }
+.sq .book { background: none; }
+.sc-read .book-t { margin-top: 0.2rem; text-align: center; }
+@media (max-width: 1180px) {
+  .sq { flex: none; height: 8rem; }
+  .sc { min-height: 10rem; }
+}
+.side-listening { list-style: none; margin: 0; padding: 0; }
+.sq .book { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.sq .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.cell.hire .hire-t { font-size: 0.9375rem; }
