@@ -278,22 +278,6 @@
     });
     return z;
   }
-  // "open to work" tag after the name. Variant from the hash (&tag=a|b|c|d)
-  // while Griffin picks one; default a.
-  const TAG = (/[#&]tag=([abcd])/.exec(location.hash) || [])[1] || 'a';
-  function nameCell() {
-    const h = el('h1', 'cell title name-cell tag-' + TAG);
-    const mail = ((CV.nav || []).find(([l]) => l === 'email') || [])[1] || '#';
-    const tags = {
-      a: `<a class="otw otw-pill" href="${esc(mail)}"><span class="hire-dot" aria-hidden="true"></span>open to work</a>`,
-      b: `<a class="otw otw-text" href="${esc(mail)}">is open to work <span class="otw-arrow">→</span></a>`,
-      c: `<a class="otw otw-note" href="${esc(mail)}"><span class="otw-flag" aria-hidden="true"></span><span class="otw-bubble">is open to work · full-time or projects</span></a>`,
-      d: `<a class="otw otw-ticker" href="${esc(mail)}"><span class="otw-track"><span>open to work · full-time or projects · say hi →&nbsp;&nbsp;&nbsp;</span><span aria-hidden="true">open to work · full-time or projects · say hi →&nbsp;&nbsp;&nbsp;</span></span></a>`,
-    };
-    h.innerHTML = `<span class="nm-t">${esc(CV.title)}</span>${tags[TAG]}`;
-    return h;
-  }
-
   function buildTop() {
     // Upper header = three side-by-side columns so the bio can be one merged
     // cell spanning every row: [photo + name/subtitle/facts] [bio] [nav/zoom].
@@ -304,7 +288,7 @@
 
     const colA = el('div', 'top-col a');
     colA.append(
-      row('head', corner, nameCell()),
+      row('head', corner, el('h1', 'cell title', esc(CV.title))),
       row('sub', el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`)),
       ...facts.map(([label, value]) => row('fact', el('div', 'cell gutter'),
         el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${value === '@hats' ? hatsHtml() : rich(value)}</span>`))),
@@ -321,7 +305,8 @@
     navRow.querySelectorAll('a.nav').forEach((a, k) => { const h = navLinks[k][1]; a.href = h; if (/^https?:/.test(h)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } });
     // "open to work" takes the second row (no zoom control any more).
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
-    const subRow = row('sub', el('div', 'cell fill'));
+    const subRow = row('sub', el('a', 'cell hire', `<span class="hire-dot" aria-hidden="true"></span><span class="hire-t">open to work</span><span class="hire-s">full-time or projects · say hi →</span>`));
+    subRow.querySelector('a.hire').href = navHref('email');
     // Listening + reading: two plain cells side by side under that.
     const side = el('div', 'cell fill side', `<div class="side-inner">
       <section class="sc sc-listen"><p class="sc-h">listening <span>this month</span></p>
