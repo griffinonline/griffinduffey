@@ -241,6 +241,8 @@ function serveDist() {
 
       const ext = path.extname(filePath).toLowerCase();
       res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
+      // Never let the browser cache dev files, or a reload can show stale JS/CSS.
+      res.setHeader('Cache-Control', 'no-store');
 
       if (ext === '.html') {
         let html = fs.readFileSync(filePath, 'utf-8');
