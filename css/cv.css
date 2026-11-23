@@ -480,7 +480,9 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 /* Stack the corner column's cells into one: no lines under the photo */
 .top .trow:not(.head) > .gutter { border-top: 0; }
 .top .trow.head > .gutter, .top .trow.sub > .gutter, .top .trow.fact > .gutter { border-bottom-color: transparent; }
-.trow.fact .fact-label { color: #888; margin-right: 0.35em; }
+/* Same look as the 'cv: ...' subtitle row */
+.trow.fact .title { font-style: italic; font-size: 1rem; }
+.trow.fact .fact-label { margin-right: 0.3em; }
 @media (max-width: 720px) {
   .top { --pw: 3.75rem; --tabsh: 2.25rem; }
   .trow.fact, .trow.fact > .cell { height: auto; min-height: var(--row); }
