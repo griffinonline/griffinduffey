@@ -190,6 +190,23 @@
     return { tab: tab.id, zoom, tl, item };
   }
 
+  // Reading list for an entry (e.g. the reading group), grouped by year, newest first.
+  const MON = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  function booksHtml(item) {
+    if (!item.books || !item.books.length) return '';
+    const groups = [];
+    item.books.forEach((b) => {
+      const y = b.d === 'now' ? 'reading now' : b.d.slice(0, 4);
+      let g = groups.find((x) => x.y === y);
+      if (!g) groups.push((g = { y, list: [] }));
+      g.list.push(b);
+    });
+    return `<div class="c-books"><p class="c-books-head">what we've read <span>(${item.books.length})</span></p>` +
+      groups.map((g) => `<p class="c-books-year">${esc(g.y)}</p><ul>` +
+        g.list.map((b) => `<li><em>${esc(b.t)}</em>, ${esc(b.a)}${b.d !== 'now' ? ` <span>${MON[+b.d.slice(5, 7) - 1]}</span>` : ''}</li>`).join('') +
+        '</ul>').join('') + '</div>';
+  }
+
   // ---------- Header: title, nav, zoom, timeline switch, tabs ----------
   const tabLinks = [];
   const zoomLinks = {};
@@ -490,6 +507,7 @@
       <p class="c-sub"><em>${rich(item.sub)}</em>${item.also ? `<br><span class="c-also">${esc(item.also)}</span>` : ''}<br>${esc(whenOf(item))}${len ? ` <span class="c-len">· ${esc(len)}</span>` : ''}</p>
       ${facts}
       ${(item.body || []).map((p) => `<p>${rich(p)}</p>`).join('')}
+      ${booksHtml(item)}
       ${item.stack ? `<p class="c-stack">built with ${esc(item.stack)}</p>` : ''}
       ${links.length ? `<p class="c-links">${links.join('<br>')}</p>` : ''}
       <p class="c-nav"><button type="button" data-step="-1">&larr; prev</button><button type="button" data-step="1">next &rarr;</button></p>`;

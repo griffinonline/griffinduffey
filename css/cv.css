@@ -457,3 +457,12 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   .print-cv .p-item { display: grid; grid-template-columns: 7.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
   .print-cv strong { font-weight: normal; }
 }
+
+/* Reading list inside a popup card (reading group) */
+.comment .c-books { margin-top: 0.9rem; }
+.comment .c-books-head { margin-bottom: 0.2rem; }
+.comment .c-books-head span,
+.comment .c-books li span { color: #888; }
+.comment .c-books-year { margin: 0.6rem 0 0.15rem; color: #888; font-size: 0.85em; }
+.comment .c-books ul { list-style: none; margin: 0; padding: 0; }
+.comment .c-books li { padding: 0.12rem 0; line-height: 1.3; }
