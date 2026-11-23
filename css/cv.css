@@ -503,7 +503,8 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 /* ---------- Upper header: [photo + name block] [bio] [nav + zoom] ---------- */
 .top-upper { display: flex; align-items: stretch; }
 .top-col { display: flex; flex-direction: column; }
-.top-col.a { flex: 0 0 clamp(22rem, 32vw, 30rem); min-width: 0; }
+/* Text width is fixed (photo column added on top), so wrapping can't feed back into the photo size */
+.top-col.a { flex: 0 0 calc(var(--pw) + 2 * var(--pp) + clamp(22rem, 32vw, 30rem)); min-width: 0; }
 .top-col.a .trow > .title { flex: 1 1 auto; border-right-color: var(--line); padding-right: 0.6rem; }
 /* Long info rows (e.g. likely fit for) wrap instead of widening the column */
 .top-col.a .trow.fact, .top-col.a .trow.fact > .cell { height: auto; min-height: var(--row); }

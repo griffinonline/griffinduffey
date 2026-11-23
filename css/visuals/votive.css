@@ -1,1 +1,218 @@
 /* Featured-work visuals: votive. Scope every rule under .v-votive */
+
+/* ---------- shared: fixed 540x440 design canvas, scaled to the stage ---------- */
+.v-votive { position: relative; overflow: hidden; text-transform: none; letter-spacing: normal; font-style: normal; }
+.v-votive .vv-canvas * { text-transform: inherit; }
+.v-votive .vv-fit { position: absolute; inset: 0; }
+.v-votive .vv-canvas {
+  position: absolute; left: 0; top: 0; width: 540px; height: 440px;
+  transform-origin: 0 0; isolation: isolate;
+}
+.v-votive .vv-canvas > * { position: absolute; }
+.v-votive.vv-still *, .v-votive.vv-still *::before, .v-votive.vv-still *::after { transition: none !important; animation: none !important; }
+
+/* ======================================================================
+   votive-brand: cream stock, two riso passes, stepped frames (no tweens)
+   ====================================================================== */
+.v-votive.v-votive-brand { background: #F2EADB; }
+.v-votive-brand .vv-canvas { --a: #9F5841; --b: #FFB511; color: #1a1a1a; }
+
+.v-votive-brand .vv-top {
+  left: 28px; right: 24px; top: 16px; display: flex; justify-content: space-between;
+  font: 11px/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .08em; text-transform: uppercase;
+}
+.v-votive-brand .vv-inkname { color: var(--a); }
+
+.v-votive-brand .vv-sun { left: 352px; top: 64px; width: 150px; height: 150px; border-radius: 50%; background: var(--b); mix-blend-mode: multiply; }
+.v-votive-brand .vv-logo { left: 30px; top: 46px; width: 272px; height: 330px; }
+.v-votive-brand .vv-ink {
+  position: absolute; inset: 0;
+  -webkit-mask: url(/assets/visuals/votive/logo-silhouette.svg) center / contain no-repeat;
+  mask: url(/assets/visuals/votive/logo-silhouette.svg) center / contain no-repeat;
+  mix-blend-mode: multiply;
+}
+.v-votive-brand .vv-sil { background: var(--a); }
+.v-votive-brand .vv-fil {
+  background: #1a1a1a;
+  -webkit-mask-image: url(/assets/visuals/votive/logo-fill.svg);
+  mask-image: url(/assets/visuals/votive/logo-fill.svg);
+}
+/* the sparkle sits on the star where the two lines cross */
+.v-votive-brand .vv-spark {
+  position: absolute; left: calc(29% - 17px); top: calc(50.6% - 17px); width: 34px; height: 34px;
+  fill: #1a1a1a; transform: scale(0); overflow: visible;
+}
+
+.v-votive-brand .vv-shelf { left: 318px; top: 160px; width: 206px; height: 202px; }
+.v-votive-brand .vv-prod { position: absolute; bottom: 0; transform-origin: 50% 100%; }
+.v-votive-brand .vv-p0 { left: 0; width: 112px; height: 196px; }
+.v-votive-brand .vv-p1 { left: 120px; width: 40px; height: 170px; }
+.v-votive-brand .vv-p2 { left: 166px; width: 40px; height: 170px; }
+.v-votive-brand .vv-prod svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.v-votive-brand .vv-tiny { font: 5.2px/1 Georgia, 'Times New Roman', serif; fill: #1a1a1a; }
+.v-votive-brand .vv-tinier { font-size: 4.2px; font-style: italic; }
+.v-votive-brand .vv-ground { left: 306px; top: 362px; width: 222px; height: 1.5px; background: #1a1a1a; }
+
+.v-votive-brand .vv-foot {
+  left: 28px; right: 24px; top: 394px; display: flex; justify-content: space-between; align-items: baseline;
+  border-top: 1.5px solid #1a1a1a; padding-top: 10px;
+}
+.v-votive-brand .vv-line { font: italic 19px/1 Georgia, 'Times New Roman', serif; min-height: 19px; }
+.v-votive-brand .vv-line.typing::after { content: ''; display: inline-block; width: 8px; height: 15px; margin-left: 2px; background: var(--a); vertical-align: -1px; }
+.v-votive-brand .vv-place { font: 11px/1 ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; }
+
+/* paper: fine grain (multiply) + uneven coverage (soft-light), both static */
+.v-votive-brand .vv-grain, .v-votive-brand .vv-wear { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.v-votive-brand .vv-grain { opacity: .4; background-size: 220px 220px; }
+/* coarse blotches scaled up and smoothed: ink that didn't quite cover */
+.v-votive-brand .vv-wear { opacity: .5; background-size: 640px 640px; image-rendering: auto; mix-blend-mode: screen; }
+
+/* ======================================================================
+   votive-system: storefront → stripe → webhook → sheet, + shippo
+   ====================================================================== */
+.v-votive.v-votive-system { background: #ecebe6; }
+.v-votive-system .vv-canvas { font: 11px/1.3 Arial, Helvetica, sans-serif; color: #202124; }
+.v-votive-system .vv-muted { color: #80868b; }
+
+/* storefront: the real site is near-default HTML, so this is too */
+.v-votive-system .vv-store {
+  left: 12px; top: 12px; width: 212px; height: 222px; background: #fff; border: 1px solid #c9c7bf;
+  overflow: hidden;
+}
+.v-votive-system .vv-url {
+  height: 22px; display: flex; align-items: center; gap: 5px; padding: 0 7px;
+  background: #f1f0ec; border-bottom: 1px solid #dedcd5; font-size: 9.5px; color: #5f6368; white-space: nowrap; overflow: hidden;
+}
+.v-votive-system .vv-lock { width: 6px; height: 6px; border: 1.3px solid #80868b; border-radius: 1px; flex: none; }
+.v-votive-system .vv-page {
+  position: absolute; left: 0; right: 0; top: 22px; bottom: 0; padding: 8px 9px;
+  font: 11px/1.3 'Times New Roman', Times, serif; color: #000;
+  transition: opacity .3s, transform .3s;
+}
+.v-votive-system .vv-page:not(.out) { transition-delay: .2s; }
+.v-votive-system .vv-page.out { opacity: 0; transform: translateY(-6px); transition-duration: .2s; }
+.v-votive-system .vv-page.blank .vv-acct, .v-votive-system .vv-page.blank .vv-lineitem,
+.v-votive-system .vv-page.blank .vv-rates, .v-votive-system .vv-page.blank .vv-total, .v-votive-system .vv-page.blank .vv-btn { visibility: hidden; }
+.v-votive-system .vv-page p { margin: 0 0 5px; }
+.v-votive-system .vv-shead { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+.v-votive-system .vv-shead img { width: 18px; height: 22px; display: block; }
+.v-votive-system .vv-shead a { color: #0000ee; text-decoration: underline; }
+.v-votive-system .vv-cartbtn {
+  margin-left: auto; font: 9.5px/1 Arial, sans-serif; padding: 3px 5px; white-space: nowrap; background: #efefef; border: 1px solid #767676; border-radius: 2px;
+}
+.v-votive-system .vv-rates { border: 1px solid #b9b9b9; margin: 0 0 6px; padding: 2px 6px 5px; min-height: 62px; }
+.v-votive-system .vv-rates legend { padding: 0 3px; font-size: 10px; }
+.v-votive-system .vv-rates label { display: flex; align-items: center; gap: 4px; font-size: 10px; letter-spacing: -.01em; padding: 1px 0; white-space: nowrap; }
+.v-votive-system .vv-rates .vv-rp { margin-left: auto; }
+.v-votive-system .vv-radio { width: 8px; height: 8px; border: 1px solid #767676; border-radius: 50%; flex: none; }
+.v-votive-system .vv-rates label.on .vv-radio { border-color: #0060df; box-shadow: inset 0 0 0 2px #fff; background: #0060df; }
+.v-votive-system .vv-btn {
+  position: absolute; left: 9px; bottom: 10px; display: inline-block; font: 11px/1 Arial, sans-serif;
+  padding: 5px 9px; background: #efefef; border: 1px solid #767676; border-radius: 3px;
+  transition: transform .12s, background-color .2s;
+}
+.v-votive-system .vv-btn.press { transform: scale(.95); background: #dcdcdc; }
+.v-votive-system .vv-btn.sent { background: #e6f4ea; border-color: #34a853; color: #137333; }
+
+/* stripe invoice view, shown while the payment lands */
+.v-votive-system .vv-invoice {
+  position: absolute; left: 0; right: 0; top: 22px; bottom: 0; padding: 12px 12px;
+  opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s;
+}
+.v-votive-system .vv-invoice:not(.in) { transition-duration: .2s; }
+.v-votive-system .vv-invoice.in { opacity: 1; transform: none; transition-delay: .2s; }
+.v-votive-system .vv-inv-h { font-size: 10px; color: #5f6368; text-transform: uppercase; letter-spacing: .06em; }
+.v-votive-system .vv-inv-h b { color: #635bff; text-transform: none; letter-spacing: 0; font-size: 12px; margin-right: 3px; }
+.v-votive-system .vv-inv-to { font-size: 15px; margin: 8px 0 10px; }
+.v-votive-system .vv-inv-row { display: flex; justify-content: space-between; border-top: 1px solid #ecebe6; padding: 5px 0; font-size: 10.5px; }
+.v-votive-system .vv-inv-row span:first-child { color: #80868b; }
+.v-votive-system .vv-stamp {
+  position: absolute; right: 14px; bottom: 14px; font: bold 20px/1 Arial, sans-serif; letter-spacing: .08em;
+  color: #137333; border: 2.5px solid #137333; padding: 4px 8px; transform: rotate(-8deg) scale(1.4); opacity: 0;
+  transition: transform .25s cubic-bezier(.2, 1.4, .4, 1), opacity .15s;
+}
+.v-votive-system .vv-invoice.paid .vv-stamp { opacity: 1; transform: rotate(-8deg) scale(1); }
+
+/* rail + stubs */
+.v-votive-system .vv-rail { left: 236px; top: 38px; width: 1px; height: 208px; background: #a9a69c; }
+.v-votive-system .vv-stub { left: 236px; width: 16px; height: 1px; background: #a9a69c; }
+.v-votive-system .vv-stub-store { left: 224px; top: 196px; width: 12px; }
+
+/* service chips */
+.v-votive-system .vv-chip {
+  left: 252px; width: 276px; height: 60px; background: #fff; border: 1px solid #c9c7bf; padding: 7px 10px;
+  transition: border-color .25s, box-shadow .25s;
+}
+.v-votive-system .vv-chip-h { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #80868b; white-space: nowrap; }
+.v-votive-system .vv-chip-h b { font-size: 12.5px; color: #202124; letter-spacing: -.01em; }
+.v-votive-system .vv-chip-h span { margin-left: auto; overflow: hidden; text-overflow: ellipsis; }
+.v-votive-system .vv-chip-h i { width: 7px; height: 7px; border-radius: 50%; background: #c9c7bf; transition: background-color .25s; }
+.v-votive-system .vv-chip-stripe { --hue: #635bff; }
+.v-votive-system .vv-chip-webhook { --hue: #202124; }
+.v-votive-system .vv-chip-shippo { --hue: #1e8e5a; }
+.v-votive-system .vv-chip-m { margin-top: 6px; font: 11.5px/1.2 ui-monospace, 'SF Mono', Menlo, monospace; color: #9aa0a6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-votive-system .vv-chip-s { font-size: 10px; color: #9aa0a6; margin-top: 2px; white-space: nowrap; }
+.v-votive-system .vv-chip.has .vv-chip-m { color: #202124; }
+.v-votive-system .vv-chip.has .vv-chip-s { color: #5f6368; }
+.v-votive-system .vv-chip.has .vv-chip-h i { background: var(--hue); }
+.v-votive-system .vv-chip.hot { border-color: var(--hue); box-shadow: 0 0 0 2px color-mix(in srgb, var(--hue) 16%, transparent); }
+.v-votive-system .vv-chip.skip .vv-chip-m { color: #80868b; }
+
+.v-votive-system .vv-packet {
+  left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: #202124;
+  box-shadow: 0 0 0 3px rgba(32, 33, 36, .14); opacity: 0; z-index: 5;
+}
+
+/* google sheet */
+.v-votive-system .vv-sheet {
+  left: 12px; width: 516px; height: 190px; background: #fff; border: 1px solid #c9c7bf; overflow: hidden;
+}
+.v-votive-system .vv-sheet-bar { height: 22px; display: flex; align-items: center; gap: 6px; padding: 0 8px; border-bottom: 1px solid #e0e0e0; font-size: 11.5px; }
+.v-votive-system .vv-sheet-icon {
+  width: 10px; height: 12px; border-radius: 1.5px; background: #188038;
+  box-shadow: inset 0 0 0 2px #188038, inset 0 0 0 3px #fff;
+}
+.v-votive-system .vv-sheet-sub { color: #80868b; font-size: 10px; margin-left: auto; }
+.v-votive-system .vv-grid { position: absolute; left: 0; right: 0; top: 22px; bottom: 16px; overflow: hidden; }
+.v-votive-system .vv-hrow, .v-votive-system .vv-row { position: absolute; left: 0; right: 0; }
+.v-votive-system .vv-hrow { top: 0; height: 17px; background: #f0efe9; font-weight: bold; }
+.v-votive-system .vv-hrow .vv-c { line-height: 16px; font-size: 9.5px; }
+.v-votive-system .vv-rows { position: absolute; left: 0; right: 0; top: 17px; bottom: 0; }
+.v-votive-system .vv-row { height: 27px; opacity: 0; transform: translateY(-5px); transition: opacity .35s, transform .35s, color .3s; }
+.v-votive-system .vv-row.in { opacity: 1; transform: none; }
+.v-votive-system .vv-row::after { content: ''; position: absolute; inset: 0 0 0 20px; background: #fef7e0; opacity: 0; transition: opacity .8s; z-index: -1; }
+.v-votive-system .vv-row.fresh::after { opacity: 1; transition: none; }
+.v-votive-system .vv-rn {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 20px; background: #f8f9fa; border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;
+  color: #80868b; font-size: 8.5px; text-align: center; line-height: 16px;
+}
+.v-votive-system .vv-c {
+  position: absolute; top: 0; bottom: 0; padding: 2px 3px; border-right: 1px solid #e2e2e2; border-bottom: 1px solid #e2e2e2;
+  font-size: 9.5px; line-height: 11.5px; overflow: hidden; white-space: normal; word-break: break-word;
+  transition: background-color .4s, color .4s;
+}
+.v-votive-system .vv-c5 { text-align: right; }
+.v-votive-system .vv-c6 { text-align: center; }
+.v-votive-system .vv-c0 { display: grid; place-items: start center; padding-top: 3px; }
+.v-votive-system .vv-box { width: 9px; height: 9px; border: 1.3px solid #5f6368; border-radius: 1.5px; display: block; position: relative; }
+.v-votive-system .vv-row.done .vv-box, .v-votive-system .vv-c0.ticked .vv-box { background: #1a73e8; border-color: #1a73e8; }
+.v-votive-system .vv-row.done .vv-box::after, .v-votive-system .vv-c0.ticked .vv-box::after {
+  content: ''; position: absolute; left: 2.2px; top: 0; width: 2.5px; height: 5px; border: solid #fff; border-width: 0 1.4px 1.4px 0; transform: rotate(45deg);
+}
+.v-votive-system .vv-row.done .vv-c:not(.vv-c0) { color: #9aa0a6; text-decoration: line-through; }
+.v-votive-system .vv-c2.vv-local { background: #fce8b2; }
+.v-votive-system .vv-unpaid { background: #f4c7c3; font-weight: bold; }
+.v-votive-system .vv-paid.vv-flip { background: #ceead6; color: #137333; font-weight: bold; }
+.v-votive-system .vv-c7 u { color: #1155cc; }
+.v-votive-system .vv-c7.flash { background: #e8f0fe; }
+.v-votive-system .vv-row.done .vv-c7 u { color: #9aa0a6; }
+.v-votive-system .vv-cursor {
+  position: absolute; left: 0; top: 0; height: 27px; border: 2px solid #1a73e8; pointer-events: none; opacity: 0;
+  transition: transform .3s cubic-bezier(.3, .7, .2, 1), width .3s cubic-bezier(.3, .7, .2, 1), opacity .2s;
+}
+.v-votive-system .vv-tabs {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 16px; background: #f8f9fa; border-top: 1px solid #e0e0e0;
+  display: flex; padding-left: 26px; font-size: 9.5px; color: #5f6368;
+}
+.v-votive-system .vv-tabs span { padding: 2px 10px; }
+.v-votive-system .vv-tabs .on { background: #fff; color: #188038; font-weight: bold; box-shadow: inset 0 2px 0 #188038; }

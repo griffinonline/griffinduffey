@@ -1,1 +1,329 @@
 /* Featured-work visuals: sheaf. Scope every rule under .v-sheaf */
+/* Tokens, type, radii and icons copied from Sheaf's own Paper theme (sheaf/public/style.css). */
+
+@font-face {
+  font-family: "Sheaf Areal";
+  src: url("/assets/visuals/sheaf/ABCArealVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sheaf Geist Mono";
+  src: url("/assets/visuals/sheaf/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.v-sheaf {
+  --paper: #f6f4ef;
+  --paper-2: #efece5;
+  --paper-3: #e6e2d9;
+  --raised: #fbfaf7;
+  --ink: #111111;
+  --ink-2: #3b3934;
+  --muted: #6b6862;
+  --faint: #736f68;
+  --rule: rgba(17, 17, 17, 0.10);
+  --rule-strong: rgba(17, 17, 17, 0.20);
+  --border: #dedad1;
+  --ok: #1d7a46;
+  --signal-blue: #2f6fd6;
+  --font: "Sheaf Areal", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, "Sheaf Geist Mono", Menlo, Consolas, monospace;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --float: 0 18px 48px -18px rgba(17, 17, 17, 0.28), 0 1px 2px rgba(17, 17, 17, 0.06);
+  background: radial-gradient(120% 90% at 30% 20%, #ece9e2 0%, #e2ded5 100%);
+}
+
+.v-sheaf .vs-root { position: absolute; inset: 0; overflow: hidden; }
+.v-sheaf .vs-canvas {
+  position: absolute; top: 0; left: 0; transform-origin: 0 0;
+  font-family: var(--font); color: var(--ink); font-size: 14px; line-height: 1.4;
+  text-transform: none; letter-spacing: normal; word-spacing: normal; font-style: normal; text-align: left;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  pointer-events: none; user-select: none;
+}
+.v-sheaf .vs-canvas *, .v-sheaf .vs-canvas *::before, .v-sheaf .vs-canvas *::after { box-sizing: border-box; }
+.v-sheaf .vs-canvas svg { display: block; }
+.v-sheaf .vs-canvas b { font-weight: 600; }
+.v-sheaf .vs-grow { flex: 1; }
+.v-sheaf [hidden] { display: none !important; }
+
+/* ---------- Composition: laptop window + phone ---------- */
+.v-sheaf .vs-desk { position: absolute; inset: 0; display: flex; align-items: center; gap: 24px; padding: 24px; }
+.v-sheaf .vs-win {
+  flex: 1; min-width: 0; height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--paper); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.12), 0 30px 60px -30px rgba(17, 17, 17, 0.35), 0 2px 6px rgba(17, 17, 17, 0.06);
+}
+.v-sheaf .vs-bar {
+  flex: none; position: relative; height: 28px; display: flex; align-items: center; gap: 7px; padding: 0 12px;
+  background: var(--paper-2); border-bottom: 1px solid var(--rule);
+}
+.v-sheaf .vs-bar i { width: 11px; height: 11px; border-radius: 50%; background: #d9d5cc; box-shadow: inset 0 0 0 0.5px rgba(17,17,17,0.12); }
+.v-sheaf .vs-bar span { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 500; color: var(--muted); }
+.v-sheaf .vs-app { flex: 1; min-height: 0; display: flex; }
+
+/* ---------- Sidebar ---------- */
+.v-sheaf .vs-side {
+  flex: 0 0 214px; display: flex; flex-direction: column; padding: 0 12px 12px;
+  border-right: 1px solid var(--rule); background: var(--paper); overflow: hidden;
+}
+.v-sheaf .vs-win.no-side .vs-side { display: none; }
+.v-sheaf .vs-brand { display: flex; align-items: center; gap: 2px; padding: 12px 0 10px 8px; }
+.v-sheaf .vs-word { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; letter-spacing: -0.01em; }
+.v-sheaf .vs-word svg { width: 15px; height: 15px; }
+.v-sheaf .vs-word b { font-weight: 500; }
+.v-sheaf .vs-shead { display: flex; gap: 8px; padding: 2px 0 10px; }
+.v-sheaf .vs-search {
+  flex: 1; height: 30px; display: flex; align-items: center; padding: 0 12px;
+  background: var(--raised); border: 1px solid var(--border); border-radius: 10px; color: var(--faint); font-size: 13px;
+}
+.v-sheaf .vs-newbtn {
+  display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 11px 0 9px;
+  border: 1px solid var(--border); border-radius: 999px; font-size: 12px; font-weight: 500;
+}
+.v-sheaf .vs-newbtn svg, .v-sheaf .vs-newarea svg { width: 11px; height: 11px; }
+.v-sheaf .vs-group { display: flex; justify-content: space-between; min-height: 26px; align-items: center; padding: 0 8px; font-size: 12px; color: var(--muted); }
+.v-sheaf .vs-card {
+  position: relative; display: flex; flex-direction: column; gap: 2px;
+  padding: 8px 10px 8px 14px; margin: 0 0 4px; border-radius: 12px;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+.v-sheaf .vs-ctop b { font-size: 14px; font-weight: 600; line-height: 1.4; }
+.v-sheaf .vs-cbot { display: flex; gap: 8px; align-items: baseline; font-size: 13px; color: var(--muted); }
+.v-sheaf .vs-cbot span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-sheaf .vs-cbot i { font-style: normal; font-size: 12px; flex: none; font-variant-numeric: tabular-nums; }
+.v-sheaf .vs-card.active { background: var(--ink); color: var(--paper); }
+.v-sheaf .vs-card.active .vs-cbot { color: color-mix(in srgb, var(--paper) 72%, transparent); }
+.v-sheaf .vs-card[data-line]::before,
+.v-sheaf .vs-card.working::before {
+  content: ""; position: absolute; left: 5px; top: 12px; bottom: 12px; width: 2px; border-radius: 2px;
+}
+.v-sheaf .vs-card[data-line="unread"]::before { background: var(--signal-blue); }
+.v-sheaf .vs-card.working::before {
+  background: linear-gradient(180deg, color-mix(in srgb, #4fbf7f 30%, transparent) 30%, #4fbf7f 50%, color-mix(in srgb, #4fbf7f 30%, transparent) 70%);
+  background-size: 100% 250%; animation: vs-sweep 1.8s linear infinite;
+}
+@keyframes vs-sweep { from { background-position: 0 100%; } to { background-position: 0 -150%; } }
+.v-sheaf .vs-newarea { display: flex; align-items: center; gap: 8px; padding: 8px 8px 6px; font-size: 13px; color: var(--muted); }
+.v-sheaf .vs-qa { margin-top: auto; }
+
+/* ---------- Chat column ---------- */
+.v-sheaf .vs-chat { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--paper); }
+.v-sheaf .vs-hdr {
+  flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  height: 50px; padding: 0 12px 0 14px; border-bottom: 1px solid var(--rule); overflow: hidden;
+}
+.v-sheaf .vs-hl, .v-sheaf .vs-hr { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.v-sheaf .vs-hl { gap: 6px; }
+.v-sheaf .vs-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; margin-left: 4px; }
+.v-sheaf .vs-nav { display: grid; place-items: center; width: 24px; height: 28px; color: var(--muted); }
+.v-sheaf .vs-nav.off { opacity: 0.4; }
+.v-sheaf .vs-nav svg { width: 15px; height: 15px; }
+.v-sheaf .vs-ib { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; color: var(--muted); flex: none; }
+.v-sheaf .vs-ib svg { width: 17px; height: 17px; }
+.v-sheaf .vs-ib.on { color: var(--ink); background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.v-sheaf .vs-sep { width: 1px; height: 18px; background: var(--rule-strong); margin: 0 6px; }
+.v-sheaf .vs-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-left: 4px; flex: none; }
+.v-sheaf .vs-chat.running .vs-dot { background: var(--ink); animation: vs-breathe 1.2s ease-in-out infinite; }
+@keyframes vs-breathe { 50% { opacity: 0.25; } }
+
+.v-sheaf .vs-msgs { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+.v-sheaf .vs-msgs::after { /* soft edge where messages pass under the composer */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18px;
+  background: linear-gradient(to bottom, transparent, var(--paper));
+}
+.v-sheaf .vs-scroll {
+  display: flex; flex-direction: column; gap: 22px;
+  padding: 26px max(26px, calc((100% - 560px) / 2)) 24px;
+  transition: transform 0.7s var(--ease), opacity 0.6s ease;
+  will-change: transform;
+}
+.v-sheaf .vs-chat.fade .vs-scroll { opacity: 0; transition: transform 0s, opacity 0.6s ease; }
+.v-sheaf .vs-msg { display: flex; flex-direction: column; min-width: 0; }
+.v-sheaf .vs-msg.us { align-self: flex-end; align-items: flex-end; max-width: 85%; }
+.v-sheaf .vs-bubble { background: var(--ink); color: var(--paper); padding: 9px 14px; border-radius: 18px; line-height: 1.5; font-size: 15px; }
+.v-sheaf .vs-text { font-size: 15px; line-height: 1.6; }
+.v-sheaf .vs-text code {
+  font-family: var(--mono); font-size: 13px; padding: 1px 5px; border-radius: 5px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.v-sheaf .vs-summary {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 24px; margin: 0 0 6px;
+  font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.v-sheaf .vs-summary > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.v-sheaf .vs-summary::after {
+  content: ""; flex: none; width: 5px; height: 5px; margin-top: -2px;
+  border-right: 1.3px solid currentColor; border-bottom: 1.3px solid currentColor; transform: rotate(45deg); opacity: 0.6;
+}
+
+/* New turn: everything has its space from the start; it fades in, nothing reflows. */
+.v-sheaf .vs-new, .v-sheaf .vs-turn { opacity: 0; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.5s var(--ease); }
+.v-sheaf .vs-new.in, .v-sheaf .vs-turn.in { opacity: 1; transform: none; }
+.v-sheaf .vs-steps { display: grid; }
+.v-sheaf .vs-steps > * { grid-area: 1 / 1; }
+.v-sheaf .vs-rows { display: flex; flex-direction: column; padding-bottom: 6px; transition: opacity 0.3s ease, transform 0.45s var(--ease); }
+.v-sheaf .vs-row {
+  display: flex; align-items: center; gap: 8px; min-height: 22px; font-size: 12px; color: var(--muted);
+  opacity: 0; transform: translateY(4px); transition: opacity 0.3s ease, transform 0.4s var(--ease);
+}
+.v-sheaf .vs-row::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; flex: none; }
+.v-sheaf .vs-row.in { opacity: 1; transform: none; }
+.v-sheaf .vs-row em { font-style: normal; color: var(--ok); font-weight: 500; }
+.v-sheaf .vs-live {
+  min-height: 22px; font-size: 13px; line-height: 22px; white-space: nowrap;
+  color: transparent; -webkit-background-clip: text; background-clip: text;
+  background-image: linear-gradient(90deg, var(--faint) 0%, var(--faint) 38%, var(--ink) 50%, var(--faint) 62%, var(--faint) 100%);
+  background-size: 220% 100%; animation: vs-shimmer 1.5s linear infinite;
+  opacity: 0; transition: opacity 0.25s ease, transform 0.4s var(--ease);
+}
+.v-sheaf .vs-live.in { opacity: 1; }
+@keyframes vs-shimmer { from { background-position: 100% 0; } to { background-position: -120% 0; } }
+.v-sheaf .vs-steps .vs-summary { align-self: start; opacity: 0; transform: translateY(6px); transition: opacity 0.35s ease 0.1s, transform 0.45s var(--ease) 0.1s; }
+.v-sheaf .vs-turn.folded .vs-rows { opacity: 0; transform: translateY(-6px) scaleY(0.6); transform-origin: top; }
+.v-sheaf .vs-turn.folded .vs-steps .vs-summary { opacity: 1; transform: none; }
+.v-sheaf .vs-reply { transition: transform 0.55s var(--ease); }
+.v-sheaf .vs-turn.folded .vs-reply { transform: translateY(var(--fold, 0)); }
+.v-sheaf .vs-reply span { opacity: 0; transition: opacity 0.3s ease; }
+.v-sheaf .vs-reply span.in { opacity: 1; }
+
+/* ---------- Composer ---------- */
+.v-sheaf .vs-input { flex: none; padding: 6px max(22px, calc((100% - 580px) / 2)) 14px; }
+.v-sheaf .vs-box {
+  background: var(--raised); border: 1px solid var(--border); border-radius: 20px; padding: 8px 8px 6px;
+  transition: border-color 0.15s;
+}
+.v-sheaf .vs-chat.focus .vs-box { border-color: var(--ink); }
+.v-sheaf .vs-field { position: relative; min-height: 30px; padding: 4px 8px 6px; font-size: 16px; line-height: 1.4; }
+.v-sheaf .vs-ph { position: absolute; left: 8px; top: 4px; color: var(--faint); }
+.v-sheaf .vs-chat.has-text .vs-ph { display: none; }
+.v-sheaf .vs-caret { display: none; width: 1.5px; height: 1.1em; background: var(--ink); vertical-align: text-bottom; margin-left: 1px; animation: vs-blink 1s step-end infinite; }
+.v-sheaf .vs-chat.focus .vs-caret { display: inline-block; }
+.v-sheaf .vs-chat.focus:not(.has-text) .vs-ph { left: 11px; }
+.v-sheaf .vs-chat.focus:not(.has-text) .vs-caret { position: absolute; left: 8px; top: 7px; }
+@keyframes vs-blink { 50% { opacity: 0; } }
+.v-sheaf .vs-tools { display: flex; align-items: center; gap: 2px; }
+.v-sheaf .vs-cb, .v-sheaf .vs-send { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--muted); }
+.v-sheaf .vs-cb svg, .v-sheaf .vs-send svg { width: 18px; height: 18px; }
+.v-sheaf .vs-send { position: relative; background: var(--ink); color: var(--paper); transition: transform 0.15s var(--ease); }
+.v-sheaf .vs-send > span { position: absolute; inset: 0; display: grid; place-items: center; transition: opacity 0.2s ease; }
+.v-sheaf .vs-send .i-stop { opacity: 0; }
+.v-sheaf .vs-chat.running .vs-send .i-send { opacity: 0; }
+.v-sheaf .vs-chat.running .vs-send .i-stop { opacity: 1; }
+.v-sheaf .vs-chat.sent .vs-send { transform: scale(0.88); }
+.v-sheaf .vs-um { display: inline-flex; flex-direction: column; justify-content: center; gap: 3px; width: 34px; height: 34px; padding: 0 7px; }
+.v-sheaf .vs-um i { display: block; height: 3px; border-radius: 2px; background: var(--paper-3); overflow: hidden; position: relative; }
+.v-sheaf .vs-um i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--muted); border-radius: 2px; }
+.v-sheaf .vs-cx { display: flex; align-items: center; gap: 4px; padding: 6px 4px 0; font-size: 13px; color: var(--muted); }
+.v-sheaf .vs-chip { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; white-space: nowrap; }
+.v-sheaf .vs-chip > svg:first-child { width: 14px; height: 14px; }
+.v-sheaf .vs-chip svg:last-child:not(:first-child) { width: 10px; height: 10px; color: var(--faint); }
+.v-sheaf .vs-chip.strong { color: var(--ink); font-weight: 500; font-size: 14px; }
+
+/* ---------- Done notice (floating card, like Sheaf's update card) ---------- */
+.v-sheaf .vs-toast {
+  position: absolute; top: 62px; right: 16px; width: 330px;
+  display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px;
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 14px; box-shadow: var(--float);
+  opacity: 0; transform: translateX(24px); transition: opacity 0.3s ease, transform 0.5s var(--ease);
+}
+.v-sheaf .vs-chat.toast-in .vs-toast { opacity: 1; transform: none; }
+.v-sheaf .vs-t-mark { flex: none; width: 30px; height: 30px; border-radius: 8px; background: var(--ink); color: var(--paper); display: grid; place-items: center; }
+.v-sheaf .vs-t-mark svg { width: 14px; height: 14px; }
+.v-sheaf .vs-t-body { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.v-sheaf .vs-t-body b { font-size: 14px; }
+.v-sheaf .vs-t-body span { font-size: 12px; color: var(--muted); }
+.v-sheaf .vs-t-open { flex: none; height: 28px; padding: 0 12px; display: grid; place-items: center; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 12px; font-weight: 500; }
+
+/* ---------- Terminal pane (the console is always black) ---------- */
+.v-sheaf .vs-term { flex: 0 0 290px; display: flex; flex-direction: column; border-left: 1px solid var(--rule); background: var(--paper); }
+.v-sheaf .vs-win.no-term .vs-term { display: none; }
+.v-sheaf .vs-win.roomy .vs-term { flex-basis: 330px; }
+.v-sheaf .vs-win.roomy .vs-side { flex-basis: 232px; }
+.v-sheaf .vs-win:not(.roomy) .vs-wide, .v-sheaf .vs-win:not(.roomy) .vs-chip.strong { display: none; }
+.v-sheaf .vs-thead { flex: none; height: 50px; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--rule); }
+.v-sheaf .vs-thead > b { font-size: 14px; margin-right: 6px; }
+.v-sheaf .vs-ttab { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border: 1px solid transparent; border-radius: var(--r-sm); font-size: 13px; color: var(--ink-2); opacity: 0.6; }
+.v-sheaf .vs-ttab.active { opacity: 1; border-color: var(--border); font-weight: 600; }
+.v-sheaf .vs-ttab span { font-weight: 400; color: var(--muted); }
+.v-sheaf .vs-thead .vs-ib { width: 26px; height: 26px; }
+.v-sheaf .vs-thead .vs-ib svg { width: 15px; height: 15px; }
+.v-sheaf .vs-console {
+  flex: 1; min-height: 0; overflow: hidden; background: #000; color: #e8e6e1;
+  padding: 12px 14px; font-family: var(--mono); font-size: 11.5px; line-height: 1.6;
+}
+.v-sheaf .vs-console div { white-space: pre; }
+.v-sheaf .vs-console .vs-tout { white-space: normal; }
+.v-sheaf .vs-console .dim, .v-sheaf .vs-console .d { color: #8d8a84; }
+.v-sheaf .vs-console b { color: #7aa7f0; font-weight: 500; }
+.v-sheaf .vs-console i { color: #c9a0f0; font-style: normal; }
+.v-sheaf .vs-console s { text-decoration: none; color: #5fd08a; }
+.v-sheaf .vs-tcur { display: inline-block; width: 7px; height: 1.15em; vertical-align: text-bottom; background: #e8e6e1; }
+.v-sheaf .vs-tcur.gone { visibility: hidden; }
+.v-sheaf .vs-tcur.blink { animation: vs-blink 1s step-end infinite; }
+.v-sheaf .vs-tl { opacity: 0; }
+.v-sheaf .vs-tl.in { opacity: 1; }
+.v-sheaf .vs-console > *, .v-sheaf .vs-tout { transition: opacity 0.6s ease; }
+.v-sheaf .vs-root.term-fade .vs-tout, .v-sheaf .vs-root.term-fade .vs-tcmd { opacity: 0; }
+
+/* ---------- Phone ---------- */
+.v-sheaf .vs-phone {
+  flex: none; position: relative; padding: 9px; border-radius: 44px; background: #1b1a18;
+  box-shadow: inset 0 0 0 1.5px #3a3833, 0 30px 60px -28px rgba(17, 17, 17, 0.45);
+}
+.v-sheaf .vs-screen { position: relative; width: 100%; height: 100%; border-radius: 35px; overflow: hidden; background: var(--paper); }
+.v-sheaf .vs-screen-in { position: absolute; top: 0; left: 0; transform-origin: 0 0; display: flex; flex-direction: column; background: var(--paper); }
+.v-sheaf .vs-status { flex: none; position: relative; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 40px; font-size: 16px; }
+.v-sheaf .vs-island { position: absolute; left: 50%; top: 11px; width: 120px; height: 34px; margin-left: -60px; border-radius: 20px; background: #000; }
+.v-sheaf .vs-sicons { display: flex; align-items: flex-end; gap: 2px; }
+.v-sheaf .vs-sicons i { width: 4px; background: var(--ink); border-radius: 1px; }
+.v-sheaf .vs-sicons i:nth-child(1) { height: 6px; } .v-sheaf .vs-sicons i:nth-child(2) { height: 9px; } .v-sheaf .vs-sicons i:nth-child(3) { height: 12px; }
+.v-sheaf .vs-sicons u { width: 25px; height: 12px; margin-left: 6px; border-radius: 4px; border: 1.5px solid var(--ink); background: linear-gradient(90deg, var(--ink) 70%, transparent 70%) content-box; padding: 1.5px; }
+.v-sheaf .vs-k-phone { flex: 1; min-height: 0; }
+.v-sheaf .vs-k-phone .vs-hdr { padding: 0 10px 0 12px; height: 48px; }
+.v-sheaf .vs-k-phone .vs-hl { gap: 4px; }
+.v-sheaf .vs-k-phone .vs-ib { width: 36px; height: 36px; }
+.v-sheaf .vs-k-phone .vs-ib svg { width: 19px; height: 19px; }
+.v-sheaf .vs-k-phone .vs-scroll { padding: 22px 16px 20px; gap: 20px; }
+.v-sheaf .vs-k-phone .vs-input { padding: 6px 12px 26px; }
+.v-sheaf .vs-k-phone .vs-field { min-height: 52px; }
+.v-sheaf .vs-k-phone .vs-toast { display: none; }
+.v-sheaf .vs-push {
+  position: absolute; top: 56px; left: 10px; right: 10px; display: flex; gap: 10px; align-items: center;
+  padding: 12px 14px; border-radius: 22px; background: rgba(251, 250, 247, 0.92);
+  box-shadow: 0 12px 30px -10px rgba(17, 17, 17, 0.35), 0 0 0 0.5px rgba(17, 17, 17, 0.1);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  opacity: 0; transform: translateY(-110%); transition: opacity 0.3s ease, transform 0.6s var(--ease);
+}
+.v-sheaf .vs-root.push-in .vs-push { opacity: 1; transform: none; }
+.v-sheaf .vs-p-icon { flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--rule); display: grid; place-items: center; color: var(--ink); }
+.v-sheaf .vs-p-icon svg { width: 18px; height: 18px; }
+.v-sheaf .vs-p-body { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 15px; line-height: 1.3; }
+.v-sheaf .vs-p-top { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.v-sheaf .vs-p-top b { font-weight: 500; color: var(--muted); }
+.v-sheaf .vs-p-body > span { color: var(--ink-2); }
+
+/* Phone-width stage: the phone's own screen fills the stage, no frame. */
+.v-sheaf .vs-root.is-mob .vs-desk { padding: 0; }
+.v-sheaf .vs-root.is-mob .vs-win { display: none; }
+.v-sheaf .vs-root.is-mob .vs-phone { width: 100%; height: 100%; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+.v-sheaf .vs-root.is-mob .vs-screen { border-radius: 0; }
+.v-sheaf .vs-root.is-mob .vs-status { display: none; }
+.v-sheaf .vs-root.is-mob .vs-k-phone .vs-toast { display: flex; top: 58px; left: 12px; right: 12px; width: auto; }
+.v-sheaf .vs-root.is-mob .vs-k-phone .vs-input { padding-bottom: 12px; }
+.v-sheaf .vs-root.is-mob .vs-k-phone .vs-cx { display: none; }
+.v-sheaf .vs-root.is-mob .vs-push { display: none; }
+
+/* Reduced motion: one calm finished frame, no loops. */
+.v-sheaf .vs-root.still *, .v-sheaf .vs-root.still *::before, .v-sheaf .vs-root.still *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .v-sheaf .vs-canvas *, .v-sheaf .vs-canvas *::before, .v-sheaf .vs-canvas *::after { animation: none !important; transition: none !important; }
+}
