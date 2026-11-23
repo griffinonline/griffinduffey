@@ -27,6 +27,7 @@
 //   No `see` = "walkthrough on request".
 
 window.CV = {
+  portrait: '/assets/cv/griffin-id.jpg', // lo-fi scan, top-left corner cell
   title: 'griffin bennett duffey',
   subtitle: 'cv: designer, builder, project lead. greenville, sc',
   note: 'draft',
