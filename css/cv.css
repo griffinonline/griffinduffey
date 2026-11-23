@@ -493,9 +493,43 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 .top .trow.head > .gutter, .top .trow.sub > .gutter, .top .trow.fact > .gutter { border-bottom-color: transparent; }
 /* Same look as the 'cv: ...' subtitle row */
 .trow.fact .title { font-style: italic; font-size: 1rem; }
-.trow.fact .fact-label { margin-right: 0.3em; }
+.trow.fact .fact-label { margin-right: 0; }
 @media (max-width: 720px) {
   .top { --pw: 3.75rem; --tabsh: 2.25rem; }
   .trow.fact, .trow.fact > .cell { height: auto; min-height: var(--row); }
   .trow.fact .title { font-size: 0.875rem; white-space: normal; line-height: 1.25; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+}
+
+/* ---------- Upper header: [photo + name block] [bio] [nav + zoom] ---------- */
+.top-upper { display: flex; align-items: stretch; }
+.top-col { display: flex; flex-direction: column; }
+.top-col.a { flex: 0 0 clamp(22rem, 32vw, 30rem); min-width: 0; }
+.top-col.a .trow > .title { flex: 1 1 auto; border-right-color: var(--line); padding-right: 0.6rem; }
+/* Long info rows (e.g. likely fit for) wrap instead of widening the column */
+.top-col.a .trow.fact, .top-col.a .trow.fact > .cell { height: auto; min-height: var(--row); }
+.top-col.a .trow.fact > .title { white-space: normal; line-height: 1.25; padding-top: 0.2rem; padding-bottom: 0.2rem; }
+.top-col.c { flex: none; }
+.top-col.c .trow { justify-content: flex-end; }
+.top-col.c .trow > .fill { flex: 1 1 auto; }
+.top-col.c .trow.rest { flex: 1 1 auto; height: auto; }
+.top-col.c .trow.rest > .fill { height: auto; }
+.cell.bio {
+  flex: 1 1 24rem; min-width: 16rem; height: auto;
+  display: block; white-space: normal; overflow: visible;
+  padding: 0.45rem 0.9rem 0.5rem; font-size: 0.9375rem; line-height: 1.4;
+}
+.cell.bio p + p { margin-top: 0.5em; }
+/* Narrower screens: bio drops below as a full-width cell */
+@media (max-width: 1180px) {
+  .top-upper { flex-wrap: wrap; }
+  .top-col.a { flex: 1 1 0; min-width: 0; }
+  .top-col.a .trow > .title { padding-right: 0.3rem; }
+  .cell.bio { order: 3; flex: 1 1 100%; padding: 0.6rem 0.9rem 0.7rem calc(var(--pw) + 2 * var(--pp) + 0.3rem); }
+}
+@media (max-width: 720px) {
+  .top-col.c .trow.sub, .top-col.c .trow.rest { display: none; }
+  .top-col.a, .top-col.c { flex: 1 1 100%; }
+  .top-col.c .trow.head { justify-content: flex-start; padding-left: calc(var(--pw) + 2 * var(--pp)); }
+  .top-upper { position: relative; }
+  .cell.bio { padding-left: 0.6rem; font-size: 0.875rem; }
 }

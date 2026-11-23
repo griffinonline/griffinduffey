@@ -30,6 +30,10 @@ window.CV = {
   portrait: '/assets/cv/griffin-id.jpg', // lo-fi scan, top-left corner cell
   title: 'griffin bennett duffey',
   subtitle: 'cv: designer, builder, project lead',
+  // Bio: one merged cell to the right of the name block. Draft, Griffin to edit.
+  bio: [
+    "i design and build websites, tools and the systems behind them, and i'm usually the person on the call with you too. most recently i ran projects and did most of the building at [oratory], which became [MOMENT], making sites for ai and software companies. before that i started votive, a chai company, and built its whole back office. i studied religion and philosophy at clemson and still read philosophy with friends. i genuinely like working with people.",
+  ],
   // Info rows under the subtitle, next to the photo. [moment] becomes a link.
   facts: [
     ['currently based in', 'greenville, sc'],

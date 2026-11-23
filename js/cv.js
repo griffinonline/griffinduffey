@@ -224,17 +224,33 @@
     return z;
   }
   function buildTop() {
-    const r1 = el('div', 'trow head');
-    // Corner cell: Griffin's scanned ID photo + signature, hanging down over the header rows.
+    // Upper header = three side-by-side columns so the bio can be one merged
+    // cell spanning every row: [photo + name/subtitle/facts] [bio] [nav/zoom].
+    const row = (cls, ...cells) => { const r = el('div', 'trow ' + cls); r.append(...cells); return r; };
     const corner = el('div', 'cell gutter corner',
       CV.portrait ? `<span class="portrait"><img src="${esc(CV.portrait)}" alt="griffin duffey, scanned photo and signature"></span>` : '');
-    r1.append(corner, el('h1', 'cell title', esc(CV.title)), el('div', 'cell fill'));
-    CV.nav.forEach(([label, href]) => r1.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
+    const facts = CV.facts || [];
 
-    const r2 = el('div', 'trow sub');
-    r2.append(el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`), el('div', 'cell fill'));
-    r2.append(switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
-    if (CV.note) r2.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
+    const colA = el('div', 'top-col a');
+    colA.append(
+      row('head', corner, el('h1', 'cell title', esc(CV.title))),
+      row('sub', el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`)),
+      ...facts.map(([label, value]) => row('fact', el('div', 'cell gutter'),
+        el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${rich(value)}</span>`))),
+    );
+
+    const colC = el('div', 'top-col c');
+    const navRow = row('head');
+    CV.nav.forEach(([label, href]) => navRow.append(el('div', 'cell nav', `<a href="${esc(href)}"${ext(href)}>${esc(label)}</a>`)));
+    const subRow = row('sub', switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
+    if (CV.note) subRow.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
+    // One stretchy blank cell fills the rest of the column next to the fact rows.
+    colC.append(navRow, subRow, row('rest', el('div', 'cell fill')));
+
+    const upper = el('div', 'top-upper');
+    upper.append(colA);
+    if (CV.bio && CV.bio.length) upper.append(el('div', 'cell bio', CV.bio.map((p) => `<p>${rich(p)}</p>`).join('')));
+    upper.append(colC);
 
     const r3 = el('nav', 'trow tabs');
     r3.setAttribute('aria-label', 'CV sections');
@@ -247,12 +263,7 @@
       r3.append(a);
     });
     r3.append(el('div', 'cell fill'));
-    const facts = (CV.facts || []).map(([label, value]) => {
-      const r = el('div', 'trow fact');
-      r.append(el('div', 'cell gutter'), el('div', 'cell title', `<span class="fact-label">${esc(label)}</span> ${rich(value)}`), el('div', 'cell fill'));
-      return r;
-    });
-    top.append(r1, r2, ...facts, r3);
+    top.append(upper, r3);
   }
 
   // ---------- Sheet ----------
@@ -583,6 +594,7 @@
   // ---------- Print version: a plain CV with everything ----------
   const pr = document.getElementById('print-cv');
   pr.innerHTML = `<h1>${esc(CV.title)}</h1><p>${esc(CV.subtitle)}</p>` +
+    (CV.bio || []).map((p) => `<p>${rich(p)}</p>`).join('') +
     (CV.facts || []).map(([l, v]) => `<p>${esc(l)} ${rich(v)}</p>`).join('') +
     CV.sections.map((s) => `<section><h2>${esc(s.name)}</h2>` +
       s.items.map((i) => {
