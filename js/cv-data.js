@@ -724,7 +724,7 @@ window.CV = {
           links: [],
           // From Griffin's Goodreads export (11/23); Griffin confirmed which were group reads.
           books: [
-            { t: "Ethics of Liberation", a: "Enrique Dussel", d: 'now' },
+            { t: "Ethics of Liberation", a: "Enrique Dussel", d: '2026-08' },
             { t: "What Is Philosophy?", a: "Gilles Deleuze", d: '2026-06' },
             { t: "Infinitely Demanding", a: "Simon Critchley", d: '2026-05' },
             { t: "The Yield: Kafka's Atheological Reformation", a: "Paul North", d: '2026-04' },
