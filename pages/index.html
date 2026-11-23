@@ -4,50 +4,139 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Griffin Duffey</title>
-  <meta name="description" content="Griffin Bennett Duffey — design engineer, musician, founder.">
+  <meta name="description" content="Griffin Duffey designs and builds sites, tools, and automations, and is the person you talk to while it happens. Open for work.">
   <link rel="icon" type="image/png" href="/assets/fav.png">
   <link rel="apple-touch-icon" href="/assets/webclip.png">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/pro.css">
 </head>
 <body>
-  <main class="page-layout home">
-    <aside class="site-nav" data-include="/partials/nav.html"></aside>
+  <div class="pro">
+    <header class="pro-head" data-include="/partials/header.html"></header>
 
-    <section class="home-icons">
-      <button class="desktop-icon" type="button" data-open-dialog="reading">
-        <img src="/assets/globe.gif" alt="" class="desktop-icon-image">
-        <span class="desktop-icon-label">what i'm currently reading</span>
-      </button>
+    <main class="pro-main">
+      <p class="draft-flag">draft: grey boxes = images to come</p>
 
-      <button class="desktop-icon" type="button" data-open-dialog="listening">
-        <img src="/assets/musical-notes.gif" alt="" class="desktop-icon-image">
-        <span class="desktop-icon-label">what i'm currently listening to</span>
-      </button>
-    </section>
+      <!-- Anchor line -->
+      <section class="hero">
+        <h1>i turn a team's backlog into working software: sites, tools, automations. and i'm the one you talk to while it happens.</h1>
+        <p class="hero-sub">design, build, and run the project. most recently at MOMENT, shipping brand sites for ai and software companies. before that, i started a beverage company and built its whole back office.</p>
+        <p class="buttons">
+          <a href="#work">see work</a>
+          <a href="mailto:griffinbennettduffey@gmail.com?subject=work">get in touch</a>
+          <a href="/cv">cv</a>
+        </p>
+      </section>
 
-    <dialog class="dialog" id="dialog-reading">
-      <form method="dialog" class="dialog-close-form">
-        <button class="dialog-close" type="submit" aria-label="Close">×</button>
-      </form>
-      <h2 class="dialog-title">currently reading</h2>
-      <div data-widget="currently-reading">
-        <!-- Books fetched at view time via /api/currently-reading (see js/goodreads.js) -->
-      </div>
-    </dialog>
+      <!-- What I do -->
+      <section class="group">
+        <aside class="group-label"><span>what i do</span></aside>
+        <div class="group-body cols">
+          <div class="col">
+            <h2>design + build</h2>
+            <p>brand sites from figma to production. next.js, astro, sanity, webflow. real cms, forms, deploys.</p>
+          </div>
+          <div class="col">
+            <h2>systems + tools</h2>
+            <p>the stuff behind the site: ordering, invoices, internal dashboards, automations a team can run without me.</p>
+          </div>
+          <div class="col">
+            <h2>run the project</h2>
+            <p>client calls, scope, timelines, handoffs. i've been the main point of contact on most of what's below.</p>
+          </div>
+        </div>
+      </section>
 
-    <dialog class="dialog" id="dialog-listening">
-      <form method="dialog" class="dialog-close-form">
-        <button class="dialog-close" type="submit" aria-label="Close">×</button>
-      </form>
-      <h2 class="dialog-title">top albums</h2>
-      <div data-widget="top-albums">
-        <!-- Albums fetched at view time from Last.fm (see js/lastfm.js) -->
-      </div>
-    </dialog>
-  </main>
+      <!-- Selected work -->
+      <section class="group" id="work">
+        <aside class="group-label"><span>selected work</span></aside>
+        <div class="group-body cases">
+          <a class="case" href="#">
+            <div class="img" aria-hidden="true"></div>
+            <h3>tahoe labs</h3>
+            <p class="meta">MOMENT · builder + client contact</p>
+            <p>brand site for an ai company, on sanity. ran the staging-to-release flow and shipped the tara launch.</p>
+          </a>
+          <a class="case" href="#">
+            <div class="img" aria-hidden="true"></div>
+            <h3>allobrain</h3>
+            <p class="meta">MOMENT · builder + handoff</p>
+            <p>site build, then a handoff a non-technical team could actually run: patch, docs, and a prompt they paste into their own ai tool.</p>
+          </a>
+          <a class="case" href="#">
+            <div class="img" aria-hidden="true"></div>
+            <h3>g360 technologies</h3>
+            <p class="meta">MOMENT · builder</p>
+            <p>site for an ai security company selling promptvault and repo audit. [check: my exact role + what i built]</p>
+          </a>
+          <a class="case" href="#">
+            <div class="img" aria-hidden="true"></div>
+            <h3>studio ops tools</h3>
+            <p class="meta">MOMENT · designer + builder</p>
+            <p>the studio's own internal tooling: a project dashboard, then a client hub with intake, timelines, and handoffs.</p>
+          </a>
+          <a class="case" href="/work-votive">
+            <div class="img" aria-hidden="true"></div>
+            <h3>votive back office</h3>
+            <p class="meta">founder · designer + builder</p>
+            <p>my own non-alcoholic beverage company, 15+ wholesale accounts. wholesale ordering, net-terms invoices, ups labels, and an order sheet that updates itself.</p>
+          </a>
+          <div class="case unreleased">
+            <h3>not live yet</h3>
+            <p class="meta">walkthroughs on request</p>
+            <p><strong>scite</strong>: marketing site for an ai research tool.<br><strong>nps prism</strong>: marketing site for bain, lead builder (~158 of ~190 commits).</p>
+          </div>
+        </div>
+      </section>
 
-  <script src="/js/main.js"></script>
-  <script src="/js/goodreads.js"></script>
-  <script src="/js/lastfm.js"></script>
+      <!-- Earlier work -->
+      <section class="group">
+        <aside class="group-label"><span>earlier</span></aside>
+        <div class="group-body rows">
+          <div class="row"><p><a href="https://www.devincihouse.com/" target="_blank" rel="noopener noreferrer">devinci house</a></p><p class="meta">design + development</p><p>contemporary art gallery in greenville. y2k energy up front, clean inside.</p></div>
+          <div class="row"><p><a href="https://throw-site.webflow.io/" target="_blank" rel="noopener noreferrer">throw</a></p><p class="meta">design + development</p><p>hand-thrown sites for people-first businesses, led for meridian. featured on one page love.</p></div>
+          <div class="row"><p><a href="https://www.drinkvotive.com/" target="_blank" rel="noopener noreferrer">votive</a></p><p class="meta">design + development</p><p>brutalist, simple, functional. gifs of 3d-scanned product.</p></div>
+          <div class="row"><p><a href="https://pitchsafe.co/" target="_blank" rel="noopener noreferrer">pitchsafe</a></p><p class="meta">co-developer</p><p>pitching development platform for players, parents, and coaches.</p></div>
+          <div class="row"><p><a href="https://www.berryconsultants.com/" target="_blank" rel="noopener noreferrer">berry consultants</a></p><p class="meta">co-developer</p><p>adaptive clinical trial design and software.</p></div>
+          <div class="row"><p><a href="https://www.samacho.com/" target="_blank" rel="noopener noreferrer">sam acho</a></p><p class="meta">co-developer</p><p>speaker, espn analyst, former nfl player.</p></div>
+          <div class="row"><p><a href="https://www.dripos.com/" target="_blank" rel="noopener noreferrer">dripos</a></p><p class="meta">development support</p><p>final-hour debugging and client requests for kinetic studio.</p></div>
+        </div>
+      </section>
+
+      <!-- How I work -->
+      <section class="group">
+        <aside class="group-label"><span>how i work</span></aside>
+        <ul class="group-body points">
+          <li><strong>i'm the person you talk to.</strong> no handing you off to a dev you never meet.</li>
+          <li><strong>it ships to production.</strong> real sites with real cms, forms, and deploys, not demos.</li>
+          <li><strong>you can run it without me.</strong> every project ends with a handoff your team can actually use.</li>
+          <li><strong>ai does the typing.</strong> i use it every day, which is why the work moves fast.</li>
+        </ul>
+      </section>
+
+      <!-- Work with me -->
+      <section class="group">
+        <aside class="group-label"><span>work with me</span></aside>
+        <div class="group-body">
+          <div class="cols">
+            <div class="col">
+              <h2>full-time</h2>
+              <p>design engineer, forward-deployed, or ai implementation roles. remote or greenville, sc.</p>
+            </div>
+            <div class="col">
+              <h2>sprints</h2>
+              <p>fixed-scope, two-week builds for small teams: a site, a tool, or the system behind your business.</p>
+            </div>
+            <div class="col">
+              <h2>agencies</h2>
+              <p>extra hands that can design, build, and talk to your client.</p>
+            </div>
+          </div>
+          <p class="buttons"><a href="mailto:griffinbennettduffey@gmail.com?subject=work">email me</a> <a href="/cv">cv</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pro-foot" data-include="/partials/footer.html"></footer>
+  </div>
 </body>
 </html>

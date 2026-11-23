@@ -7,18 +7,17 @@
   <meta name="description" content="The system behind a bootstrapped chai company: wholesale ordering, net-terms invoices, shipping labels, and an order sheet that keeps itself up to date.">
   <link rel="icon" type="image/png" href="/assets/fav.png">
   <link rel="apple-touch-icon" href="/assets/webclip.png">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/work.css">
+  <link rel="stylesheet" href="/css/pro.css">
 </head>
 <body>
-  <div class="page-layout">
-    <aside class="site-nav" data-include="/partials/nav.html"></aside>
+  <div class="pro">
+    <header class="pro-head" data-include="/partials/header.html"></header>
 
-    <main class="page-content work case-page">
+    <main class="pro-main case-page">
       <p class="draft-flag">draft case study: check every fact before it goes live</p>
 
       <header class="case-head">
-        <p><a href="/work">← work</a></p>
+        <p class="back"><a href="/#work">← all work</a></p>
         <h1>the back office behind a chai company</h1>
         <p class="case-meta">
           <span>votive</span>
@@ -28,7 +27,7 @@
         </p>
       </header>
 
-      <div class="case-img" aria-hidden="true"></div>
+      <div class="img" aria-hidden="true"></div>
 
       <section class="case-body">
         <h2>the problem</h2>
@@ -59,10 +58,10 @@
         <p>astro · cloudflare workers · stripe (checkout, invoices, webhooks) · shippo + ups · google sheets api · python</p>
       </section>
 
-      <p class="case-next"><a href="/work">next: back to all work →</a></p>
+      
     </main>
-  </div>
 
-  <script src="/js/main.js"></script>
+    <footer class="pro-foot" data-include="/partials/footer.html"></footer>
+  </div>
 </body>
 </html>
