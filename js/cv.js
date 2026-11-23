@@ -247,15 +247,15 @@
     if (!lf || !ul) return;
     const api = (method, extra) => fetch(`https://ws.audioscrobbler.com/2.0/?method=${method}&user=${lf.user}&api_key=${lf.key}&format=json&${extra}`).then((r) => r.json());
     try {
-      const d = await api('user.gettopalbums', 'period=7day&limit=3');
-      const art = (imgs) => { const pick = (imgs || []).find((i) => i.size === 'medium' && i['#text']) || (imgs || []).find((i) => i['#text']); return pick ? pick['#text'] : ''; };
+      const d = await api('user.gettopalbums', 'period=1month&limit=4');
+      const art = (imgs) => { const pick = (imgs || []).find((i) => i.size === 'large' && i['#text']) || (imgs || []).find((i) => i['#text']); return pick ? pick['#text'] : ''; };
       let rows = ((d.topalbums || {}).album || []).map((a) => [a.name, a.artist && a.artist.name, a.url, art(a.image)]);
       if (!rows.length) {
         const r = await api('user.getrecenttracks', 'limit=1');
         rows = ((r.recenttracks || {}).track || []).slice(0, 1).map((t) => [t.name, t.artist && t.artist['#text'], t.url, art(t.image)]);
       }
       ul.innerHTML = rows.length
-        ? rows.map(([n, a, u, img]) => `<li><a class="alb" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(n)}, ${esc(a || '')}">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : '<span class="alb-blank"></span>'}<span class="alb-t"><em>${esc(n)}</em><span>${esc(a || '')}</span></span></a></li>`).join('')
+        ? rows.map(([n, a, u, img]) => `<li><a class="alb" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(n)}, ${esc(a || '')}">${img ? `<img src="${esc(img)}" alt="${esc(n)}, ${esc(a || '')}" loading="lazy">` : `<span class="alb-blank">${esc(n)}</span>`}</a></li>`).join('')
         : '<li class="muted">nothing lately</li>';
     } catch (e) {
       ul.innerHTML = '<li class="muted">last.fm is quiet</li>';
@@ -305,10 +305,16 @@
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
     const links = (CV.elsewhere || []).map(([l, h]) => [l, h === '@nav' ? navHref(l) : h]).filter(([, h]) => h);
     const side = el('div', 'cell fill side', `
-      <section class="wg"><p class="wg-h">reading</p>
-        <ul class="side-reading">${(CV.reading || []).map(([t, a]) => `<li><em>${esc(t)}</em> <span>${esc(a)}</span></li>`).join('')}</ul></section>
-      <section class="wg"><p class="wg-h">listening <span>this week</span></p>
-        <ul class="side-listening"><li class="muted">…</li></ul></section>
+      <a class="wg wg-hire" href="${esc(navHref('email'))}">
+        <span class="hire-dot" aria-hidden="true"></span>
+        <span class="hire-t"><b>open to work</b><span>full-time or projects · say hi →</span></span>
+      </a>
+      <div class="wg-row">
+        <section class="wg wg-listen"><p class="wg-h">listening <span>this month</span></p>
+          <ul class="side-listening"><li class="muted">…</li></ul></section>
+        <section class="wg wg-read"><p class="wg-h">reading</p>
+          ${(CV.reading || []).slice(0, 1).map(([t, a, cover]) => `<div class="book">${cover ? `<img src="${esc(cover)}" alt="${esc(t)}, ${esc(a)}" loading="lazy">` : ''}</div><p class="book-t"><em>${esc(t)}</em> <span>${esc(a)}</span></p>`).join('')}</section>
+      </div>
       <section class="wg wg-links"><p class="wg-h">elsewhere</p>
         <p class="side-links">${links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join('')}</p></section>`);
     colC.append(navRow, subRow, row('rest', side));
