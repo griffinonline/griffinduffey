@@ -220,10 +220,10 @@ window.CVVisuals = window.CVVisuals || {};
           <path d="M-40 120 Q300 -40 640 120" /><path d="M-40 250 Q300 90 640 250" /><path d="M-40 380 Q300 220 640 380"/><path d="M300 0V330" />
         </svg>
         <div class="g-chips">
-        <span class="g-chip" style="left:44%;top:8%">${G_ICONS.alert}Sensitive data at risk</span>
-        <span class="g-chip" style="left:5%;top:30%">${G_ICONS.eyeoff}Untracked AI interaction</span>
-        <span class="g-chip" style="left:52%;top:54%">${G_ICONS.branch}Code path never tested</span>
-        <span class="g-chip" style="left:17%;top:78%">${G_ICONS.bug}Hidden code vulnerability</span>
+        <span class="g-chip" style="left:44%;top:14%">${G_ICONS.alert}Sensitive data at risk</span>
+        <span class="g-chip" style="left:5%;top:35%">${G_ICONS.eyeoff}Untracked AI interaction</span>
+        <span class="g-chip" style="left:52%;top:57%">${G_ICONS.branch}Code path never tested</span>
+        <span class="g-chip" style="left:17%;top:80%">${G_ICONS.bug}Hidden code vulnerability</span>
         </div>
         <div class="g-hero-copy">
           <h1>Scale AI with confidence.</h1>
@@ -246,7 +246,7 @@ window.CVVisuals = window.CVVisuals || {};
               <div class="g-bubble"><span class="g-btext">${PROMPT.map(([s, r]) => r ? `<span class="g-sens"><span class="g-raw">${s}</span><span class="g-tok">[${r}]</span></span>` : `<span>${s}</span>`).join('')}</span><i class="g-av"></i></div>
               <div class="g-reply">${G_ICONS.shield}<span><b>3 fields masked</b> before reaching the model</span></div>
             </div>
-            <div class="g-input"><span class="g-typed"><span class="g-ph">Ask anything</span></span><span class="g-caret"></span><span class="g-plus">+</span><span class="g-send" data-k="send">${G_ICONS.up}</span></div>
+            <div class="g-input"><span class="g-ghost" aria-hidden="true">${PROMPT.map(([s]) => s).join('')}</span><span class="g-typed"><span class="g-ph">Ask anything</span><span class="g-caret"></span></span><span class="g-plus">+</span><span class="g-send" data-k="send">${G_ICONS.up}</span></div>
           </div>
         </section>
         <div class="g-feats">
@@ -312,7 +312,8 @@ window.CVVisuals = window.CVVisuals || {};
       c.term = c.q('.g-term');
       c.ralink = c.q('.g-link');
       c.typedNode = document.createElement('span');
-      c.typed.append(c.typedNode);
+      // typed text goes before the caret, so the caret follows it
+      c.typed.insertBefore(c.typedNode, c.typed.querySelector('.g-caret'));
     },
     frame(c, t) {
       // hero chips: staggered fade-up, then a slow float

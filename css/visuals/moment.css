@@ -71,7 +71,7 @@
   background: linear-gradient(180deg, #eceef5 0%, #f4f5f9 55%, #fff 100%);
   border-bottom: 1px solid var(--line);
 }
-.v-g360 .g-chips { position: relative; flex: 1; min-height: 120px; margin: 14px 0 10px; }
+.v-g360 .g-chips { position: relative; flex: 1; min-height: 120px; margin: 24px 0 10px; }
 .v-g360 .g-arcs { position: absolute; inset: 0; width: 100%; height: 100%; }
 .v-g360 .g-arcs path { fill: none; stroke: #d9dce6; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .v-g360 .g-chip {
@@ -381,3 +381,8 @@
 .v-less .narrow .l-panels { height: 230px; }
 .v-less .narrow .l-hero { padding-top: 20px; }
 .v-less .narrow .l-hero h1 { font-size: 31px; }
+
+/* The input reserves the full prompt's height (invisible ghost text), and the
+   typed text sits on top of it, so the box never grows while typing. */
+.v-g360 .g-ghost { visibility: hidden; display: block; }
+.v-g360 .g-typed { position: absolute; left: 9px; right: 9px; top: 7px; }
