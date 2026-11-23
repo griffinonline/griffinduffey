@@ -113,6 +113,28 @@ em { font-style: italic; }
 
 .m-thumb { display: none; }
 
+/* Timelines: multi-year entries run a thin bar in the section color from
+   the thumbnail (start year) to the end year. "–now" fades out at the end. */
+.yr.span { position: relative; }
+.yr.span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0.3125rem;
+  transform: translateY(-50%);
+  background: color-mix(in srgb, var(--tint, #ccc) 80%, #fff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint, #ccc) 70%, #000 12%);
+}
+.yr.span-end::before { right: 0.3rem; }
+.yr.span-open::before {
+  right: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent);
+  mask-image: linear-gradient(90deg, #000 40%, transparent);
+}
+.row.entry:hover .yr.span::before { background: var(--tint, #ccc); }
+
 /* Placeholder: hatch in the section color until a real image goes in. */
 .ph {
   --tint: #ccc;
@@ -154,7 +176,8 @@ em { font-style: italic; }
 }
 .viewer-media > img,
 .viewer-media > .ph { width: 100%; height: 100%; object-fit: cover; }
-.viewer-media > img { display: block; }
+.viewer-media > img { display: block; object-position: left top; }
+.has-thumb > img, .m-thumb > img { object-position: left top; }
 
 .comment {
   position: fixed;
@@ -226,7 +249,7 @@ body.viewing .row.entry:not(.is-open) .name { color: transparent; }
   .row.head .name { white-space: normal; }
   .nav-m {
     display: grid;
-    grid-template-columns: var(--gutter) repeat(4, 1fr);
+    grid-template-columns: var(--gutter) repeat(var(--nav-n, 3), 1fr);
     height: var(--row);
   }
   .nav-m::before { content: ''; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }

@@ -81,6 +81,11 @@ a { color: inherit; }
   animation: blink 1.6s steps(1) infinite;
 }
 
+.pro-prev {
+  margin-left: 0.6em;
+  opacity: 0.6;
+}
+
 @keyframes blink {
   50% { opacity: 0; }
 }
@@ -221,6 +226,18 @@ a.case:hover h3 {
     #eee;
 }
 
+.img:has(img) {
+  background: #fff;
+}
+
+.img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
 .meta {
   opacity: 0.6;
 }
@@ -258,6 +275,23 @@ a.case:hover h3 {
 
 .points strong {
   font-weight: bold;
+}
+
+/* Quote slot */
+.quote {
+  max-width: 54ch;
+  margin-top: 1.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--line);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 0.35rem;
+  font-style: normal;
+  opacity: 0.6;
 }
 
 /* ---------- Footer ---------- */
@@ -325,6 +359,60 @@ a.case:hover h3 {
   gap: 0.45rem;
   padding-left: 1rem;
   list-style: '– ';
+}
+
+/* Extra screenshots inside a case study */
+.shots {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.shots.pair {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr);
+  align-items: start;
+}
+
+.shots.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.shots figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+
+.shots .img {
+  margin: 0;
+}
+
+.shots figcaption {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.next-case {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  font-size: 1.15rem;
+}
+
+.next-case a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.next-case a:hover {
+  color: var(--hot);
+}
+
+.next-case .meta {
+  display: block;
+  font-size: 0.9rem;
 }
 
 /* ---------- Phones ---------- */

@@ -25,7 +25,7 @@
   const placeholder = (item, color, big) => {
     const ph = el('div', big ? 'ph ph-big' : 'ph');
     ph.style.setProperty('--tint', color);
-    if (big) ph.innerHTML = `<span>${esc(item.title)}</span><small>drop an image at /assets/cv/${esc(item.id)}.jpg</small>`;
+    if (big) ph.innerHTML = `<span>${esc(item.title)}</span><small>${esc(item.years)}</small>`;
     return ph;
   };
   const picture = (item, color, big) => {
@@ -36,6 +36,21 @@
     img.loading = 'lazy';
     return img;
   };
+
+  // "2021–2023" or "2024–now" → { from, to, open }. Anything else → null,
+  // and the item shows as a single thumbnail in its year column.
+  const spanOf = (item) => {
+    const m = String(item.years || '').match(/(\d{4})\s*[–-]\s*(\d{4}|now)/i);
+    if (!m) return null;
+    const from = Number(m[1]);
+    const open = /now/i.test(m[2]);
+    const to = open ? CV.lastYear : Number(m[2]);
+    return to > from ? { from, to, open } : null;
+  };
+  // Short year label for the phone cell: "21–23", "24–", "26".
+  const shortYears = (item, span) => span
+    ? `${String(span.from).slice(2)}–${span.open ? '' : String(span.to).slice(2)}`
+    : String(item.year).slice(2);
 
   // A row = gutter cell + name cell + one cell per year + a trailing cell.
   // Rows that aren't entries pass their own content in.
@@ -66,6 +81,7 @@
   if (note && CV.note) { note.classList.add('note'); note.innerHTML = `<em>${esc(CV.note)}</em>`; }
   // On phones the nav gets its own row (CSS hides the year cells there).
   const navM = el('nav', 'row nav-m');
+  navM.style.setProperty('--nav-n', CV.nav.length);
   CV.nav.forEach(([label, href]) => {
     const a = el('a', 'cell', esc(label));
     a.href = href;
@@ -88,16 +104,27 @@
       const r = row({ tag: 'a', cls: 'entry', num: n, name: esc(item.title), href: '#' + item.id });
       r.dataset.id = item.id;
       r.setAttribute('aria-label', `${item.title}, ${item.years}`);
-      const col = years.indexOf(item.year);
+      const span = spanOf(item);
+      const col = years.indexOf(span ? span.from : item.year);
       const yrCells = r.querySelectorAll('.yr');
       if (col >= 0) {
         yrCells[col].classList.add('has-thumb');
         yrCells[col].append(picture(item, sec.color, false));
       }
+      // Timeline: a bar in the section color through the rest of the range.
+      if (span) {
+        r.style.setProperty('--tint', sec.color);
+        for (let y = span.from + 1; y <= span.to; y++) {
+          const c = yrCells[years.indexOf(y)];
+          if (!c) continue;
+          c.classList.add('span');
+          if (y === span.to) c.classList.add(span.open ? 'span-open' : 'span-end');
+        }
+      }
       // Phone-only cell: year text + thumbnail, since year columns are hidden.
       const m = el('div', 'cell m-thumb');
       m.append(picture(item, sec.color, false));
-      m.append(el('span', '', String(item.year).slice(2)));
+      m.append(el('span', '', shortYears(item, span)));
       r.append(m);
       sheet.append(r);
       flat.push({ item, sec, num: n, rowEl: r });
