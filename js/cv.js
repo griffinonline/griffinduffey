@@ -248,13 +248,14 @@
     const api = (method, extra) => fetch(`https://ws.audioscrobbler.com/2.0/?method=${method}&user=${lf.user}&api_key=${lf.key}&format=json&${extra}`).then((r) => r.json());
     try {
       const d = await api('user.gettopalbums', 'period=7day&limit=3');
-      let rows = ((d.topalbums || {}).album || []).map((a) => [a.name, a.artist && a.artist.name, a.url]);
+      const art = (imgs) => { const pick = (imgs || []).find((i) => i.size === 'medium' && i['#text']) || (imgs || []).find((i) => i['#text']); return pick ? pick['#text'] : ''; };
+      let rows = ((d.topalbums || {}).album || []).map((a) => [a.name, a.artist && a.artist.name, a.url, art(a.image)]);
       if (!rows.length) {
         const r = await api('user.getrecenttracks', 'limit=1');
-        rows = ((r.recenttracks || {}).track || []).slice(0, 1).map((t) => [t.name, t.artist && t.artist['#text'], t.url]);
+        rows = ((r.recenttracks || {}).track || []).slice(0, 1).map((t) => [t.name, t.artist && t.artist['#text'], t.url, art(t.image)]);
       }
       ul.innerHTML = rows.length
-        ? rows.map(([n, a, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer"><em>${esc(n)}</em></a>, ${esc(a || '')}</li>`).join('')
+        ? rows.map(([n, a, u, img]) => `<li><a class="alb" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(n)}, ${esc(a || '')}">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : '<span class="alb-blank"></span>'}<span class="alb-t"><em>${esc(n)}</em><span>${esc(a || '')}</span></span></a></li>`).join('')
         : '<li class="muted">nothing lately</li>';
     } catch (e) {
       ul.innerHTML = '<li class="muted">last.fm is quiet</li>';
@@ -303,12 +304,12 @@
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
     const links = (CV.elsewhere || []).map(([l, h]) => [l, h === '@nav' ? navHref(l) : h]).filter(([, h]) => h);
     const side = el('div', 'cell fill side', `
-      <p class="side-h">reading</p>
-      <ul class="side-reading">${(CV.reading || []).map(([t, a]) => `<li><em>${esc(t)}</em>, ${esc(a)}</li>`).join('')}</ul>
-      <p class="side-h">listening</p>
-      <ul class="side-listening"><li class="muted">…</li></ul>
-      <p class="side-h">elsewhere</p>
-      <p class="side-links">${links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join(' · ')}</p>`);
+      <section class="wg"><p class="wg-h">reading</p>
+        <ul class="side-reading">${(CV.reading || []).map(([t, a]) => `<li><em>${esc(t)}</em> <span>${esc(a)}</span></li>`).join('')}</ul></section>
+      <section class="wg"><p class="wg-h">listening <span>this week</span></p>
+        <ul class="side-listening"><li class="muted">…</li></ul></section>
+      <section class="wg wg-links"><p class="wg-h">elsewhere</p>
+        <p class="side-links">${links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join('')}</p></section>`);
     colC.append(navRow, subRow, row('rest', side));
     loadListening(side.querySelector('.side-listening'));
 
