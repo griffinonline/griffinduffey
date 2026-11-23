@@ -7,8 +7,6 @@
 //   /cv#moment&zoom=years a tab at a zoom
 //   /cv#moment/tahoe      a tab with an entry open
 //   /cv#tahoe             an entry (opens in a tab that has it)
-//   /cv#overview&tl=c     a timeline style: a filled cells (default),
-//                         b dates as text (no chart), c labelled bars
 (function () {
   const CV = window.CV;
   const top = document.getElementById('top');
@@ -162,11 +160,11 @@
   const tabHas = (tab, id) => groupsFor(tab).some((g) => g.items.some((i) => i.id === id));
 
   // ---------- State + hash ----------
-  // tl = timeline style: a filled cells, b dates as text, c labelled bars.
-  const TLS = ['a', 'b', 'c'];
+  // Timeline style is fixed to filled cells ("a"; Griffin picked it 11/23).
+  // The b/c branches below are unreachable and can be deleted later.
   const DEFAULT_TL = 'a';
   const state = { tab: null, zoom: null, tl: DEFAULT_TL, item: null };
-  const defaultZoom = (tab) => tab.zoom || 'years';
+  const defaultZoom = (tab) => tab.zoom || 'months';
   function hashFor(tabId, itemId, zoom, tl = state.tl) {
     const tab = tabById(tabId);
     let h = '#' + tabId + (itemId ? '/' + itemId : '');
@@ -188,7 +186,7 @@
     }
     tab = tab || CV.tabs[0];
     const zoom = params.zoom === 'months' || params.zoom === 'years' ? params.zoom : defaultZoom(tab);
-    const tl = TLS.includes(params.tl) ? params.tl : DEFAULT_TL;
+    const tl = DEFAULT_TL;
     return { tab: tab.id, zoom, tl, item };
   }
 
@@ -216,7 +214,6 @@
     const r2 = el('div', 'trow sub');
     r2.append(el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`), el('div', 'cell fill'));
     r2.append(switcher('zoom', 'zoom', ['years', 'months'], zoomLinks, 'zoom'));
-    r2.append(switcher('tlsw', 'timeline', TLS, tlLinks, 'tl'));
     if (CV.note) r2.append(el('div', 'cell note', `<em>${esc(CV.note)}</em>`));
 
     const r3 = el('nav', 'trow tabs');

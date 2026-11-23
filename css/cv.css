@@ -196,6 +196,9 @@ body[data-tl='b'] .top .zoom { display: none; }
 .row.entry .t-len { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .row.entry .t-len { color: #777; }
 .row.entry .nm { display: block; min-width: 0; }
+/* Second role line (e.g. "design + imagery support") sits under the role on every tab */
+.row.entry .t-sub { flex-wrap: wrap; align-content: center; }
+.row.entry .t-sub .also { flex-basis: 100%; margin-top: 0.15rem; font-size: 0.875rem; color: #777; }
 .row.entry a.open { color: inherit; }
 .row.entry:hover .cell { background: #f6f6f6; }
 .row.entry:hover a.open { color: var(--link); text-decoration: none; }
