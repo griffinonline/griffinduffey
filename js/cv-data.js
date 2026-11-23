@@ -1,30 +1,91 @@
 // CV content. Sources: the CV Google Sheet (Work, Work abridged, About,
-// Education tabs), career/cv-draft.md, and project notes. Lines marked
-// `// check:` are facts the sources disagree on or that need Griffin's OK.
+// Education tabs), career/cv-draft.md, project notes, and oratory-ops
+// (kickoff/handoff dates). Lines marked `// check:` are facts the sources
+// disagree on or that need Griffin's OK.
 //
 // Each entry:
-//   id     url hash (/cv#votive), lowercase, no spaces
-//   title  shows in the row
-//   sub    italic line in the panel (role, place)
-//   year   which year column the thumbnail lands in (the start year)
-//   years  free text shown in the panel. A range of two years
-//          ("2021–2023") or "2024–now" draws a timeline bar in the sheet.
-//   img    optional, e.g. "/assets/cv/votive.jpg". No img = placeholder.
-//   body   array of paragraphs
-//   links  array of [label, href]
-//   stack  optional short line (tools used)
+//   id       url hash (/cv#votive-chai), lowercase, no spaces, unique
+//   title    shows in the row
+//   sub      role, shown in the role column and the panel
+//   year     start year (used when there are no months)
+//   years    free text for year-only entries. "2021–2023" or "2024–now"
+//            draws a timeline bar.
+//   start    optional 'YYYY-MM'. With it, the bar is month-accurate.
+//   end      optional 'YYYY-MM' or 'now'. Missing = a single month.
+//   img      optional. Only for good non-site images (no site screenshots).
+//   site     optional [label, href]. Shows as a link where the timeline
+//            starts ("less.tech ↗").
+//   featured optional. Shows in the overview's selected projects.
+//   body     array of paragraphs
+//   links    array of [label, href]
+//   stack    optional short line (tools used)
+//
+// moment + oratory entries also carry the table columns:
+//   what, studio ('oratory' | 'moment'), type, status, see.
+//   No `see` = "walkthrough on request".
 
 window.CV = {
   title: 'griffin bennett duffey',
   subtitle: 'cv: designer, builder, project lead. greenville, sc',
   note: 'draft',
-  firstYear: 2016,
-  lastYear: 2026,
+  now: '2026-11',
+  // Month zoom shows months back to here; older time folds into "earlier".
+  monthsFrom: '2024-01',
   nav: [
     ['home', '/'],
     ['email', 'mailto:griffinbennettduffey@gmail.com?subject=work'],
     ['print', '#print'],
   ],
+
+  // Tabs across the top. Each group pulls a section, a filtered part of a
+  // section, or a list of ids. `table: true` = the moment + oratory layout.
+  tabs: [
+    {
+      id: 'overview', label: 'overview',
+      groups: [
+        { section: 'work' },
+        { label: 'selected projects', color: '#b9a4ff', featured: true },
+        { label: 'education', color: '#c9c9c9', ids: ['clemson', 'thesis', 'paper', 'logic-ta', 'webflow'] },
+      ],
+    },
+    {
+      id: 'moment', label: 'moment + oratory', table: true, zoom: 'months',
+      intro: [
+        'oratory was a small studio in greenville making brands and websites for ai and software companies. in the fall of 2026 it became MOMENT. that was a rebrand after the berlin studio PERMANENT took a stake, not a second studio. MOMENT sold 4-week brand + site sprints (6 weeks at first) to ai and software companies.',
+        'my title was project manager. in practice i was the main ai-assisted builder and the client contact on most of these projects: scoping, timelines, client calls, reviews, building pages, QA and the handoff. between projects i built the tools the studio ran on.',
+        'i was there from march to november 2026, when MOMENT reset the team. the projects that were just starting then say how far i got. click any row for more.',
+      ],
+      groups: [
+        { section: 'moment + oratory', label: 'client projects', kind: 'client' },
+        { section: 'moment + oratory', label: 'studio tools + sales', kind: 'internal' },
+      ],
+    },
+    {
+      id: 'built', label: 'built',
+      groups: [{ section: 'design & build' }, { section: 'tools' }],
+    },
+    {
+      id: 'votive', label: 'votive',
+      groups: [
+        { section: 'work', ids: ['votive-job'] },
+        { section: 'votive' },
+        { section: 'art & music', ids: ['votive-motion'] },
+      ],
+    },
+    {
+      id: 'earlier', label: 'earlier work',
+      groups: [
+        { section: 'work', label: 'earlier jobs', ids: ['meridian', 'fbg', 'methodical', 'ecb'] },
+        { section: 'earlier web work' },
+      ],
+    },
+    {
+      id: 'research', label: 'research + education',
+      groups: [{ section: 'education' }, { section: 'research & writing' }, { section: 'teaching & community' }],
+    },
+    { id: 'everything', label: 'everything', all: true },
+  ],
+
   sections: [
     // ------------------------------------------------------------------
     {
@@ -32,36 +93,37 @@ window.CV = {
       color: '#7fb6ff',
       items: [
         {
-          id: 'moment', title: 'MOMENT (formerly Oratory)', sub: 'Design engineer & project lead', year: 2026, years: '2026',
-          img: '/assets/cv/moment.jpg',
+          // check: "fall of 2026" for the rebrand is from memory ("announced ~sept").
+          id: 'moment-job', title: 'MOMENT (formerly Oratory)', sub: 'Project manager, builder & client lead', year: 2026,
+          start: '2026-03', end: '2026-11',
           body: [
-            'A small studio making brands and websites for AI and software companies. Oratory became MOMENT in 2026.',
-            'I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also designed, built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
+            'A small studio making brands and websites for AI and software companies. Oratory became MOMENT in the fall of 2026.',
+            'My title was project manager. I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
             'Between client work I built the tools the studio ran on: a project dashboard, an ops system that reads scope and timelines from Slack and the repos, the intake and launch docs, and sales decks.',
           ],
-          links: [['moment.so', 'https://moment.so']],
+          links: [['every project, with my role', '#moment'], ['moment.so', 'https://moment.so']],
           stack: 'Next.js, Astro, Sanity, Vercel, Cloudflare, Figma, Claude Code',
         },
         {
           // check: the Work tab says 2025, the abridged tab says 2024–2025.
           id: 'meridian', title: 'Meridian Design', sub: 'Design engineer', year: 2024, years: '2024–2025',
-          img: '/assets/cv/meridian.jpg',
           body: [
             'Designed and built websites for clients and agencies, mostly in Webflow, usually from Figma designs.',
             'Led Throw from concept to launch, and co-developed sites for Tabbi, AAA Storage, Sam Acho, Berry and Pitchsafe.',
           ],
+          site: ['meridian.design', 'https://www.meridian.design/'],
           links: [['meridian.design', 'https://www.meridian.design/']],
           stack: 'Webflow, Figma',
         },
         {
           // check: the Work tab says Votive started 2025; the abridged tab and the description say 2024.
-          id: 'votive', title: 'Votive', sub: 'Founder', year: 2024, years: '2024–now',
+          id: 'votive-job', title: 'Votive', sub: 'Founder', year: 2024, years: '2024–now',
           img: '/assets/cv/votive-chai.jpg',
           body: [
             'A non-alcoholic beverage company in Greenville: chai concentrate and single-origin tea kombucha. 15+ wholesale accounts across the southeast in the first year.',
-            'I do all of it: recipes, production, labels, the website, social content, orders and the books. More below, under votive.',
+            'I do all of it: recipes, production, labels, the website, social content, orders and the books.',
           ],
-          links: [['drinkvotive.com', 'https://www.drinkvotive.com/']],
+          links: [['drinkvotive.com', 'https://www.drinkvotive.com/'], ['the votive tab', '#votive']],
         },
         {
           // check: the Work tab header says 2025–, but griffinduffey.com and the Votive site are 2024.
@@ -69,10 +131,10 @@ window.CV = {
           body: [
             'Brands and websites for galleries, musicians, tutors and small businesses. Sites designed in Figma, then built in Webflow, Astro or plain HTML.',
           ],
-          links: [],
+          links: [['what i built', '#built']],
         },
         {
-          id: 'fbg', title: 'First Baptist Greenville', sub: 'Ministry assistant for spiritual formation & outreach', year: 2024, years: '2024–2026',
+          id: 'fbg', title: 'First Baptist Greenville', sub: 'Ministry assistant, spiritual formation & outreach', year: 2024, years: '2024–2026',
           body: [
             'Worked with Rev. Camille Loomis Rehnborg to resource the congregation with educational content and organize churchwide events.',
             'FBG champions interfaith community building and a safe place for the marginalized, in the Cooperative Baptist Fellowship.',
@@ -99,48 +161,47 @@ window.CV = {
     },
     // ------------------------------------------------------------------
     {
-      // Oratory / MOMENT client work, newest kickoff first (dates from oratory-ops).
-      // Role is every hat beyond PM; PM is a given on all of them.
-      name: 'client projects',
+      // Oratory / MOMENT projects, newest kickoff first. Dates: kickoff and
+      // handoff months from oratory-ops; memory notes for the MOMENT ones.
+      name: 'moment + oratory',
       color: '#b9a4ff',
       items: [
         {
           // check: Ravera is unannounced, so the product isn't named here.
-          id: 'vitally', title: 'Vitally', sub: 'Project lead', year: 2026, years: 'nov 2026',
-          body: ['Website for a new Vitally product, brand by Studio Freight. Kicked off in November. In progress.'],
+          // check: confirm Griffin ran the 11/3 kickoff.
+          // check: contract paper was Oratory's; branded MOMENT from 11/2.
+          id: 'vitally', title: 'Vitally', sub: 'Project manager', year: 2026, start: '2026-11',
+          what: 'site for a new vitally product, brand by studio freight', studio: 'moment', type: 'site build',
+          status: 'started: i ran kickoff and the first week before i left', see: 'not public yet',
+          body: ['Website for a new Vitally product, with the brand by Studio Freight. I ran the kickoff, gathered the client\'s positioning and product UI into one place, and set up the stack conversation. I left a week in.'],
           links: [],
         },
         {
-          id: 'netbird', title: 'NetBird', sub: 'Project lead, research', year: 2026, years: 'oct–nov 2026',
-          body: ['Brand and website sprint for an open-source networking company. Ran the project and gathered inspiration and product UI for the team. Launching soon.'],
+          // check: confirm how much of NetBird's kickoff Griffin ran.
+          id: 'netbird', title: 'NetBird', sub: 'Project manager, research', year: 2026, start: '2026-10', end: '2026-11',
+          what: 'brand + site for an open-source networking company', studio: 'moment', type: 'sprint',
+          status: 'early phase: i set up kickoff and ran the first weeks',
+          body: ['Brand and website sprint, the first run on the 4-week model. I set up the project hub, booked the reviews and gathered inspiration and product UI for the team. I left before the build.'],
           links: [],
         },
         {
-          id: 'emdash', title: 'Emdash', sub: 'Project lead', year: 2026, years: 'oct–nov 2026',
-          body: ['The first six-week MOMENT brand and site sprint. I also wrote the client intake (a long and a short version) it ran on.'],
+          id: 'emdash', title: 'Emdash', sub: 'Project manager', year: 2026, start: '2026-10', end: '2026-11',
+          what: 'the first MOMENT brand + site sprint', studio: 'moment', type: 'sprint',
+          status: 'early phase: i wrote the intake and ran the first weeks',
+          body: ['The first MOMENT brand and site sprint. I wrote the client intake it ran on (a long and a short version) and was on it until I left.'],
           links: [],
         },
         {
-          id: 'tembo-decks', title: 'Tembo sales decks', sub: 'Designer', year: 2026, years: 'sep 2026',
-          body: ['Sales-call decks in Figma, one per brand direction, built from the Tembo project as the worked example. Plus positioning and homepage wireframes.'],
-          links: [],
-          stack: 'Figma',
-        },
-        {
-          // check: confirm Design Inc and the Tembo case study are public before linking.
-          id: 'design-inc', title: 'Design Inc', sub: 'Writer, developer', year: 2026, years: '2026',
-          body: ['MOMENT\'s publication and store for software design. Drafted the Tembo case study.'],
-          links: [],
-          stack: 'Astro',
-        },
-        {
-          id: 'default', title: 'Default', sub: 'Project lead', year: 2026, years: 'aug 2026',
+          // check: status after Sept; oratory-ops still had it active.
+          id: 'default', title: 'Default', sub: 'Project manager', year: 2026, start: '2026-08',
+          what: 'brand + homepage', studio: 'moment', type: 'brand + homepage', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
-          id: 'allobrain', title: 'AlloBrain', sub: 'Project lead, developer', year: 2026, years: 'aug–sep 2026',
-          img: '/assets/cv/allobrain.jpg',
+          id: 'allobrain', title: 'AlloBrain', sub: 'Project manager + main builder', year: 2026, start: '2026-08', end: '2026-09',
+          what: 'site for an ai contact-center platform', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['allobrain.com', 'https://www.allobrain.com'], featured: true,
           body: [
             'Marketing site for an AI contact-center platform. Built the site and its Sanity setup, ran motion prototypes for the review calls, and handed it off so a non-technical owner can keep editing it with AI.',
           ],
@@ -148,173 +209,223 @@ window.CV = {
           stack: 'Astro, Sanity, Vercel',
         },
         {
-          id: 'g360', title: 'G360 Technologies', sub: 'Project lead, developer', year: 2026, years: 'jul–sep 2026',
-          img: '/assets/cv/g360.jpg',
-          body: ['Site for an AI security company (PromptVault, Repo Audit). Built from the Figma file, then handed over the domain, DNS and services to the client.'],
+          id: 'g360', title: 'G360 Technologies', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-09',
+          what: 'site for an ai security company', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['g360technologies.com', 'https://www.g360technologies.com'], featured: true,
+          body: ['Site for an AI security company (PromptVault, Repo Audit). Others committed too, but I did most of the development, built from the Figma file, then handed the domain, DNS and services over to the client.'],
           links: [['g360technologies.com', 'https://www.g360technologies.com'], ['case study', '/work-g360']],
         },
         {
-          id: 'nps-prism', title: 'NPS Prism (Bain)', sub: 'Project lead, developer', year: 2026, years: 'jul–oct 2026',
+          id: 'nps-prism', title: 'NPS Prism (Bain)', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-10',
+          what: 'site for bain\'s cx benchmarking product', studio: 'oratory', type: 'site build', status: 'launching soon',
           body: [
-            'Marketing site for Bain\'s customer-experience benchmarking product. Only the homepage was designed, so I skinned every interior page from wireframes using the homepage\'s system, plus forms and handoff docs.',
-            'Launching soon.',
+            'Marketing site for Bain\'s customer-experience benchmarking product. Only the homepage was designed, so I skinned every interior page from wireframes using the homepage\'s system, plus Sanity, forms and handoff docs. About 158 of roughly 190 commits.',
           ],
           links: [],
-          stack: 'Next.js, Tailwind',
+          stack: 'Next.js, Tailwind, Sanity',
         },
         {
-          id: 'scite', title: 'Scite', sub: 'Project lead, developer', year: 2026, years: 'jul–aug 2026',
-          body: ['New marketing site for an AI research assistant. Launching soon.'],
+          id: 'scite', title: 'Scite', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-08',
+          what: 'site for an ai research assistant', studio: 'oratory', type: 'site build', status: 'launching soon',
+          body: ['New marketing site for an AI research assistant.'],
           links: [],
         },
         {
-          id: 'sol', title: 'Sol', sub: 'Project lead', year: 2026, years: 'jun 2026',
+          id: 'sol', title: 'Sol', sub: 'Project manager', year: 2026, start: '2026-06',
+          what: 'brand + homepage', studio: 'oratory', type: 'brand + homepage', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
           // check: itshandled.ai was still on Framer in October; confirm the live site is the build.
-          id: 'handled', title: 'Handled', sub: 'Project lead, developer', year: 2026, years: 'jun–sep 2026',
-          img: '/assets/cv/handled.jpg',
+          id: 'handled', title: 'Handled', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
+          what: 'brand + site for an ai teammate for cpg brands', studio: 'oratory', type: 'site build', status: 'handed off',
+          site: ['itshandled.ai', 'https://www.itshandled.ai'],
           body: ['Brand and site for an AI teammate made for consumer packaged goods. Worked through batched client feedback and kept changes small and on brand.'],
           links: [['itshandled.ai', 'https://www.itshandled.ai']],
         },
         {
-          id: 'tahoe', title: 'Tahoe', sub: 'Project lead, developer', year: 2026, years: 'jun–oct 2026',
-          img: '/assets/cv/tahoe.jpg',
-          body: ['Site for a biology AI lab. Set up the staging-to-production flow and Sanity content, and launched the Tara page.'],
+          id: 'tahoe', title: 'Tahoe', sub: 'Project manager; facilitated the move off Webflow into a custom build', year: 2026, start: '2026-06', end: '2026-10',
+          what: 'site for a biology ai lab, plus the tara launch', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
+          site: ['tahoelabs.ai', 'https://tahoelabs.ai'], featured: true,
+          body: ['Site for a biology AI lab. Moved it off Webflow into a custom build, set up the staging-to-production flow and Sanity content, and launched the Tara campaign page.'],
           links: [['tahoelabs.ai', 'https://tahoelabs.ai'], ['case study', '/work-tahoe']],
           stack: 'Sanity, Cloudflare',
         },
         {
-          id: 'suppli', title: 'Suppli', sub: 'Project lead, developer', year: 2026, years: 'jun–sep 2026',
-          img: '/assets/cv/suppli.jpg',
+          // check: the client planned its own go-live for 11/9; confirm it's live.
+          id: 'suppli', title: 'Suppli', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
+          what: 'site for a credit platform for the physical economy', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['gosuppli.com', 'https://www.gosuppli.com'],
           body: ['Site for a credit platform for the physical economy. Built pages and Sanity content, worked the client punchlist down, and handed the repo over.'],
           links: [['gosuppli.com', 'https://www.gosuppli.com']],
           stack: 'Next.js, Sanity, Vercel',
         },
         {
-          id: 'product-school', title: 'Product School', sub: 'Project lead', year: 2026, years: 'may–aug 2026',
+          id: 'product-school', title: 'Product School', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-08',
+          what: 'site refresh', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Site refresh.'],
           links: [],
         },
         {
           // check: arrows.to is inferred from the client's email domain.
-          id: 'arrows', title: 'Arrows', sub: 'Project lead', year: 2026, years: 'may–jul 2026',
-          img: '/assets/cv/arrows.jpg',
+          id: 'arrows', title: 'Arrows', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-07',
+          what: 'site for a sales deal-playbook tool', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['arrows.to', 'https://arrows.to'],
           body: ['Marketing site for a sales deal-playbook tool.'],
           links: [['arrows.to', 'https://arrows.to']],
         },
         {
-          id: 'magentrix', title: 'Magentrix', sub: 'Project lead', year: 2026, years: 'may 2026',
+          id: 'magentrix', title: 'Magentrix', sub: 'Project manager', year: 2026, start: '2026-05',
+          what: 'brand + homepage', studio: 'oratory', type: 'brand + homepage', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
-          id: 'blind-zebra', title: 'Blind Zebra', sub: 'Project lead', year: 2026, years: 'may 2026',
-          body: ['Ongoing site work.'],
-          links: [],
-        },
-        {
-          id: 'commodityai', title: 'CommodityAI', sub: 'Project lead', year: 2026, years: 'may 2026',
-          body: ['Marketing site.'],
-          links: [],
-        },
-        {
           // check: less.tech is inferred from the client's email domain.
-          id: 'less', title: 'Less', sub: 'Project lead', year: 2026, years: 'may 2026',
-          img: '/assets/cv/less.jpg',
+          // check: Griffin called it "Feature Less"; oratory-ops names the client "Less".
+          id: 'less', title: 'Less', sub: 'Project manager', year: 2026, start: '2026-05',
+          what: 'site for a data workflow tool', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['less.tech', 'https://www.less.tech'], featured: true,
           body: ['Marketing site for a data workflow tool.'],
           links: [['less.tech', 'https://www.less.tech']],
         },
         {
-          id: 'flowgen', title: 'Flowgen', sub: 'Project lead', year: 2026, years: 'apr 2026',
+          id: 'blind-zebra', title: 'Blind Zebra', sub: 'Project manager', year: 2026, start: '2026-05',
+          what: 'ongoing site work', studio: 'oratory', type: 'site build', status: 'handed off',
+          body: ['Ongoing site work, billed hourly.'],
+          links: [],
+        },
+        {
+          id: 'commodityai', title: 'CommodityAI', sub: 'Project manager', year: 2026, start: '2026-05',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'product-partners', title: 'Product Partners', sub: 'Project lead', year: 2026, years: 'apr 2026',
+          id: 'flowgen', title: 'Flowgen', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          // karumi.com now says the company has closed, so no link or image.
-          id: 'karumi', title: 'Karumi', sub: 'Project lead', year: 2026, years: 'apr 2026',
+          id: 'product-partners', title: 'Product Partners', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'kyckr', title: 'Kyckr', sub: 'Project lead', year: 2026, years: 'apr 2026',
+          // karumi.com now says the company has closed, so no link.
+          id: 'karumi', title: 'Karumi', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off (company has since closed)',
+          body: ['Marketing site. The company has since closed.'],
+          links: [],
+        },
+        {
+          id: 'kyckr', title: 'Kyckr', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
           // check: umony.com is inferred from the client's email domain.
-          id: 'umony', title: 'Umony', sub: 'Project lead', year: 2026, years: 'apr 2026',
-          img: '/assets/cv/umony.jpg',
+          id: 'umony', title: 'Umony', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'site for a communications compliance platform', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['umony.com', 'https://www.umony.com'],
           body: ['Marketing site for a communications compliance platform.'],
           links: [['umony.com', 'https://www.umony.com']],
         },
         {
           // check: musubilabs.ai is inferred from the client's email domain.
-          id: 'musubi', title: 'Musubi', sub: 'Project lead', year: 2026, years: 'apr 2026',
-          img: '/assets/cv/musubi.jpg',
+          id: 'musubi', title: 'Musubi', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['musubilabs.ai', 'https://www.musubilabs.ai'], featured: true,
           body: ['Marketing site.'],
           links: [['musubilabs.ai', 'https://www.musubilabs.ai']],
         },
         {
           // check: qase.io is inferred from the client's email domain.
-          id: 'qase', title: 'Qase', sub: 'Project lead', year: 2026, years: 'apr 2026',
-          img: '/assets/cv/qase.jpg',
+          id: 'qase', title: 'Qase', sub: 'Project manager', year: 2026, start: '2026-04', end: '2026-05',
+          what: 'site for a test management platform', studio: 'oratory', type: 'site build', status: 'live',
+          site: ['qase.io', 'https://qase.io'], featured: true,
           body: ['Marketing site for a test management platform.'],
           links: [['qase.io', 'https://qase.io']],
         },
         {
-          id: 'passetto', title: 'Passetto', sub: 'Project lead', year: 2026, years: 'apr 2026',
+          id: 'passetto', title: 'Passetto', sub: 'Project manager', year: 2026, start: '2026-04',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'neuron7', title: 'Neuron7', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'neuron7', title: 'Neuron7', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'advance', title: 'Advance', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'advance', title: 'Advance', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'article-galaxy', title: 'Article Galaxy', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'article-galaxy', title: 'Article Galaxy', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'revvue', title: 'RevVue', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'revvue', title: 'RevVue', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'neurawork', title: 'Neurawork', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'neurawork', title: 'Neurawork', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
-          id: 'tenzo', title: 'Tenzo', sub: 'Project lead', year: 2026, years: 'mar 2026',
+          id: 'tenzo', title: 'Tenzo', sub: 'Project manager', year: 2026, start: '2026-03',
+          what: 'marketing site', studio: 'oratory', type: 'site build', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
+        // ---- studio tools + sales (kind: internal) ----
         {
-          id: 'pm-app', title: 'Studio PM app (internal)', sub: 'Designer & developer', year: 2026, years: '2026',
-          body: ['A project dashboard for the studio to replace Coda: projects, timelines and client intake, wired into Slack with AI status rollups.'],
+          id: 'handoff-checklist', title: 'Handoff checklist', sub: 'Writer', year: 2026, start: '2026-10', kind: 'internal',
+          what: 'the steps before a client takes over a site', studio: 'moment', type: 'internal tool', status: 'internal',
+          body: ['The steps before a site goes to the client: accounts, domains, secrets, what still runs on our side, and a check for what a repo transfer leaves connected.'],
+          links: [],
+        },
+        {
+          id: 'intake', title: 'Client intake + launch doc', sub: 'Writer & developer', year: 2026, start: '2026-10', kind: 'internal',
+          what: 'intake forms (long + short) and the delivery terms for sprints', studio: 'moment', type: 'internal tool', status: 'internal',
+          body: ['The client intake for MOMENT sprints, in a long contract-driven version and a short 17-question one, plus the launch doc that set out delivery terms.'],
           links: [['case study', '/work-studio-tools']],
-          stack: 'Laravel, Inertia, React, Tailwind, Neon',
         },
         {
-          id: 'oratory-ops', title: 'Studio ops system (internal)', sub: 'Developer', year: 2026, years: '2026',
+          id: 'sales-decks', title: 'Sales decks', sub: 'Designer', year: 2026, start: '2026-09', end: '2026-10', kind: 'internal',
+          what: 'sales-call decks, one per brand direction, from a past project', studio: 'moment', type: 'sales', status: 'internal',
+          body: ['Sales-call decks in Figma, one per brand direction, built from a past project as the worked example. Plus a positioning and homepage-wireframe example.'],
+          links: [],
+          stack: 'Figma',
+        },
+        {
+          id: 'oratory-ops', title: 'Studio ops system', sub: 'Developer', year: 2026, start: '2026-09', end: '2026-10', kind: 'internal',
+          what: 'measures scope and timelines from repos + slack', studio: 'oratory', type: 'internal tool', status: 'internal (retired)',
           body: ['Measures each project\'s scope and timeline from its repo and Slack instead of asking people to update a tracker. Also held the client intake forms and launch docs.'],
           links: [['case study', '/work-studio-tools']],
           stack: 'Next.js, Vercel, Claude',
+        },
+        {
+          id: 'pm-app', title: 'Studio PM app', sub: 'Designer & main developer', year: 2026, start: '2026-04', end: '2026-08', kind: 'internal',
+          what: 'project dashboard that replaced coda', studio: 'oratory', type: 'internal tool', status: 'internal (retired)',
+          body: ['A project dashboard for the studio to replace Coda: projects, timelines and client intake, wired into Slack with AI status rollups. Started with a teammate, then mostly mine.'],
+          links: [['case study', '/work-studio-tools']],
+          stack: 'Laravel, Inertia, React, Tailwind, Neon',
         },
       ],
     },
@@ -325,85 +436,42 @@ window.CV = {
       items: [
         {
           // check: wescarroll.com isn't a signed engagement yet; this links the preview build.
-          id: 'wescarroll', title: 'wescarroll.com', sub: 'Designer & developer', year: 2026, years: '2026',
-          img: '/assets/cv/wescarroll.jpg',
+          id: 'wescarroll', title: 'wescarroll.com', sub: 'Designer & developer', year: 2026, start: '2026-10', end: 'now',
           body: ['Moving a tutoring and coaching site off WordPress to a custom build, keeping every URL working. In progress.'],
+          site: ['preview', 'https://wescarroll.vercel.app'],
           links: [['preview', 'https://wescarroll.vercel.app']],
           stack: 'Astro, Sanity, Vercel',
         },
         {
           // check: the workers.dev address may not be the final domain.
-          id: 'michael-alan-scott', title: 'Michael Alan Scott', sub: 'Designer & developer', year: 2026, years: '2026',
-          img: '/assets/cv/michael-alan-scott.jpg',
+          id: 'michael-alan-scott', title: 'Michael Alan Scott', sub: 'Designer & developer', year: 2026, start: '2026-09', end: '2026-10',
           body: ['Site for a Nashville musician and touring guitarist. Early-web energy: raw HTML feel, 35mm film scans, one moving GIF.'],
+          site: ['site', 'https://michael-alan-scott.griffinbennettduffey.workers.dev'],
           links: [['site', 'https://michael-alan-scott.griffinbennettduffey.workers.dev']],
           stack: 'Astro, Cloudflare',
         },
         {
           // check: the Sheet puts Throw at the top of the Meridian list (2025).
           id: 'throw', title: 'Throw', sub: 'Project lead, designer, developer, via Meridian', year: 2025, years: '2025',
-          img: '/assets/cv/throw.jpg',
           body: ['A smaller site service that\'s accessible and custom. I had full rein from concept to publishing. Featured on One Page Love.'],
+          site: ['throw-site.webflow.io', 'https://throw-site.webflow.io/'],
           links: [['throw-site.webflow.io', 'https://throw-site.webflow.io/'], ['one page love', 'https://onepagelove.com/throw']],
           stack: 'Webflow',
         },
         {
           // check: the Sheet lists Devinci House first under freelance (2025); the old CV draft said 2023.
           id: 'devinci', title: 'Devinci House', sub: 'Designer & developer', year: 2025, years: '2025',
-          img: '/assets/cv/devinci.jpg',
           body: ['Contemporary art gallery in downtown Greenville. A fun landing page with Windows 98 icons and styles, and clean, minimal pages inside.'],
+          site: ['devincihouse.com', 'https://www.devincihouse.com/'],
           links: [['devincihouse.com', 'https://www.devincihouse.com/']],
           stack: 'Figma, Webflow',
         },
         {
-          id: 'tabbi', title: 'Tabbi', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
-          img: '/assets/cv/tabbi.jpg',
-          body: ['Site for a nightlife app.'],
-          links: [['tabbi.app', 'https://www.tabbi.app/']],
-          stack: 'Webflow',
-        },
-        {
-          id: 'aaa-storage', title: 'AAA Storage', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
-          img: '/assets/cv/aaa-storage.jpg',
-          body: ['Site for a self-storage investment firm.'],
-          links: [['aaastorageinvestments.com', 'https://www.aaastorageinvestments.com/']],
-          stack: 'Webflow',
-        },
-        {
-          id: 'sam-acho', title: 'Sam Acho', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
-          img: '/assets/cv/sam-acho.jpg',
-          body: ['Site for a speaker, ESPN analyst, author and former NFL player.'],
-          links: [['samacho.com', 'https://www.samacho.com/']],
-          stack: 'Webflow',
-        },
-        {
-          id: 'berry', title: 'Berry Consultants', sub: 'Co-developer, via Meridian', year: 2024, years: '2024',
-          img: '/assets/cv/berry.jpg',
-          body: ['Site for a clinical trial design consultancy.'],
-          links: [['berryconsultants.com', 'https://www.berryconsultants.com/']],
-          stack: 'Webflow',
-        },
-        {
-          id: 'pitchsafe', title: 'Pitchsafe', sub: 'Co-developer, via Meridian', year: 2024, years: '2024',
-          img: '/assets/cv/pitchsafe.jpg',
-          body: ['Site for a pitcher training app.'],
-          links: [['pitchsafe.co', 'https://pitchsafe.co/']],
-          stack: 'Webflow',
-        },
-        {
           id: 'griffinduffey', title: 'griffinduffey.com', sub: 'Designer & developer', year: 2024, years: '2024–now',
-          img: '/assets/cv/griffinduffey.jpg',
           body: ['My personal site and archive. Simple on purpose, always changing. This CV lives here.'],
+          site: ['griffinduffey.com', 'https://griffinduffey.com'],
           links: [['griffinduffey.com', 'https://griffinduffey.com']],
           stack: 'Plain HTML, Cloudflare Pages',
-        },
-        {
-          // check: Dripos isn't in the Sheet; year is from the old draft.
-          id: 'dripos', title: 'Dripos', sub: 'Development support, via Kinetic Studio', year: 2022, years: '2022',
-          img: '/assets/cv/dripos.jpg',
-          body: ['Came in at the end to debug the site and handle last-minute client requests.'],
-          links: [['dripos.com', 'https://www.dripos.com/']],
-          stack: 'Webflow',
         },
       ],
     },
@@ -414,21 +482,22 @@ window.CV = {
       items: [
         {
           id: 'sheaf', title: 'Sheaf', sub: 'Designer & builder', year: 2026, years: '2026',
-          img: '/assets/cv/sheaf.jpg',
+          featured: true,
           body: [
             'A front end for AI coding agents that runs on your own machine and works from a phone. In beta.',
           ],
+          site: ['sheaf.to', 'https://sheaf.to'],
           links: [['sheaf.to', 'https://sheaf.to'], ['case study', '/work-sheaf']],
           stack: 'Bun, TypeScript, SQLite, vanilla JS PWA',
         },
         {
-          id: 'money-mode', title: 'Money Mode', sub: 'Personal tool', year: 2026, years: '2026',
+          id: 'money-mode', title: 'Money Mode', sub: 'Personal tool', year: 2026, start: '2026-09', end: 'now',
           body: ['A budgeting app built around how I actually spend, with every account linked.'],
           links: [],
           stack: 'Next.js, Neon, Vercel',
         },
         {
-          id: 'muscle-mode', title: 'Muscle Mode', sub: 'Personal tool', year: 2026, years: '2026',
+          id: 'muscle-mode', title: 'Muscle Mode', sub: 'Personal tool', year: 2026, start: '2026-09', end: '2026-10',
           body: ['Lift logging with automatic progression. Feeds my training dashboard.'],
           links: [],
           stack: 'Next.js, Vercel',
@@ -440,7 +509,7 @@ window.CV = {
           stack: 'Python, SQLite',
         },
         {
-          id: 'hermit-mode', title: 'Hermit Mode', sub: 'Personal tool', year: 2026, years: '2026',
+          id: 'hermit-mode', title: 'Hermit Mode', sub: 'Personal tool', year: 2026, start: '2026-08',
           body: ['An Instagram replacement: post and reply without the app, but never cold-start a conversation.'],
           links: [],
           stack: 'Next.js, Neon, Vercel',
@@ -487,9 +556,59 @@ window.CV = {
         },
         {
           id: 'votive-site', title: 'drinkvotive.com', sub: 'Designer & developer', year: 2024, years: '2024',
-          img: '/assets/cv/votive-site.jpg',
           body: ['Where my web work started. I didn\'t want a templated site, so I learned to make my own. Brutalist and functional: GIFs of 3D product scans, marquees, bold color.'],
+          site: ['drinkvotive.com', 'https://www.drinkvotive.com/'],
           links: [['drinkvotive.com', 'https://www.drinkvotive.com/']],
+        },
+      ],
+    },
+    // ------------------------------------------------------------------
+    {
+      name: 'earlier web work',
+      color: '#e8b8e8',
+      items: [
+        {
+          id: 'tabbi', title: 'Tabbi', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
+          body: ['Site for a nightlife app.'],
+          site: ['tabbi.app', 'https://www.tabbi.app/'],
+          links: [['tabbi.app', 'https://www.tabbi.app/']],
+          stack: 'Webflow',
+        },
+        {
+          id: 'aaa-storage', title: 'AAA Storage', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
+          body: ['Site for a self-storage investment firm.'],
+          site: ['aaastorageinvestments.com', 'https://www.aaastorageinvestments.com/'],
+          links: [['aaastorageinvestments.com', 'https://www.aaastorageinvestments.com/']],
+          stack: 'Webflow',
+        },
+        {
+          id: 'sam-acho', title: 'Sam Acho', sub: 'Co-developer, via Meridian', year: 2025, years: '2025',
+          body: ['Site for a speaker, ESPN analyst, author and former NFL player.'],
+          site: ['samacho.com', 'https://www.samacho.com/'],
+          links: [['samacho.com', 'https://www.samacho.com/']],
+          stack: 'Webflow',
+        },
+        {
+          id: 'berry', title: 'Berry Consultants', sub: 'Co-developer, via Meridian', year: 2024, years: '2024',
+          body: ['Site for a clinical trial design consultancy.'],
+          site: ['berryconsultants.com', 'https://www.berryconsultants.com/'],
+          links: [['berryconsultants.com', 'https://www.berryconsultants.com/']],
+          stack: 'Webflow',
+        },
+        {
+          id: 'pitchsafe', title: 'Pitchsafe', sub: 'Co-developer, via Meridian', year: 2024, years: '2024',
+          body: ['Site for a pitcher training app.'],
+          site: ['pitchsafe.co', 'https://pitchsafe.co/'],
+          links: [['pitchsafe.co', 'https://pitchsafe.co/']],
+          stack: 'Webflow',
+        },
+        {
+          // check: Dripos isn't in the Sheet; year is from the old draft.
+          id: 'dripos', title: 'Dripos', sub: 'Development support, via Kinetic Studio', year: 2022, years: '2022',
+          body: ['Came in at the end to debug the site and handle last-minute client requests.'],
+          site: ['dripos.com', 'https://www.dripos.com/'],
+          links: [['dripos.com', 'https://www.dripos.com/']],
+          stack: 'Webflow',
         },
       ],
     },
@@ -499,14 +618,7 @@ window.CV = {
       color: '#ffe94a',
       items: [
         {
-          // check: confirm the album and its packaging are public.
-          id: 'my-shell-is-gone', title: 'My Shell Is Gone', sub: 'Album packaging for Mason Thomas', year: 2026, years: '2026',
-          body: ['CD jacket and vinyl jacket and labels for Mason Thomas\'s record, built around the shoot\'s photos.'],
-          links: [],
-          stack: 'Figma',
-        },
-        {
-          id: 'votive-motion', title: 'Votive motion lab', sub: 'Animated brand studies', year: 2026, years: '2026',
+          id: 'votive-motion', title: 'Votive motion lab', sub: 'Animated brand studies', year: 2026, start: '2026-10',
           img: '/assets/cv/votive-motion.jpg',
           body: ['Motion that feels analog (riso, screenprint, photocopy) built natively in code. Started with the Votive mark, then a print wall for a made-up brand.'],
           links: [],
@@ -540,15 +652,9 @@ window.CV = {
     },
     // ------------------------------------------------------------------
     {
-      name: 'community & teaching',
+      name: 'teaching & community',
       color: '#7fded3',
       items: [
-        {
-          // check: confirm what's public about Radial before naming the role.
-          id: 'radial', title: 'Radial', sub: 'Head of community', year: 2026, years: '2026',
-          body: ['Ran the launch of an open-source developer tool like a client sprint, and started its community.'],
-          links: [],
-        },
         {
           // check: start year of the reading group.
           id: 'reading-group', title: 'Reading group', sub: 'Member', year: 2026, years: 'ongoing',
@@ -568,7 +674,7 @@ window.CV = {
       color: '#c9c9c9',
       items: [
         {
-          id: 'clemson', title: 'Clemson University', sub: 'BA religious studies, BA philosophy', year: 2016, years: '2016–2020',
+          id: 'clemson', title: 'Clemson University', sub: 'BA religious studies, BA philosophy, summa cum laude', year: 2016, years: '2016–2020',
           body: ['Summa cum laude. McCullough Award for Excellent Combined Study in Philosophy and Religion (2020).'],
           links: [],
         },

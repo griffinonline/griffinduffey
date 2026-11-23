@@ -1,26 +1,29 @@
 /* Spreadsheet CV (/cv). Standalone: doesn't load style.css.
    Look: a plain grey sheet with row numbers, thin cell lines, default blue
-   links, colored swatches marking sections. Reference: Beckmans 2024. */
+   links, colored swatches marking sections. Reference: Beckmans 2024.
+   Time runs backwards: newest column on the left. */
 
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital@0;1&display=swap');
 
 :root {
   --bg: #efefef;
+  --tab-bg: #e1e1e1;
   --line: #b4b4b4;
   --ink: #111;
+  --muted: #6f6f6f;
   --link: #1a0dff;
   --select: #1f8a4c;
   --row: 1.5rem;
   --gutter: 2.75rem;
-  --name: minmax(13rem, 2.4fr);
-  --year-cols: 11;
-  --cols: var(--gutter) var(--name) repeat(var(--year-cols), minmax(0, 1fr)) minmax(1.5rem, 0.6fr);
+  --month: 2.5rem;
   --font: 'Arial Narrow', 'Archivo Narrow', Arial, sans-serif;
 }
 
 *,
 *::before,
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+[hidden] { display: none !important; }
 
 html { background: var(--bg); }
 
@@ -37,17 +40,7 @@ body.cv {
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 em { font-style: italic; }
-
-/* ---------- Grid ---------- */
-
-.sheet { min-height: 100vh; overflow: hidden; }
-
-.row {
-  display: grid;
-  grid-template-columns: var(--cols);
-  height: var(--row);
-  color: inherit;
-}
+h1 { font-size: inherit; font-weight: normal; }
 
 .cell {
   border-right: 1px solid var(--line);
@@ -61,110 +54,214 @@ em { font-style: italic; }
   align-items: center;
   min-width: 0;
 }
-
 .gutter { justify-content: center; font-variant-numeric: tabular-nums; }
-.yr, .tail { padding: 0; }
 
-/* Header rows are taller, like the Beckmans title rows. */
-.row.head { height: calc(var(--row) * 1.25); }
-.row.head .cell { height: calc(var(--row) * 1.25); }
-.row.head .name { overflow: visible; font-size: 1.125rem; }
-.row.head .yr.link,
-.row.head .yr.note { padding: 0 0.3rem; overflow: visible; z-index: 1; }
-.row.sub .name em { font-size: 1rem; }
-.row.head .yr.note { color: #777; font-size: 0.875rem; }
+/* ---------- Header: title, nav, zoom, tabs ---------- */
 
-/* Header title + nav cells: drop the inner lines so they read as merged. */
-.row.head .name,
-.row.head .yr:not(.link) { border-right-color: transparent; }
-.row.head .yr.link { border-left: 1px solid var(--line); margin-left: -1px; }
+.trow { display: flex; height: var(--row); }
+.trow > .cell { flex: none; }
+.top .gutter { width: var(--gutter); }
+.top .title { flex: 1 1 auto; border-right-color: transparent; }
+.top .fill { flex: 1 1 auto; }
+.trow .title + .fill { display: none; }
 
-.row.years .yr {
-  justify-content: center;
-  font-size: 0.75rem;
-  color: #888;
-  font-variant-numeric: tabular-nums;
+.trow.head { height: calc(var(--row) * 1.25); }
+.trow.head > .cell { height: calc(var(--row) * 1.25); }
+.trow.head .title { font-size: 1.125rem; }
+.trow.sub .title em { font-size: 1rem; }
+
+.top .nav { width: 6rem; }
+.top .zoom { width: 12.5rem; gap: 0.35rem; }
+.top .note { width: 5.5rem; flex: none; color: #777; font-size: 0.875rem; }
+.zoom-label { color: var(--muted); font-size: 0.875rem; margin-right: 0.15rem; }
+.zoom-sep { color: var(--line); }
+.zoom a.on, .zoom a[aria-current] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* Tabs read like sheet tabs: grey until picked, then the sheet's own grey
+   with a green top line. */
+.trow.tabs {
+  height: 1.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.trow.tabs::-webkit-scrollbar { display: none; }
+.trow.tabs > .cell { height: 1.75rem; }
+.tab {
+  padding: 0 0.8rem;
+  background: var(--tab-bg);
+  color: #333;
+}
+.tab:hover { text-decoration: none; color: var(--link); }
+.tab.on {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: inset 0 2px 0 var(--select);
+  border-bottom-color: transparent;
+}
+.tab:focus-visible { outline: 2px solid var(--select); outline-offset: -2px; }
+
+/* Intro paragraphs on the moment + oratory tab: merged cells. */
+.intro .trow.para { height: auto; }
+.intro .para > .cell { height: auto; }
+.intro .para p.cell {
+  flex: 1 1 auto;
+  display: block;
+  white-space: normal;
+  line-height: 1.35;
+  padding: 0.45rem max(0.5rem, calc(100% - 46rem)) 0.45rem 0.5rem;
+}
+.intro .para .gutter { align-self: stretch; }
+
+/* ---------- Grid ---------- */
+
+.sheet-wrap { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+
+.sheet {
+  --textcols: minmax(14rem, 1.6fr) minmax(11rem, 1.3fr);
+  --textmin: 25rem;
+  min-height: 60vh;
+  min-width: calc(var(--gutter) + var(--textmin) + var(--tlmin, 0rem) + 1rem);
+}
+.sheet.is-table {
+  --month: 2.25rem;
+  --textcols: minmax(7.5rem, 1fr) minmax(11rem, 1.7fr) 4.75rem 7.25rem minmax(10rem, 1.5fr) 6.5rem minmax(10rem, 1.5fr) minmax(8.5rem, 1.1fr);
+  --textmin: 65rem;
 }
 
-.row.section .name { font-size: 1.0625rem; }
+.row {
+  display: grid;
+  grid-template-columns: var(--gutter) var(--textcols) var(--tl) minmax(1rem, 0.5fr);
+  height: var(--row);
+  color: inherit;
+}
+.yr, .tail { padding: 0; }
+.m-when { display: none; }
 
-.nav-m { display: none; }
+/* Column labels */
+.row.colhead .cell { font-size: 0.75rem; color: #888; font-variant-numeric: tabular-nums; }
+.row.colhead .yr { justify-content: center; }
+.row.yearrow .yr.ylabel { justify-content: flex-start; padding-left: 0.3rem; overflow: visible; color: #555; position: relative; z-index: 1; }
+.row.yearrow .yr:not(.ylabel) { border-right-color: transparent; }
+.row.yearrow .yr.ylabel { border-left: 0; }
+
+/* Month zoom: a darker line where one year ends and the next begins. */
+.z-months .yr.ynew,
+.z-months .yr.earlier { box-shadow: inset 1px 0 0 #8a8a8a; }
+.row.colhead .yr.earlier { font-size: 0.6875rem; }
+
+/* Month zoom scrolls sideways; row numbers and names stay put. */
+.z-months:not(.is-table) .gutter,
+.z-months:not(.is-table) .t-name {
+  position: sticky;
+  z-index: 3;
+  background: var(--bg);
+}
+.z-months:not(.is-table) .gutter { left: 0; }
+.z-months:not(.is-table) .t-name { left: var(--gutter); }
+
+.row.section .t-name { font-size: 1.0625rem; overflow: visible; }
 
 /* Entries */
 .row.entry { cursor: pointer; }
-.row.entry:hover { text-decoration: none; }
+.row.entry .t-name a.open { color: inherit; }
 .row.entry:hover .cell { background: #f6f6f6; }
-.row.entry:hover .name { color: var(--link); }
-.row.entry:focus-visible { outline: none; }
-.row.entry:focus-visible .name,
-.row.entry.is-open .name { box-shadow: inset 0 0 0 2px var(--select); }
+.row.entry:hover .t-name a.open { color: var(--link); text-decoration: none; }
+.row.entry .t-name a.open:focus-visible { outline: none; }
+.row.entry:has(a.open:focus-visible) .t-name,
+.row.entry.is-open .t-name { box-shadow: inset 0 0 0 2px var(--select); }
+.row.entry .t-sub { color: #444; }
+.muted { color: var(--muted); }
 
-.has-thumb { position: relative; }
-.has-thumb > img,
-.has-thumb > .ph,
-.m-thumb > img,
-.m-thumb > .ph {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+/* Table rows (moment + oratory): text wraps, rows grow. */
+.is-table .row.entry { height: auto; }
+.is-table .row.entry .cell {
+  height: auto;
+  min-height: var(--row);
+  white-space: normal;
+  align-items: flex-start;
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+  line-height: 1.2;
 }
-.row.entry:hover .has-thumb > * { filter: contrast(1.08) saturate(1.2); }
+.is-table .row.entry .yr { padding: 0; }
+.is-table .t-see { overflow-wrap: anywhere; }
+.is-table .t-studio,
+.is-table .t-type,
+.is-table .t-when { color: #444; }
+.is-table .t-studio.studio-moment { color: var(--ink); }
 
-.m-thumb { display: none; }
+/* ---------- Timeline ---------- */
 
-/* Timelines: multi-year entries run a thin bar in the section color from
-   the thumbnail (start year) to the end year. "–now" fades out at the end. */
-.yr.span { position: relative; }
+.yr { position: relative; }
 .yr.span::before {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: var(--bar-top, 50%);
   height: 0.3125rem;
   transform: translateY(-50%);
   background: color-mix(in srgb, var(--tint, #ccc) 80%, #fff);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint, #ccc) 70%, #000 12%);
 }
-.yr.span-end::before { right: 0.3rem; }
+.yr.span-end::before { left: 0.3rem; }
 .yr.span-open::before {
-  right: 0;
-  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent);
-  mask-image: linear-gradient(90deg, #000 40%, transparent);
+  -webkit-mask-image: linear-gradient(270deg, #000 40%, transparent);
+  mask-image: linear-gradient(270deg, #000 40%, transparent);
 }
 .row.entry:hover .yr.span::before { background: var(--tint, #ccc); }
 
-/* Placeholder: hatch in the section color until a real image goes in. */
-.ph {
-  --tint: #ccc;
-  background:
-    repeating-linear-gradient(135deg, transparent 0 5px, color-mix(in srgb, var(--tint) 55%, transparent) 5px 6px),
-    color-mix(in srgb, var(--tint) 30%, #f4f4f4);
+/* Year-only entries in month zoom: dashed, since the months are a guess. */
+.approx .yr.span::before {
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tint, #ccc) 85%, #000 5%) 0 4px, transparent 4px 7px);
+  box-shadow: none;
 }
-.ph-big {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  text-align: center;
-  padding: 2rem;
-  color: #333;
-  background:
-    repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--tint) 45%, transparent) 14px 15px),
-    linear-gradient(180deg, #e6e9ec, #c9ced3);
+.row.entry.approx:hover .yr.span::before {
+  background: repeating-linear-gradient(90deg, var(--tint, #ccc) 0 4px, transparent 4px 7px);
 }
-.ph-big span { font-size: 1.75rem; }
-.ph-big small { font-size: 0.875rem; color: #555; text-transform: none; }
 
-/* ---------- Viewer: image left, comment panel right ---------- */
+/* Start of an entry (the right end of its bar): a cap, then the site link
+   spilling into the empty older cells, like overflowing text in a sheet. */
+.yr.start { overflow: visible; z-index: 1; gap: 0.3rem; }
+.cap {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--tint, #ccc);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint, #ccc) 70%, #000 18%);
+}
+.yr.start .ext,
+.yr.start .lbl {
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  background: var(--bg);
+  padding-right: 0.25rem;
+}
+.yr.start .lbl { color: #555; }
+.row.entry:hover .yr.start .ext,
+.row.entry:hover .yr.start .lbl { background: #f6f6f6; }
+
+.is-table .yr.start { align-items: flex-start; padding-top: 0.5rem; }
+.is-table { --bar-top: 0.75rem; }
+
+.has-thumb > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.row.entry:hover .has-thumb > img { filter: contrast(1.08) saturate(1.2); }
+.is-table .has-thumb > img { height: var(--row); }
+
+/* ---------- Viewer: image left (only when there is one), comment right ---------- */
 
 .viewer[hidden] { display: none; }
 
 .viewer-media {
   position: fixed;
-  top: calc(var(--row) * 2.5 + 0.5rem);
+  top: 6rem;
   left: var(--gutter);
   bottom: 0;
   width: min(47vw, 60rem);
@@ -174,17 +271,14 @@ em { font-style: italic; }
   cursor: zoom-out;
   animation: cv-in 140ms ease-out;
 }
-.viewer-media > img,
-.viewer-media > .ph { width: 100%; height: 100%; object-fit: cover; }
-.viewer-media > img { display: block; object-position: left top; }
-.has-thumb > img, .m-thumb > img { object-position: left top; }
+.viewer-media > img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .comment {
   position: fixed;
-  top: calc(var(--row) * 2.5 + 0.5rem);
+  top: 6rem;
   right: 4.5vw;
   width: min(36vw, 30rem);
-  max-height: calc(100vh - var(--row) * 2.5 - 2rem);
+  max-height: calc(100vh - 7.5rem);
   overflow: auto;
   background: var(--bg);
   border: 1px solid var(--line);
@@ -197,6 +291,7 @@ em { font-style: italic; }
 .comment h2 { font-size: 1.0625rem; font-weight: normal; padding-right: 2rem; }
 .comment p { margin-top: 1rem; }
 .comment .c-sub { margin-top: 0.15rem; }
+.comment .c-facts { color: #444; }
 .comment .c-stack { color: #666; }
 .comment .c-nav { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 0.6rem; }
 .comment .c-nav button,
@@ -221,8 +316,8 @@ em { font-style: italic; }
 .comment-close:focus { outline: none; }
 .comment-close:focus-visible { outline: 2px solid var(--select); outline-offset: 2px; }
 
-/* While viewing, names go quiet behind the image (row numbers stay). */
-body.viewing .row.entry:not(.is-open) .name { color: transparent; }
+/* While an image is up, names go quiet behind it (row numbers stay). */
+body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent; }
 
 @keyframes cv-in { from { opacity: 0; } to { opacity: 1; } }
 
@@ -230,29 +325,74 @@ body.viewing .row.entry:not(.is-open) .name { color: transparent; }
   .viewer-media, .comment { animation: none; }
 }
 
-/* ---------- Phones: rows stack, year columns collapse ---------- */
+/* ---------- Phones ---------- */
 
 @media (max-width: 720px) {
   :root {
     --gutter: 2.25rem;
     --row: 2rem;
-    --cols: var(--gutter) minmax(0, 1fr) 4.5rem;
   }
-  .row .yr, .row.entry .tail { display: none; }
-  .row.years { display: none; }
-  .row.head .yr.note { display: none; }
-  .m-thumb { display: flex; padding: 0; position: relative; }
-  .m-thumb span {
-    position: absolute; right: 0.25rem; bottom: 0.15rem;
-    font-size: 0.6875rem; color: #333; background: rgba(239, 239, 239, 0.85); padding: 0 0.15rem;
+  .top .nav { width: auto; padding: 0 0.55rem; }
+  .top .title { overflow: hidden; }
+  .trow.sub .title em { font-size: 0.875rem; }
+  .top .zoom { width: auto; padding: 0 0.5rem; }
+  .top .note { display: none; }
+  .zoom-label { display: none; }
+  .trow.tabs, .trow.tabs > .cell { height: 2.25rem; }
+  .intro .para p.cell { padding-right: 0.5rem; font-size: 1rem; }
+
+  /* Year zoom: names + a short date cell; the timeline folds away. */
+  .sheet { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; }
+  .sheet .t-sub { display: none; }
+  .z-years .row .yr,
+  .z-years .row .tail { display: none; }
+  .z-years .row { grid-template-columns: var(--gutter) minmax(0, 1fr) 4.75rem; }
+  .z-years .row.entry .m-when {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.8125rem;
+    color: #444;
+    font-variant-numeric: tabular-nums;
   }
-  .row.head .name { white-space: normal; }
-  .nav-m {
-    display: grid;
-    grid-template-columns: var(--gutter) repeat(var(--nav-n, 3), 1fr);
-    height: var(--row);
+  .z-years .row.colhead:not(.yearrow) { display: none; }
+
+  /* Month zoom: names stay, months scroll sideways. */
+  .z-months:not(.is-table) { --textcols: 9.5rem; min-width: calc(var(--gutter) + 9.5rem + var(--tlmin) + 1rem); }
+  .z-months:not(.is-table) .t-name { white-space: nowrap; }
+
+  /* moment + oratory: each row stacks into a little card. */
+  .sheet.is-table { min-width: 0; }
+  .is-table .row,
+  .is-table.z-months .row { grid-template-columns: var(--gutter) minmax(0, 1fr); height: auto; }
+  .is-table .row .yr,
+  .is-table .row .tail,
+  .is-table .row .m-when,
+  .is-table .row.colhead { display: none; }
+  .is-table .row .t:not(.t-name) { display: none; }
+  .is-table .row.entry .t { display: flex; border-right: 0; }
+  .is-table .row.entry .gutter { grid-row: span 8; align-items: flex-start; padding-top: 0.5rem; }
+  .is-table .row.entry .t:not(.t-see) { border-bottom-color: transparent; }
+  .is-table .row.entry .cell.t { padding-top: 0.12rem; padding-bottom: 0.12rem; min-height: 0; }
+  .is-table .row.entry .t-name { padding-top: 0.45rem; font-size: 1.0625rem; }
+  .is-table .row.entry .t-see { padding-bottom: 0.5rem; }
+  .is-table .row.entry .t-studio,
+  .is-table .row.entry .t-type,
+  .is-table .row.entry .t-when,
+  .is-table .row.entry .t-status,
+  .is-table .row.entry .t-see { font-size: 0.9375rem; }
+  .is-table .row.entry .t-studio::before,
+  .is-table .row.entry .t-type::before,
+  .is-table .row.entry .t-when::before,
+  .is-table .row.entry .t-status::before,
+  .is-table .row.entry .t-see::before {
+    content: attr(data-label);
+    flex: none;
+    width: 4.5rem;
+    color: #888;
   }
-  .nav-m::before { content: ''; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .is-table .row.entry .t-sub { display: flex; color: #333; }
+  .is-table .row.section .gutter { grid-row: auto; }
+  body[data-tab='moment'] .top .zoom { display: none; }
 
   .viewer-media {
     top: 0; left: 0; right: 0; bottom: auto;
@@ -260,21 +400,21 @@ body.viewing .row.entry:not(.is-open) .name { color: transparent; }
   }
   .comment {
     top: auto; bottom: 0; left: 0; right: 0;
-    width: 100%; max-height: 55vh;
+    width: 100%; max-height: 60vh;
     border-width: 1px 0 0;
   }
 }
 
-/* ---------- Print: a plain CV ---------- */
+/* ---------- Print: a plain CV with everything ---------- */
 
 .print-cv { display: none; }
 
 @media print {
   body.cv { background: #fff; font-size: 10.5pt; line-height: 1.3; }
-  .sheet, .viewer { display: none !important; }
+  .top, .intro, .sheet-wrap, .viewer { display: none !important; }
   .print-cv { display: block; }
   .print-cv h1 { font-size: 16pt; font-weight: normal; }
   .print-cv h2 { font-size: 10.5pt; font-style: italic; font-weight: normal; margin: 1.1em 0 0.3em; border-bottom: 0.5pt solid #999; }
-  .print-cv .p-item { display: grid; grid-template-columns: 6.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
+  .print-cv .p-item { display: grid; grid-template-columns: 7.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
   .print-cv strong { font-weight: normal; }
 }
