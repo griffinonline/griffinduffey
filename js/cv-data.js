@@ -720,7 +720,7 @@ window.CV = {
       items: [
         {
           id: 'reading-group', title: 'Reading group', sub: 'Member', year: 2020, years: '2020–now', // check: start month (Griffin: 'started in 2020 i believe')
-          body: ['A small group reading mostly continental philosophy, psychoanalysis and critical theory, one book at a time. Also films, making music, and resisting despair.'],
+          body: ["i've been a long time member of a private philosophy reading group, where we've delved into various traditions and excursuses of thought. we've hosted todd mcgowan, paul north, todd may, and have members like me who are ex-academic wannabes and some who've found their way into and through the current academic hellscape. it's played a major role in my thinking life."],
           links: [],
           // From Griffin's Goodreads export (11/23); Griffin confirmed which were group reads.
           books: [
