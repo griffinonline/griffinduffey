@@ -73,7 +73,7 @@ window.CV = {
         "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to 30+ sites.",
       ],
       points: [
-        'g360 technologies: an ai security company. project manager and main builder, figma to a live next.js site.',
+        'g360 technologies: an ai security company. project lead and main builder, figma to a live next.js site.',
         'less: a data workflow tool, and one of the sprints i’m proudest of. ran it end to end.',
         'tahoe: designed and built the launch page for tara, their data tool for ai agents: the visuals, the layout, the story.',
       ],
@@ -156,7 +156,7 @@ window.CV = {
       // One paragraph, [oratory] / [moment] become links (see cv.js `rich`).
       // check: "in the fall of 2026" (the rebrand) and "march to november
       // 2026" (my dates there) aren't confirmed yet.
-      intro: '[oratory] was a design studio making brands and websites for ai and software companies. in the fall of 2026 it became [MOMENT], a rebrand, not a second studio, selling short brand + site sprints. my title was project manager, but i was the main ai-assisted builder and client contact on most of these projects, and i built the studio\'s internal tools. i was there from march to november 2026, when the team reset. projects still starting then say how far i got.',
+      intro: '[oratory] was a design studio making brands and websites for ai and software companies. in the fall of 2026 it became [MOMENT], a rebrand, not a second studio, selling short brand + site sprints. i was project lead, the main ai-assisted builder and the client contact on most of these projects, and i built the studio\'s internal tools. i was there from march to november 2026, when the team reset. projects still starting then say how far i got.',
       groups: [
         { section: 'moment + oratory', label: 'client projects', kind: 'client' },
         { section: 'moment + oratory', label: 'studio tools + sales', kind: 'internal' },
@@ -196,11 +196,11 @@ window.CV = {
       items: [
         {
           // check: "fall of 2026" for the rebrand is from memory ("announced ~sept").
-          id: 'moment-job', title: '[MOMENT] (formerly [Oratory])', sub: 'Project manager, builder & client lead', year: 2026,
+          id: 'moment-job', title: '[MOMENT] (formerly [Oratory])', sub: 'Project lead, design + site development', year: 2026,
           start: '2026-03', end: '2026-11',
           body: [
             'A design studio making brands and websites for AI and software companies. [Oratory] became [MOMENT] in the fall of 2026.',
-            'My title was project manager. I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
+            'As project lead, I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
             'Between client work I built the tools the studio ran on: a project dashboard, an ops system that reads scope and timelines from Slack and the repos, the intake and launch docs, and sales decks.',
           ],
           links: [['every project, with my role', '#moment'], ['moment.so', 'https://moment.so']],
@@ -273,7 +273,7 @@ window.CV = {
           // check: Ravera is unannounced, so the product isn't named here.
           // check: confirm Griffin ran the 11/3 kickoff.
           // check: contract paper was Oratory's; branded MOMENT from 11/2.
-          id: 'vitally', title: 'Vitally', sub: 'Project manager', year: 2026, start: '2026-11',
+          id: 'vitally', title: 'Vitally', sub: 'Project lead', year: 2026, start: '2026-11',
           what: 'site for a new vitally product, brand by studio freight', studio: 'moment', type: 'brand + site sprint',
           status: 'started: i ran kickoff and the first week before i left', see: 'not public yet',
           body: ['Website for a new Vitally product, with the brand by Studio Freight. I ran the kickoff, gathered the client\'s positioning and product UI into one place, and set up the stack conversation. I left a week in.'],
@@ -282,7 +282,7 @@ window.CV = {
         {
           // check: stack unknown; I left before the build.
           // check: confirm how much of NetBird's kickoff Griffin ran.
-          id: 'netbird', title: 'NetBird', sub: 'Project manager, research', year: 2026, start: '2026-10', end: '2026-11',
+          id: 'netbird', title: 'NetBird', sub: 'Project lead, research', year: 2026, start: '2026-10', end: '2026-11',
           what: 'brand + site for an open-source networking company', studio: 'moment', type: 'brand + site sprint',
           status: 'early phase: i set up kickoff and ran the first weeks',
           body: ['Brand and website sprint, the first run on the 4-week model. I set up the project hub, booked the reviews and gathered inspiration and product UI for the team. I left before the build.'],
@@ -290,7 +290,7 @@ window.CV = {
         },
         {
           // check: stack unknown; I left before the build.
-          id: 'emdash', title: 'Emdash', sub: 'Project manager', year: 2026, start: '2026-10', end: '2026-11',
+          id: 'emdash', title: 'Emdash', sub: 'Project lead', year: 2026, start: '2026-10', end: '2026-11',
           what: 'the first [MOMENT] brand + site sprint', studio: 'moment', type: 'brand + site sprint',
           status: 'early phase: i wrote the intake and ran the first weeks',
           body: ['The first [MOMENT] brand and site sprint. I wrote the client intake it ran on (a long and a short version) and was on it until I left.'],
@@ -299,13 +299,13 @@ window.CV = {
         {
           // check: default.com (11/23) is Next.js + Sanity, but the only repo is a static preview; can't tell if the MOMENT homepage shipped. Stack left blank.
           // check: status after Sept; oratory-ops still had it active.
-          id: 'default', title: 'Default', sub: 'Project manager', year: 2026, start: '2026-08',
+          id: 'default', title: 'Default', sub: 'Project lead', year: 2026, start: '2026-08',
           what: 'brand + homepage', studio: 'moment', type: 'brand + site sprint', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
-          id: 'allobrain', title: 'AlloBrain', sub: 'Project manager + main builder', year: 2026, start: '2026-08', end: '2026-09',
+          id: 'allobrain', title: 'AlloBrain', sub: 'Project lead + main builder', year: 2026, start: '2026-08', end: '2026-09',
           what: 'site for an ai contact-center platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['allobrain.com', 'https://www.allobrain.com'], featured: true,
           body: [
@@ -315,7 +315,7 @@ window.CV = {
           stack: 'custom · astro · sanity',
         },
         {
-          id: 'g360', title: 'G360 Technologies', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-09',
+          id: 'g360', title: 'G360 Technologies', sub: 'Project lead + main builder', year: 2026, start: '2026-07', end: '2026-09',
           what: 'site for an ai security company', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['g360technologies.com', 'https://www.g360technologies.com'], featured: true,
           body: ['Site for an AI security company (PromptVault, Repo Audit). Others committed too, but I did most of the development, built from the Figma file, then handed the domain, DNS and services over to the client.'],
@@ -324,7 +324,7 @@ window.CV = {
         },
         {
           // npsprism.com on 11/23 is still the old site (no Next.js), so the Oratory build isn't live yet. Stack from the repo.
-          id: 'nps-prism', title: 'NPS Prism (Bain)', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-10',
+          id: 'nps-prism', title: 'NPS Prism (Bain)', sub: 'Project lead + main builder', year: 2026, start: '2026-07', end: '2026-10',
           what: 'site for bain\'s cx benchmarking product', studio: 'oratory', type: 'brand + site sprint', status: 'launching soon',
           body: [
             'Marketing site for Bain\'s customer-experience benchmarking product. Only the homepage was designed, so I skinned every interior page from wireframes using the homepage\'s system, plus Sanity, forms and handoff docs. About 158 of roughly 190 commits.',
@@ -334,7 +334,7 @@ window.CV = {
         },
         {
           // scite.ai on 11/23 is still the old react app (not the Next.js build), so not live yet. Stack from ~/coding/oratory/scite-oratory.
-          id: 'scite', title: 'Scite', sub: 'Project manager + main builder', year: 2026, start: '2026-07', end: '2026-08',
+          id: 'scite', title: 'Scite', sub: 'Project lead + main builder', year: 2026, start: '2026-07', end: '2026-08',
           what: 'site for an ai research assistant', studio: 'oratory', type: 'brand + site sprint', status: 'launching soon',
           body: ['New marketing site for an AI research assistant.'],
           links: [],
@@ -343,14 +343,14 @@ window.CV = {
         },
         {
           // check: stack + site unknown.
-          id: 'sol', title: 'Sol', sub: 'Project manager', year: 2026, start: '2026-06',
+          id: 'sol', title: 'Sol', sub: 'Project lead', year: 2026, start: '2026-06',
           what: 'brand + homepage', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Brand and homepage.'],
           links: [],
         },
         {
           // itshandled.ai checked 11/23: Next.js on Vercel, matches the oratorydesign/itshandled-marketing-site repo.
-          id: 'handled', title: 'Handled', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
+          id: 'handled', title: 'Handled', sub: 'Project lead + main builder', year: 2026, start: '2026-06', end: '2026-09',
           what: 'brand + site for an ai teammate for cpg brands', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['itshandled.ai', 'https://www.itshandled.ai'],
           body: ['Brand and site for an AI teammate made for consumer packaged goods. Worked through batched client feedback and kept changes small and on brand.'],
@@ -360,7 +360,7 @@ window.CV = {
         },
         {
           // Stack from tahoebio/tahoe-marketing-site (Next.js + Sanity on Cloudflare); the live HTML keeps the old Webflow export markup.
-          id: 'tahoe', title: 'Tahoe', sub: 'Project manager + design lead on the Tara launch', year: 2026, start: '2026-06', end: '2026-10',
+          id: 'tahoe', title: 'Tahoe', sub: 'Project lead + design lead on the Tara launch', year: 2026, start: '2026-06', end: '2026-10',
           what: 'the tara launch page for a biology ai lab', studio: 'oratory', type: 'rebuild + campaign launch', status: 'live',
           site: ['tahoelabs.ai/tara', 'https://www.tahoelabs.ai/tara'], featured: true,
           body: ['My main contribution was the launch of Tara, which connects the AI agents people already use to Tahoe’s frontier-scale biology datasets. I designed and built the Tara page: the visuals, layout and story, from concept to launch day.', 'Around it I ran the project and helped move the main site off Webflow into a custom build with Sanity content.'],
@@ -370,7 +370,7 @@ window.CV = {
         },
         {
           // check: the client planned its own go-live for 11/9; confirm it's live.
-          id: 'suppli', title: 'Suppli', sub: 'Project manager + main builder', year: 2026, start: '2026-06', end: '2026-09',
+          id: 'suppli', title: 'Suppli', sub: 'Project lead + main builder', year: 2026, start: '2026-06', end: '2026-09',
           what: 'site for a credit platform for the physical economy', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['gosuppli.com', 'https://www.gosuppli.com'],
           body: ['Site for a credit platform for the physical economy. Built pages and Sanity content, worked the client punchlist down, and handed the repo over.'],
@@ -380,7 +380,7 @@ window.CV = {
         },
         {
           // check: productschool.com (11/23) shows the refresh's hero ("The learning platform for AI builders"), but on Product School's own Next.js + Contentful site; confirm how much of the refresh shipped.
-          id: 'product-school', title: 'Product School', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-08',
+          id: 'product-school', title: 'Product School', sub: 'Project lead', year: 2026, start: '2026-05', end: '2026-08',
           what: 'site refresh', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['productschool.com', 'https://productschool.com'],
           body: ['Site refresh.'],
@@ -390,7 +390,7 @@ window.CV = {
         {
           // arrows.to (11/23) is Astro; the oratorydesign arrows repos are Next.js/Vite, so the client may have rebuilt it.
           // check: arrows.to is inferred from the client's email domain.
-          id: 'arrows', title: 'Arrows', sub: 'Project manager', year: 2026, start: '2026-05', end: '2026-07',
+          id: 'arrows', title: 'Arrows', sub: 'Project lead', year: 2026, start: '2026-05', end: '2026-07',
           what: 'site for a sales deal-playbook tool', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['arrows.to', 'https://arrows.to'],
           body: ['Marketing site for a sales deal-playbook tool.'],
@@ -399,7 +399,7 @@ window.CV = {
         },
         {
           // check: magentrix.com (11/23) is a Webflow site; no Oratory repo, so confirm it's the Oratory homepage.
-          id: 'magentrix', title: 'Magentrix', sub: 'Project manager', year: 2026, start: '2026-05',
+          id: 'magentrix', title: 'Magentrix', sub: 'Project lead', year: 2026, start: '2026-05',
           what: 'brand + homepage', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['magentrix.com', 'https://www.magentrix.com'],
           body: ['Brand and homepage.'],
@@ -409,7 +409,7 @@ window.CV = {
         {
           // check: less.tech is inferred from the client's email domain.
           // check: Griffin called it "Feature Less"; oratory-ops names the client "Less".
-          id: 'less', title: 'Less', sub: 'Project manager', year: 2026, start: '2026-05',
+          id: 'less', title: 'Less', sub: 'Project lead', year: 2026, start: '2026-05',
           what: 'site for a data workflow tool', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['less.tech', 'https://www.less.tech'], featured: true,
           body: ['Marketing site for a data workflow tool.'],
@@ -418,21 +418,21 @@ window.CV = {
         },
         {
           // check: stack unknown (blindzebra.com is a sports site, not clearly the client).
-          id: 'blind-zebra', title: 'Blind Zebra', sub: 'Project manager', year: 2026, start: '2026-05',
+          id: 'blind-zebra', title: 'Blind Zebra', sub: 'Project lead', year: 2026, start: '2026-05',
           what: 'ongoing site work', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Ongoing site work, billed hourly.'],
           links: [],
         },
         {
           // check: commodityai.com (11/23) is Next.js on Vercel, but there's no Oratory repo for it; confirm before marking it live. Stack left blank.
-          id: 'commodityai', title: 'CommodityAI', sub: 'Project manager', year: 2026, start: '2026-05',
+          id: 'commodityai', title: 'CommodityAI', sub: 'Project lead', year: 2026, start: '2026-05',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
         },
         {
           // flowgenlabs.com (11/23): Next.js; oratory-ops says custom build in the client's FlowGenLabs/flowgenlabs-marketing repo.
-          id: 'flowgen', title: 'Flowgen', sub: 'Project manager', year: 2026, start: '2026-04',
+          id: 'flowgen', title: 'Flowgen', sub: 'Project lead', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['flowgenlabs.com', 'https://flowgenlabs.com'],
           body: ['Marketing site.'],
@@ -441,7 +441,7 @@ window.CV = {
         },
         {
           // productpartners.com (11/23): Next.js on Vercel, same title as the oratorydesign/product-partners-marketing repo.
-          id: 'product-partners', title: 'Product Partners', sub: 'Project manager', year: 2026, start: '2026-04',
+          id: 'product-partners', title: 'Product Partners', sub: 'Project lead', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['productpartners.com', 'https://productpartners.com'],
           body: ['Marketing site.'],
@@ -451,7 +451,7 @@ window.CV = {
         {
           // Stack from the oratorydesign/karumi-marketing repo.
           // karumi.com now says the company has closed, so no link.
-          id: 'karumi', title: 'Karumi', sub: 'Project manager', year: 2026, start: '2026-04',
+          id: 'karumi', title: 'Karumi', sub: 'Project lead', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off (company has since closed)',
           body: ['Marketing site. The company has since closed.'],
           links: [],
@@ -459,7 +459,7 @@ window.CV = {
         },
         {
           // check: kyckr.com (11/23) is Framer; no Oratory repo, so confirm it's the Oratory build.
-          id: 'kyckr', title: 'Kyckr', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          id: 'kyckr', title: 'Kyckr', sub: 'Project lead + builder', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['kyckr.com', 'https://www.kyckr.com'],
           body: ['Marketing site.'],
@@ -469,7 +469,7 @@ window.CV = {
         {
           // Stack: live Next.js (11/23) + the oratorydesign/umony-marketing repo (Sanity).
           // check: umony.com is inferred from the client's email domain.
-          id: 'umony', title: 'Umony', sub: 'Project manager', year: 2026, start: '2026-04',
+          id: 'umony', title: 'Umony', sub: 'Project lead', year: 2026, start: '2026-04',
           what: 'site for a communications compliance platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['umony.com', 'https://www.umony.com'],
           body: ['Marketing site for a communications compliance platform.'],
@@ -479,7 +479,7 @@ window.CV = {
         {
           // musubilabs.ai sits behind a Vercel bot check; stack from the oratorydesign/musubi-marketing repo.
           // check: musubilabs.ai is inferred from the client's email domain.
-          id: 'musubi', title: 'Musubi', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          id: 'musubi', title: 'Musubi', sub: 'Project lead + builder', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['musubilabs.ai', 'https://www.musubilabs.ai'], featured: true,
           body: ['Marketing site.'],
@@ -489,7 +489,7 @@ window.CV = {
         {
           // Stack: live Next.js (11/23) + the oratorydesign/qase-marketing repo (Sanity).
           // check: qase.io is inferred from the client's email domain.
-          id: 'qase', title: 'Qase', sub: 'Project manager', year: 2026, start: '2026-04', end: '2026-05',
+          id: 'qase', title: 'Qase', sub: 'Project lead', year: 2026, start: '2026-04', end: '2026-05',
           what: 'site for a test management platform', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['qase.io', 'https://qase.io'], featured: true,
           body: ['Marketing site for a test management platform.'],
@@ -498,7 +498,7 @@ window.CV = {
         },
         {
           // check: passetto.com (11/23) is Webflow (B2B SaaS marketing measurement); confirm it's the Oratory build.
-          id: 'passetto', title: 'Passetto', sub: 'Project manager + builder', year: 2026, start: '2026-04',
+          id: 'passetto', title: 'Passetto', sub: 'Project lead + builder', year: 2026, start: '2026-04',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['passetto.com', 'https://www.passetto.com'],
           body: ['Marketing site.'],
@@ -507,7 +507,7 @@ window.CV = {
         },
         {
           // check: neuron7.ai (11/23) is Webflow; confirm it's the Oratory build.
-          id: 'neuron7', title: 'Neuron7', sub: 'Project manager', year: 2026, start: '2026-03',
+          id: 'neuron7', title: 'Neuron7', sub: 'Project lead', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['neuron7.ai', 'https://www.neuron7.ai'],
           body: ['Marketing site.'],
@@ -516,7 +516,7 @@ window.CV = {
         },
         {
           // check: advancehq.com (11/23, Slack channel #advancehq-oratory-ext) is Framer; confirm it's the Oratory build.
-          id: 'advance', title: 'Advance', sub: 'Project manager', year: 2026, start: '2026-03',
+          id: 'advance', title: 'Advance', sub: 'Project lead', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['advancehq.com', 'https://advancehq.com'],
           body: ['Marketing site.'],
@@ -525,7 +525,7 @@ window.CV = {
         },
         {
           // articlegalaxy.com (11/23): Next.js + Sanity on Vercel, same stack as the oratorydesign/article-galaxy-marketing-site repo.
-          id: 'article-galaxy', title: 'Article Galaxy', sub: 'Project manager', year: 2026, start: '2026-03',
+          id: 'article-galaxy', title: 'Article Galaxy', sub: 'Project lead', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['articlegalaxy.com', 'https://www.articlegalaxy.com'],
           body: ['Marketing site.'],
@@ -534,7 +534,7 @@ window.CV = {
         },
         {
           // revvue.ai (11/23) is Framer; oratory-ops has a #switch-framer-revvue channel and ownership moved to the client in June.
-          id: 'revvue', title: 'RevVue', sub: 'Project manager', year: 2026, start: '2026-03',
+          id: 'revvue', title: 'RevVue', sub: 'Project lead', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['revvue.ai', 'https://www.revvue.ai'],
           body: ['Marketing site.'],
@@ -543,7 +543,7 @@ window.CV = {
         },
         {
           // check: neurawork.ai (11/23, German AI consultancy) is Framer; confirm it's the Oratory build.
-          id: 'neurawork', title: 'Neurawork', sub: 'Project manager + builder', year: 2026, start: '2026-03',
+          id: 'neurawork', title: 'Neurawork', sub: 'Project lead + builder', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'live',
           site: ['neurawork.ai', 'https://neurawork.ai'],
           body: ['Marketing site.'],
@@ -552,7 +552,7 @@ window.CV = {
         },
         {
           // check: two Tenzos exist (tenzo.ai, AI recruiter, Next.js; gotenzo.com, restaurant analytics, Webflow); not sure which is the client. Stack + link left blank.
-          id: 'tenzo', title: 'Tenzo', sub: 'Project manager', year: 2026, start: '2026-03',
+          id: 'tenzo', title: 'Tenzo', sub: 'Project lead', year: 2026, start: '2026-03',
           what: 'marketing site', studio: 'oratory', type: 'brand + site sprint', status: 'handed off',
           body: ['Marketing site.'],
           links: [],
