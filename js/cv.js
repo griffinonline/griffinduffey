@@ -270,11 +270,34 @@
         rows = ((r.recenttracks || {}).track || []).slice(0, 1).map((t) => [t.name, t.artist && t.artist['#text'], t.url, art(t.image)]);
       }
       ul.innerHTML = rows.length
-        ? rows.map(([n, a, u, img]) => `<li><a class="alb" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="${esc(n)}, ${esc(a || '')}">${img ? `<img src="${esc(img)}" alt="${esc(n)}, ${esc(a || '')}" loading="lazy">` : `<span class="alb-blank">${esc(n)}</span>`}</a></li>`).join('')
+        ? rows.map(([n, a, u, img]) => `<li><a class="alb" href="${esc(u)}" target="_blank" rel="noopener noreferrer" data-tip="${esc(n)}${a ? `, ${esc(a)}` : ''}">${img ? `<img src="${esc(img)}" alt="${esc(n)}, ${esc(a || '')}" loading="lazy">` : `<span class="alb-blank">${esc(n)}</span>`}</a></li>`).join('')
         : '<li class="muted">nothing lately</li>';
     } catch (e) {
       ul.innerHTML = '<li class="muted">last.fm is quiet</li>';
     }
+  }
+
+  // Album names on hover, with no delay (a native title tooltip waits ~1s).
+  // One tip on <body>, since the header cells clip anything that spills out.
+  function albumTips() {
+    const tip = document.createElement('div');
+    tip.className = 'alb-tip';
+    tip.hidden = true;
+    document.body.appendChild(tip);
+    const show = (a) => {
+      tip.textContent = a.dataset.tip;
+      tip.hidden = false;
+      const r = a.getBoundingClientRect(), t = tip.getBoundingClientRect();
+      const x = Math.min(Math.max(4, r.left + r.width / 2 - t.width / 2), innerWidth - t.width - 4);
+      const below = r.bottom + 4 + t.height <= innerHeight;
+      tip.style.left = `${x}px`;
+      tip.style.top = `${below ? r.bottom + 4 : r.top - t.height - 4}px`;
+    };
+    const hide = () => { tip.hidden = true; };
+    document.addEventListener('pointerover', (e) => { const a = e.target.closest && e.target.closest('.alb[data-tip]'); a ? show(a) : hide(); });
+    document.addEventListener('focusin', (e) => { const a = e.target.closest && e.target.closest('.alb[data-tip]'); a ? show(a) : hide(); });
+    document.addEventListener('focusout', hide);
+    addEventListener('scroll', hide, { passive: true });
   }
 
   // ---------- Header: title, nav, zoom, timeline switch, tabs ----------
@@ -356,6 +379,7 @@
     </div>`);
     colC.append(navRow, subRow, row('rest', side));
     loadListening(side.querySelector('.side-listening'));
+    albumTips();
 
     const upper = el('div', 'top-upper');
     upper.append(colA);

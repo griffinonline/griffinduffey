@@ -727,3 +727,12 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
   .print-cv .p-item { display: grid; grid-template-columns: 7.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
   .print-cv strong { font-weight: normal; }
 }
+
+/* Album name on hover (cv.js albumTips): instant, unlike a native title. */
+.alb-tip {
+  position: fixed; z-index: 50; pointer-events: none;
+  max-width: 16rem; padding: 0.2rem 0.4rem;
+  background: var(--ink); color: #fff;
+  font-size: 0.6875rem; line-height: 1.3; white-space: normal;
+}
+.alb-tip[hidden] { display: none; }
