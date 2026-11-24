@@ -82,8 +82,11 @@ window.CVVisuals = window.CVVisuals || {};
     function layout() {
       const w = ctx.body.clientWidth, h = ctx.body.clientHeight;
       if (!w || !h) return;
-      ctx.cw = w < 380 ? 440 : 540;
-      ctx.scale = w / ctx.cw;
+      // Scale the mock page to the stage width, but not past ~1.1x: on very
+      // wide stages the page gets wider instead of blowing up (and cropping).
+      const base = w < 380 ? 440 : 540;
+      ctx.scale = Math.min(w / base, 1.1);
+      ctx.cw = w / ctx.scale;
       ctx.vh = h / ctx.scale;
       on(ctx.canvas, 'narrow', ctx.cw < 540);
       ctx.canvas.style.width = ctx.cw + 'px';

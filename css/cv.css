@@ -1,7 +1,13 @@
 /* Spreadsheet CV (/cv). Standalone: doesn't load style.css.
    Look: a plain grey sheet with row numbers, thin cell lines, default blue
    links, colored swatches marking sections. Reference: Beckmans 2024.
-   Time runs backwards: newest column on the left. */
+   Time runs backwards: newest column on the left.
+
+   Breakpoints (one set, used everywhere):
+     > 1180px   desktop: header = three columns [photo + name] [bio] [links]
+     721–1180   tablet: [photo + name] [links + listening], bio full width below
+     <= 900px   the moment + oratory table turns into cards
+     <= 720px   phone: everything stacks, no timeline chart */
 
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital@0;1&display=swap');
 
@@ -13,6 +19,7 @@
   --muted: #6f6f6f;
   --link: #1a0dff;
   --select: #1f8a4c;
+  --go: #1d6b39;
   --row: 1.5rem;
   --gutter: 2.75rem;
   --month: 2.5rem;
@@ -25,7 +32,7 @@
 
 [hidden] { display: none !important; }
 
-html { background: var(--bg); }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 body.cv {
   font-family: var(--font);
@@ -35,12 +42,14 @@ body.cv {
   background: var(--bg);
   text-transform: lowercase;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 em { font-style: italic; }
 h1 { font-size: inherit; font-weight: normal; }
+.muted { color: var(--muted); }
 
 .cell {
   border-right: 1px solid var(--line);
@@ -56,41 +65,158 @@ h1 { font-size: inherit; font-weight: normal; }
 }
 .gutter { justify-content: center; font-variant-numeric: tabular-nums; }
 
-/* ---------- Header: title, nav, zoom, tabs ---------- */
+/* ======================================================================
+   Header
+   ====================================================================== */
 
 .trow { display: flex; height: var(--row); }
 .trow > .cell { flex: none; }
-.top .gutter { width: var(--gutter); }
-.top .title { flex: 1 1 auto; border-right-color: transparent; }
-.top .fill { flex: 1 1 auto; }
-.trow .title + .fill { display: none; }
-
 .trow.head { height: calc(var(--row) * 1.25); }
 .trow.head > .cell { height: calc(var(--row) * 1.25); }
 .trow.head .title { font-size: 1.125rem; }
 .trow.sub .title em { font-size: 1rem; }
 
-.top .nav { width: 6rem; }
-.top .sw { gap: 0.35rem; }
-.top .zoom { width: 12.5rem; }
-.top .tlsw { width: 10.5rem; }
-.top .note { width: 5.5rem; flex: none; color: #777; font-size: 0.875rem; }
-.sw-label { color: var(--muted); font-size: 0.875rem; margin-right: 0.15rem; }
-.sw-sep { color: var(--line); }
-.sw a.on, .sw a[aria-current] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
-/* Option b has no chart, so no zoom. */
-body[data-tl='b'] .top .zoom { display: none; }
+/* --pw = photo width. Desktop: cv.js sizes it to the header's height so the
+   photo runs from the top edge down through the tabs (aspect ~1.47).
+   --textw / --biow = fixed widths of the name text and the bio, so wrapping
+   can't feed back into the photo size. They shrink on small desktops so the
+   right column always fits. */
+.top {
+  --pp: 0.4rem;
+  --pw: 9rem;
+  --textw: clamp(21rem, min(34vw, 59.5vw - 22.9rem), 34rem);
+  --biow: clamp(18rem, min(30vw, 51vw - 18.9rem), 34rem);
+}
+.top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
+.top-upper { display: flex; align-items: stretch; }
+.top-col { display: flex; flex-direction: column; min-width: 0; }
+
+/* Name column: photo corner + name, subtitle and the info rows */
+.top-col.a { flex: 0 0 calc(var(--pw) + 2 * var(--pp) + var(--textw)); }
+.top-col.a .trow > .title { flex: 1 1 auto; border-right-color: var(--line); padding-right: 0.6rem; }
+.trow.fact, .trow.fact > .cell { height: auto; min-height: var(--row); }
+.trow.fact > .title {
+  white-space: normal; line-height: 1.25; padding-top: 0.2rem; padding-bottom: 0.2rem;
+  font-style: italic; font-size: 1rem;
+}
+/* The last info row stretches so the name column has no blank gap under it */
+.top-col.a > .trow:last-child { flex: 1 1 auto; }
+.top-col.a > .trow:last-child > .cell { height: auto; align-items: flex-start; }
+
+/* Top-left corner: scanned ID photo + signature. The corner column's cells
+   read as one: no lines under the photo. */
+.top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; }
+.top .gutter.corner .portrait {
+  position: absolute; top: var(--pp); left: var(--pp); width: var(--pw); display: block; line-height: 0;
+  transform-origin: top left;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), box-shadow 220ms ease;
+}
+.top .gutter.corner img { width: 100%; height: auto; display: block; outline: 1px solid var(--line); }
+@media (hover: hover) {
+  /* Hover: the photo lifts out a bit bigger, then folds back in */
+  .top .gutter.corner .portrait:hover { transform: scale(1.8); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
+}
+.top .trow.head > .gutter, .top .trow.sub > .gutter, .top .trow.fact > .gutter { border-bottom-color: transparent; }
+
+/* "likely fit for" titles: hover (or tap) for a card of fitting work */
+.hat { cursor: help; text-decoration: underline dotted; text-decoration-color: #aaa; text-underline-offset: 0.2em; }
+.hat:hover, .hat:focus-visible { color: var(--link); text-decoration-color: currentColor; outline: none; }
+.hat-pop {
+  position: fixed; z-index: 60; width: max-content; max-width: min(22rem, calc(100vw - 1rem)); min-width: min(15rem, calc(100vw - 1rem));
+  max-height: calc(100vh - 1rem); overflow: auto;
+  background: #fff; border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  padding: 0.6rem 0.8rem 0.7rem; font-size: 0.9375rem; line-height: 1.35; font-style: normal;
+  white-space: normal;
+}
+.hat-pop .hp-title { font-style: italic; }
+.hat-pop .hp-blurb { color: #666; margin: 0.15rem 0 0.45rem; }
+.hat-pop ul { list-style: none; margin: 0; padding: 0; }
+.hat-pop li { padding: 0.12rem 0; }
+.hat-pop li span { color: #888; font-size: 0.875em; }
+
+/* Open to work, inline after "previously at MOMENT". It moves to its own
+   line as a unit when the row is too narrow. */
+.otw-inline { color: var(--go); text-decoration: none; white-space: nowrap; }
+.otw-inline:hover { color: var(--link); text-decoration: none; }
+.otw-sep { color: #999; }
+.hire-dot { position: relative; display: inline-block; width: 0.45rem; height: 0.45rem; margin-right: 0.35rem; vertical-align: 0.08em; border-radius: 50%; background: #2f9e56; }
+.hire-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #2f9e56; animation: hire-pulse 2.4s ease-out infinite; }
+@keyframes hire-pulse { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(2.8); opacity: 0; } }
+
+/* Bio: one merged cell, text on top and a slow strip of work artifacts
+   filling the rest. On desktop its content sits in an absolutely positioned
+   box so it never adds height: the name column sets the header's height. */
+.cell.bio {
+  flex: 0 0 var(--biow); min-width: 0; height: auto; position: relative;
+  display: block; white-space: normal; overflow: hidden; padding: 0;
+}
+.bio-inner { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.45rem 0.9rem; }
+.bio-text { font-size: 0.875rem; line-height: 1.38; }
+.bio-text p + p { margin-top: 0.5em; }
+.artifacts {
+  flex: 1 1 0; min-height: 0; width: 100%; overflow: hidden; position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.art-track { display: flex; gap: 0.6rem; height: 100%; width: max-content; animation: art-scroll 90s linear infinite; }
+.artifacts:hover .art-track { animation-play-state: paused; }
+.art-track figure { margin: 0; height: 100%; flex: none; }
+.art-track img { height: 100%; width: auto; display: block; border: 1px solid var(--line); background: #fff; }
+@keyframes art-scroll { to { transform: translateX(-50%); } }
+
+/* Right column: links row, book a call, listening + reading */
+.top-col.c { flex: 1 1 0; min-width: 15rem; }
+.top-col.c .trow { justify-content: flex-end; }
+.top-col.c .trow > .fill { flex: 1 1 auto; }
+.top-col.c .trow.head > .cell.nav {
+  flex: 1 1 0; width: auto; padding: 0 0.4rem; justify-content: center;
+  color: var(--ink); font-size: 0.9375rem; text-decoration: none;
+}
+.top-col.c .trow.head > .cell.nav:hover { background: #fff; color: var(--link); text-decoration: none; }
+.ext-mark { font-size: 0.7em; color: #999; margin-left: 0.15em; }
+.top-col.c .trow.sub > .cell.book-call {
+  flex: none; padding: 0 0.75rem; justify-content: center; text-decoration: none;
+  background: var(--go); color: #fff; font-size: 0.875rem; border-right-color: var(--go);
+}
+.top-col.c .trow.sub > .cell.book-call:hover { background: #155a2e; text-decoration: none; }
+.cell.book-call .ext-mark { color: #cfe8d7; }
+.top-col.c .trow.rest { flex: 1 1 auto; height: auto; }
+.cell.side { flex: 1 1 auto; height: auto; position: relative; display: block; padding: 0; white-space: normal; }
+.side-inner { position: absolute; inset: 0; display: flex; }
+.sc { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 0.3rem 0.45rem 0.35rem; border-right: 1px solid var(--line); }
+.sc:last-child { border-right: 0; }
+.sc-h { color: #888; font-size: 0.6875rem; margin-bottom: 0.25rem; white-space: nowrap; }
+.sc-h span { color: #aaa; }
+/* squares sized to whatever room is left (width or height, whichever is smaller) */
+.sq { flex: 1 1 0; min-height: 0; container-type: size; display: flex; justify-content: center; align-items: flex-start; }
+.sq .side-listening, .sq .book { width: min(100cqw, 100cqh); height: auto; aspect-ratio: 1; flex: none; }
+.side-listening { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.side-listening li { min-width: 0; min-height: 0; }
+.side-listening .muted { grid-column: 1 / -1; color: #999; font-size: 0.75rem; }
+.side-listening .alb { display: block; width: 100%; height: 100%; }
+.side-listening img, .alb-blank { width: 100%; height: 100%; object-fit: cover; display: block; background: #ddd; }
+.alb-blank { font-size: 0.625rem; color: #777; padding: 0.15rem; overflow: hidden; }
+.side-listening .alb:hover img { outline: 1px solid var(--ink); outline-offset: -1px; }
+.sq .book { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.sq .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); }
+.book-t { margin-top: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.6875rem; text-align: center; }
+.book-t span { color: #777; }
 
 /* Tabs read like sheet tabs: grey until picked, then the sheet's own grey
-   with a green top line. */
+   with a green top line. The strip scrolls sideways on small screens; a soft
+   fade marks the side that has more. */
 .trow.tabs {
   height: 1.75rem;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 .trow.tabs::-webkit-scrollbar { display: none; }
 .trow.tabs > .cell { height: 1.75rem; }
+.trow.tabs.more-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent); }
+.trow.tabs.more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5rem); mask-image: linear-gradient(90deg, transparent, #000 2.5rem); }
+.trow.tabs.more-l.more-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); }
 .tab {
   padding: 0 0.8rem;
   background: var(--tab-bg);
@@ -104,9 +230,66 @@ body[data-tl='b'] .top .zoom { display: none; }
   border-bottom-color: transparent;
 }
 .tab:focus-visible { outline: 2px solid var(--select); outline-offset: -2px; }
+.trow.tabs > .fill { flex: 1 1 auto; }
 
-/* Intro on the moment + oratory tab: one paragraph in a merged cell,
-   set larger than the sheet so it reads first. */
+/* ---------- Tablet header (721–1180): [photo + name | links + listening],
+   then the bio as a full-width row. Same lock as desktop: the name text has
+   a fixed width and cv.js sizes the photo to the name column's height. ---------- */
+@media (max-width: 1180px) {
+  .top { --textw: 42vw; --pw: 8rem; }
+  .top-upper { flex-wrap: wrap; }
+  .top-col.a .trow > .title { padding-right: 0.3rem; }
+  .top-col.c { flex: 1 1 0; min-width: 0; }
+  .cell.bio { order: 3; flex: 1 1 100%; }
+  /* text at a readable measure, the artifact strip fills the rest of the row */
+  .bio-inner { position: static; flex-direction: row; align-items: stretch; gap: 1rem; padding: 0.6rem 0.9rem 0.7rem; }
+  .bio-text { flex: 0 1 34rem; min-width: 0; }
+  .artifacts { flex: 1 1 0; height: auto; min-height: 4.5rem; min-width: 8rem; }
+  .artifacts .art-track { position: absolute; top: 0; bottom: 0; left: 0; }
+  /* the bio sits between the photo and the tabs, so tabs start at the sheet's gutter */
+  .top .trow.tabs > .gutter { width: var(--gutter); }
+}
+
+/* ---------- Phone header (<= 720): name + facts, links + book a call, bio,
+   listening + reading, then the tabs ---------- */
+@media (max-width: 720px) {
+  :root { --gutter: 2.25rem; --row: 2rem; }
+  .top { --pw: 3.75rem; }
+  .trow.sub .title em { font-size: 0.875rem; }
+  .trow.fact > .title { font-size: 0.875rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  .top-col.a { flex: 1 1 100%; }
+  .top-col.a .trow > .title { border-right-color: transparent; }
+  /* listening + reading: small squares with their labels beside them */
+  .sc { display: grid; grid-template-columns: 4.75rem minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 0.6rem; align-items: start; }
+  .sc .sq { grid-column: 1; grid-row: 1 / span 2; }
+  .sc-h { grid-column: 2; grid-row: 1; margin: 0.1rem 0 0; font-size: 0.75rem; white-space: normal; line-height: 1.25; }
+  .sc-h span { display: block; }
+  .sc .book-t { grid-column: 2; grid-row: 2; text-align: left; white-space: normal; font-size: 0.8125rem; line-height: 1.25; margin-top: 0.2rem; }
+  .sc .book-t span { display: block; }
+  /* The right column's rows join the header's own flow so they can be ordered */
+  .top-col.c { display: contents; }
+  .top-col.c .trow.head { order: 2; flex: 1 1 auto; min-width: 0; }
+  .top-col.c .trow.sub { order: 3; flex: 0 0 auto; height: calc(var(--row) * 1.25); }
+  .top-col.c .trow.sub > .cell { height: calc(var(--row) * 1.25); }
+  .top-col.c .trow.sub > .fill { display: none; }
+  .top-col.c .trow.head > .cell.nav { padding: 0 0.3rem; }
+  .top-col.c .trow.sub > .cell.book-call { padding: 0 0.7rem; }
+  .cell.bio { order: 4; }
+  .bio-inner { flex-direction: column; padding: 0.55rem 0.6rem 0.6rem; gap: 0.45rem; }
+  .bio-text { flex: none; }
+  .artifacts { flex: none; height: 3.5rem; min-height: 0; }
+  .artifacts .art-track { position: static; }
+  .top-col.c .trow.rest { order: 5; flex: 1 1 100%; }
+  .side-inner { position: static; }
+  .sc { padding: 0.45rem 0.6rem; }
+  .sq { flex: none; height: 4.75rem; justify-content: flex-start; }
+  .trow.tabs, .trow.tabs > .cell { height: 2.25rem; }
+}
+
+/* ======================================================================
+   Intro (moment + oratory tab): one paragraph in a merged cell, set larger
+   than the sheet so it reads first.
+   ====================================================================== */
 .intro .trow.para { height: auto; }
 .intro .para > .cell { height: auto; }
 .intro .para p.cell {
@@ -119,9 +302,19 @@ body[data-tl='b'] .top .zoom { display: none; }
   padding: 1.75rem max(2rem, calc(100% - 70ch - 2rem)) 2rem 2rem;
 }
 .intro .para .gutter { align-self: stretch; width: var(--gutter); flex: none; }
+@media (max-width: 900px) {
+  .intro .para p.cell { font-size: 1.1875rem; padding: 1.25rem 1.25rem 1.5rem; }
+}
+@media (max-width: 720px) {
+  .intro .para p.cell { font-size: 1.0625rem; line-height: 1.45; padding: 1rem 0.9rem 1.15rem; }
+}
 
-/* ---------- Grid ---------- */
+/* ======================================================================
+   Grid
+   ====================================================================== */
 
+/* The sheet scrolls sideways inside this box when the timeline is wider
+   than the screen (month zoom); the page itself never does. */
 .sheet-wrap { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
 
 /* Text columns per timeline style. a: name | role | when.
@@ -134,6 +327,11 @@ body[data-tl='b'] .top .zoom { display: none; }
 }
 .sheet.tl-b { --textcols: minmax(16rem, 1.4fr) minmax(18rem, 1.6fr) 11rem 6rem; --textmin: 51rem; }
 .sheet.tl-c { --textcols: minmax(14rem, 1.4fr) minmax(15rem, 1.5fr); --textmin: 29rem; }
+
+/* Tablets: tighter text columns so more of the timeline shows before it scrolls */
+@media (max-width: 1100px) {
+  .sheet.tl-a { --textcols: minmax(11rem, 1.2fr) minmax(11.5rem, 1.3fr) 7.75rem; --textmin: 30.25rem; }
+}
 
 /* moment + oratory table: client (+ what) | studio · type | my role |
    when | [length] | status | see it. */
@@ -168,15 +366,26 @@ body[data-tl='b'] .top .zoom { display: none; }
 .z-months .yr.earlier { box-shadow: inset 1px 0 0 #8a8a8a; }
 .row.colhead .yr.earlier { font-size: 0.6875rem; }
 
-/* Month zoom scrolls sideways; row numbers and names stay put. */
-.z-months:not(.is-table) .gutter,
-.z-months:not(.is-table) .t-name {
+/* Wide timelines scroll sideways; row numbers and names stay put. */
+.sheet:not(.is-table) .gutter,
+.sheet:not(.is-table) .t-name {
   position: sticky;
   z-index: 3;
   background: var(--bg);
 }
-.z-months:not(.is-table) .gutter { left: 0; }
-.z-months:not(.is-table) .t-name { left: var(--gutter); }
+.sheet:not(.is-table) .gutter { left: 0; }
+.sheet:not(.is-table) .t-name { left: var(--gutter); }
+.sheet:not(.is-table) .row.entry:hover .t-name { background: #f6f6f6; }
+
+/* The moment + oratory table scrolls sideways on smaller desktops: row
+   numbers and the client column stay put there too. */
+@media (min-width: 901px) {
+  .is-table .gutter,
+  .is-table .t-client { position: sticky; z-index: 3; background: var(--bg); }
+  .is-table .gutter { left: 0; }
+  .is-table .t-client { left: var(--gutter); }
+  .is-table .row.entry:hover .t-client { background: #f6f6f6; }
+}
 
 .row.section .t-name,
 .row.section .t-client { font-size: 1.0625rem; overflow: visible; }
@@ -197,7 +406,7 @@ body[data-tl='b'] .top .zoom { display: none; }
 .row.entry .t-len { color: #777; }
 .row.entry .nm { display: block; min-width: 0; }
 /* Second role line (e.g. "design + imagery support") sits under the role on every tab */
-.row.entry .t-sub { flex-wrap: wrap; align-content: center; }
+.row.entry .t-sub { flex-wrap: wrap; align-content: center; color: #444; }
 .row.entry .t-sub .also { flex-basis: 100%; margin-top: 0.15rem; font-size: 0.875rem; color: #777; }
 .row.entry a.open { color: inherit; }
 .row.entry:hover .cell { background: #f6f6f6; }
@@ -205,8 +414,6 @@ body[data-tl='b'] .top .zoom { display: none; }
 .row.entry a.open:focus-visible { outline: none; }
 .row.entry:has(a.open:focus-visible) :is(.t-name, .t-client),
 .row.entry.is-open :is(.t-name, .t-client) { box-shadow: inset 0 0 0 2px var(--select); }
-.row.entry .t-sub { color: #444; }
-.muted { color: var(--muted); }
 
 /* ---------- moment + oratory table: room to read ---------- */
 
@@ -232,8 +439,8 @@ body[data-tl='b'] .top .zoom { display: none; }
 /* Second lines: how the site was built (under the type), extra role (under my role). */
 .is-table .t-st .stk,
 .is-table .t-sub .also { display: block; margin-top: 0.15rem; font-size: 0.875rem; color: #777; }
-.is-table .row.entry .t-sub { display: block; }
-.comment .c-also { color: #666; }
+/* block containers honour align-content now; keep the role at the top like its neighbours */
+.is-table .row.entry .t-sub { display: block; align-content: start; }
 .is-table .row.entry .t-status { flex-direction: column; align-items: flex-start; gap: 0.1rem; }
 .is-table .st { font-size: 0.9375rem; letter-spacing: 0.01em; color: #6a6a6a; }
 .is-table .st-live { color: #1d7a3e; }
@@ -254,7 +461,7 @@ body[data-tl='b'] .top .zoom { display: none; }
 .yr .lbl { font-size: 0.75rem; color: #555; padding-left: 0.3rem; white-space: nowrap; }
 .is-table .yr .lbl { padding-top: 0.75rem; }
 
-/* ---------- Timeline c: one labelled bar per entry ---------- */
+/* ---------- Timeline c: one labelled bar per entry (unused; tl is fixed to a) ---------- */
 
 .bar {
   position: absolute;
@@ -270,26 +477,133 @@ body[data-tl='b'] .top .zoom { display: none; }
   pointer-events: none;
 }
 .is-table .bar { top: 0.65rem; margin-top: 0; }
-.bar-lbl {
-  font-size: 0.75rem;
-  line-height: 1;
-  color: #1b1b1b;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-/* Label doesn't fit inside: print it just right of the bar. */
-.bar.out .bar-lbl {
-  position: absolute;
-  left: calc(100% + 0.3rem);
-  color: #444;
-}
+.bar-lbl { font-size: 0.75rem; line-height: 1; color: #1b1b1b; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bar.out .bar-lbl { position: absolute; left: calc(100% + 0.3rem); color: #444; }
 .approx .bar { background: color-mix(in srgb, var(--tint, #ccc) 50%, var(--bg)); }
 .row.entry:hover .bar,
 .row.entry.is-open .bar { background: color-mix(in srgb, var(--tint, #ccc) 80%, #000 18%); }
-/* Hidden under the sticky name column while scrolling sideways. */
-.z-months:not(.is-table) .bar { z-index: 2; }
 
-/* ---------- Viewer: image left (only when there is one), comment right ---------- */
+/* ---------- moment + oratory as cards (<= 900px): each row stacks ---------- */
+@media (max-width: 900px) {
+  .sheet.is-table { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; }
+  .is-table .row .yr,
+  .is-table .row .tail,
+  .is-table .row.yearrow,
+  .is-table .bar { display: none; }
+  .is-table .row { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+  .is-table .row .m-when,
+  .is-table .row.colhead { display: none; }
+  .is-table .row .t:not(.t-client) { display: none; }
+  .is-table .row.entry .t { display: flex; border-right: 0; }
+  .is-table .row.entry .gutter { grid-row: span 8; align-items: flex-start; padding-top: 0.6rem; }
+  .is-table .row.entry .t:not(.t-see) { border-bottom-color: transparent; }
+  .is-table .row.entry .cell.t { padding-top: 0.12rem; padding-bottom: 0.12rem; min-height: 0; }
+  .is-table .row.entry .t-client { padding-top: 0.6rem; padding-bottom: 0.3rem; }
+  .is-table .row.entry .t-see { padding-bottom: 0.65rem; }
+  .is-table .row.entry .t:not(.t-client) { font-size: 0.9375rem; flex-direction: row; gap: 0; }
+  .is-table .row.entry .t-st,
+  .is-table .row.entry .t-sub { display: block; padding-left: 6.85rem; text-indent: -6.25rem; }
+  .is-table .row.entry .t-st::before,
+  .is-table .row.entry .t-sub::before { display: inline-block; text-indent: 0; }
+  .is-table .t-st .ty { text-indent: 0; display: inline; }
+  .is-table .t-st .stk,
+  .is-table .t-sub .also { display: inline; margin: 0; font-size: inherit; }
+  .is-table .t-st .stk::before,
+  .is-table .t-sub .also::before { content: ' · '; }
+  .is-table .row.entry .t:not(.t-client)::before {
+    content: attr(data-label);
+    flex: none;
+    width: 6.25rem;
+    white-space: nowrap;
+    color: #888;
+  }
+  .is-table .row.entry .t-status .st-note { display: none; }
+  .is-table .row.section .gutter { grid-row: auto; }
+}
+/* Tablet portrait: the card's fields sit in two columns */
+@media (min-width: 721px) and (max-width: 900px) {
+  .is-table .row.entry { grid-template-columns: var(--gutter) minmax(0, 1fr) minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+  .is-table .row.entry .gutter { grid-row: span 4; border-bottom: 0; }
+  .is-table .row.entry .t-client { grid-column: 2 / -1; }
+  .is-table .row.entry .cell.t { border-bottom-color: transparent; }
+}
+
+/* ---------- Phones: no chart on any tab. Names + the dates as text. ---------- */
+@media (max-width: 720px) {
+  .sheet,
+  .sheet.tl-b,
+  .sheet.tl-c { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; min-height: 0; }
+  .sheet .row .yr,
+  .sheet .row .tail,
+  .sheet .bar,
+  .sheet .row.yearrow { display: none; }
+  .sheet:not(.is-table) .t-sub,
+  .sheet:not(.is-table) .t-when,
+  .sheet:not(.is-table) .t-len { display: none; }
+  /* one fixed date column so the line between name and date runs straight */
+  .sheet:not(.is-table) .row { grid-template-columns: var(--gutter) minmax(0, 1fr) 6.6rem; }
+  .sheet:not(.is-table) .row:not(.entry) .t-name { grid-column: 2 / -1; }
+  .sheet:not(.is-table) .row.entry .m-when {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.8125rem;
+    color: #444;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .sheet:not(.is-table) .row.colhead { display: none; }
+  .sheet:not(.is-table) .gutter,
+  .sheet:not(.is-table) .t-name { position: static; }
+  .row.entry .t-name { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+}
+
+/* ======================================================================
+   Featured work tab: case text + code-built visuals
+   ====================================================================== */
+.sheet.is-featured { display: block; min-width: 0; min-height: 0; }
+.ft-case {
+  display: grid;
+  grid-template-columns: var(--gutter) minmax(18rem, 30rem) minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+.ft-num { height: auto; align-items: flex-start; padding-top: 0.9rem; }
+.ft-text { padding: 1.1rem 1.3rem 1.4rem; border-right: 1px solid var(--line); white-space: normal; min-width: 0; }
+.ft-kicker { color: #777; font-size: 0.875rem; }
+.ft-title { font-size: 1.5rem; line-height: 1.15; margin: 0.35rem 0 0.25rem; font-weight: normal; text-wrap: balance; }
+.ft-role { margin-bottom: 0.8rem; }
+.ft-body { line-height: 1.45; font-size: 1rem; max-width: 62ch; }
+.ft-points { list-style: '– '; padding-left: 1rem; margin: 0.8rem 0; display: grid; gap: 0.3rem; line-height: 1.35; max-width: 62ch; }
+.ft-links { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin-top: 0.9rem; line-height: 1.3; }
+.ft-visuals { display: grid; gap: 0; grid-template-columns: minmax(0, 1fr); min-width: 0; }
+.ft-visuals.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ft-visual { margin: 0; border-right: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.ft-stage { position: relative; flex: 1; min-height: 26rem; overflow: hidden; background: #e8e8e8; }
+.ft-visual figcaption { border-top: 1px solid var(--line); padding: 0.3rem 0.6rem; font-size: 0.8125rem; color: #777; }
+.ft-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #999; font-size: 0.875rem; }
+/* Very wide screens: the stages get taller so the visuals don't just get wider */
+@media (min-width: 1680px) { .ft-stage { min-height: 30rem; } }
+@media (min-width: 2200px) { .ft-stage { min-height: 36rem; } }
+/* Tablets: text on top (two columns of points beside the body when there's room), visuals below */
+@media (max-width: 1100px) {
+  .ft-case { grid-template-columns: var(--gutter) minmax(0, 1fr); }
+  .ft-visuals { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  .ft-text { border-right: 0; }
+  .ft-visual:last-child { border-right: 0; }
+}
+@media (max-width: 720px) {
+  .ft-text { padding: 0.9rem 0.9rem 1.1rem; }
+  .ft-title { font-size: 1.3125rem; }
+  .ft-body { font-size: 0.9375rem; }
+  .ft-points { font-size: 0.9375rem; }
+  .ft-visuals.two { grid-template-columns: minmax(0, 1fr); }
+  .ft-visual { border-right: 0; }
+  .ft-visuals.two .ft-visual + .ft-visual { border-top: 1px solid var(--line); }
+  .ft-stage { min-height: 22rem; }
+}
+
+/* ======================================================================
+   Viewer: image left (only when there is one), comment card right
+   ====================================================================== */
 
 .viewer[hidden] { display: none; }
 
@@ -311,9 +625,12 @@ body[data-tl='b'] .top .zoom { display: none; }
   position: fixed;
   top: 6rem;
   right: 4.5vw;
-  width: min(36vw, 30rem);
+  width: clamp(22rem, 36vw, 30rem);
+  max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 7.5rem);
+  max-height: calc(100dvh - 7.5rem);
   overflow: auto;
+  overscroll-behavior: contain;
   background: var(--bg);
   border: 1px solid var(--line);
   box-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.28);
@@ -326,8 +643,10 @@ body[data-tl='b'] .top .zoom { display: none; }
 .comment p { margin-top: 1rem; }
 .comment .c-sub { margin-top: 0.15rem; }
 .comment .c-facts { color: #444; }
+.comment .c-also { color: #666; }
 .comment .c-stack { color: #666; }
 .comment .c-len { color: #666; }
+.comment .c-site, .comment .c-links { overflow-wrap: anywhere; }
 .comment .c-nav { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 0.6rem; }
 .comment .c-nav button,
 .comment-close {
@@ -338,6 +657,7 @@ body[data-tl='b'] .top .zoom { display: none; }
   color: var(--link);
   cursor: pointer;
 }
+.comment .c-nav button { padding: 0.3rem 0; }
 .comment-close {
   position: absolute;
   top: 0.85rem;
@@ -346,117 +666,12 @@ body[data-tl='b'] .top .zoom { display: none; }
   height: 1.25rem;
   color: #666;
 }
+/* a bigger tap target than the drawn X */
+.comment-close::before { content: ''; position: absolute; inset: -0.6rem; }
 .comment-close svg { width: 100%; height: 100%; display: block; }
 .comment-close:hover { color: var(--ink); }
 .comment-close:focus { outline: none; }
 .comment-close:focus-visible { outline: 2px solid var(--select); outline-offset: 2px; }
-
-/* While an image is up, names go quiet behind it (row numbers stay). */
-body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent; }
-
-@keyframes cv-in { from { opacity: 0; } to { opacity: 1; } }
-
-@media (prefers-reduced-motion: reduce) {
-  .viewer-media, .comment { animation: none; }
-}
-
-/* ---------- Phones ---------- */
-
-@media (max-width: 720px) {
-  :root {
-    --gutter: 2.25rem;
-    --row: 2rem;
-  }
-  .top .nav { width: auto; padding: 0 0.55rem; }
-  .top .title { overflow: hidden; }
-  .trow.sub .title em { font-size: 0.875rem; }
-  .top .zoom { width: auto; padding: 0 0.5rem; }
-  .top .note { display: none; }
-  .zoom-label { display: none; }
-  .trow.tabs, .trow.tabs > .cell { height: 2.25rem; }
-  .intro .para p.cell { padding-right: 0.5rem; font-size: 1rem; }
-
-  /* Phones: no chart in any style. Names + the dates as text. */
-  .top .sw { display: none; }
-  .sheet,
-  .sheet.tl-b,
-  .sheet.tl-c { --textcols: minmax(0, 1fr); --textmin: 10rem; min-width: 0; }
-  .sheet .row .yr,
-  .sheet .row .tail,
-  .sheet .bar,
-  .sheet .row.yearrow { display: none; }
-  .sheet:not(.is-table) .t-sub,
-  .sheet:not(.is-table) .t-when,
-  .sheet:not(.is-table) .t-len { display: none; }
-  .sheet:not(.is-table) .row { grid-template-columns: var(--gutter) minmax(0, 1fr) auto; }
-  .sheet:not(.is-table) .row.entry .m-when {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 0.8125rem;
-    color: #444;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
-  .sheet:not(.is-table) .row.colhead { display: none; }
-  .z-months:not(.is-table) .gutter,
-  .z-months:not(.is-table) .t-name { position: static; }
-  .intro .para p.cell { font-size: 1.125rem; padding: 1.1rem 1rem 1.25rem; }
-
-  /* moment + oratory: each row stacks into a little card. */
-  .is-table .row { grid-template-columns: var(--gutter) minmax(0, 1fr); }
-  .is-table .row .m-when,
-  .is-table .row.colhead { display: none; }
-  .is-table .row .t:not(.t-client) { display: none; }
-  .is-table .row.entry .t { display: flex; border-right: 0; }
-  .is-table .row.entry .gutter { grid-row: span 8; align-items: flex-start; padding-top: 0.6rem; }
-  .is-table .row.entry .t:not(.t-see) { border-bottom-color: transparent; }
-  .is-table .row.entry .cell.t { padding-top: 0.12rem; padding-bottom: 0.12rem; min-height: 0; }
-  .is-table .row.entry .t-client { padding-top: 0.6rem; }
-  .is-table .row.entry .t-see { padding-bottom: 0.65rem; }
-  .is-table .row.entry .t:not(.t-client) { font-size: 0.9375rem; flex-direction: row; gap: 0; }
-  .is-table .row.entry .t-st,
-  .is-table .row.entry .t-sub { display: block; padding-left: 6.85rem; text-indent: -6.25rem; }
-  .is-table .row.entry .t-st::before,
-  .is-table .row.entry .t-sub::before { display: inline-block; text-indent: 0; }
-  .is-table .t-st .ty { text-indent: 0; }
-  .is-table .t-st .stk,
-  .is-table .t-sub .also { display: inline; margin: 0; font-size: inherit; }
-  .is-table .t-st .stk::before,
-  .is-table .t-sub .also::before { content: ' · '; }
-  .is-table .row.entry .t:not(.t-client)::before {
-    content: attr(data-label);
-    flex: none;
-    width: 6.25rem;
-    white-space: nowrap;
-    color: #888;
-  }
-  .is-table .row.entry .t-status .st-note { display: none; }
-  .is-table .row.section .gutter { grid-row: auto; }
-
-  .viewer-media {
-    top: 0; left: 0; right: 0; bottom: auto;
-    width: 100%; height: 45vh;
-  }
-  .comment {
-    top: auto; bottom: 0; left: 0; right: 0;
-    width: 100%; max-height: 60vh;
-    border-width: 1px 0 0;
-  }
-}
-
-/* ---------- Print: a plain CV with everything ---------- */
-
-.print-cv { display: none; }
-
-@media print {
-  body.cv { background: #fff; font-size: 10.5pt; line-height: 1.3; }
-  .top, .intro, .sheet-wrap, .viewer { display: none !important; }
-  .print-cv { display: block; }
-  .print-cv h1 { font-size: 16pt; font-weight: normal; }
-  .print-cv h2 { font-size: 10.5pt; font-style: italic; font-weight: normal; margin: 1.1em 0 0.3em; border-bottom: 0.5pt solid #999; }
-  .print-cv .p-item { display: grid; grid-template-columns: 7.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
-  .print-cv strong { font-weight: normal; }
-}
 
 /* Reading list inside a popup card (reading group) */
 .comment .c-books { margin-top: 0.9rem; }
@@ -467,267 +682,49 @@ body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent;
 .comment .c-books ul { list-style: none; margin: 0; padding: 0; }
 .comment .c-books li { padding: 0.12rem 0; line-height: 1.3; }
 
-/* Top-left corner: scanned ID photo + signature, filling the corner column
-   from the name row down through the tabs. Header rows stay normal height;
-   the photo is sized to their total. Photo aspect ~1.47 (606x891). */
-.top { --pp: 0.4rem; --tabsh: 1.75rem; --nfacts: 4;
-  --ph: calc(var(--row) * 1.25 + var(--row) * (1 + var(--nfacts)) + var(--tabsh));
-  --pw: calc((var(--ph) - 2 * var(--pp)) / 1.47); }
-.top .gutter { width: calc(var(--pw) + 2 * var(--pp)); }
-.top .gutter.corner { position: relative; overflow: visible; z-index: 5; padding: 0; }
-.top .gutter.corner .portrait {
-  position: absolute; top: var(--pp); left: var(--pp); width: var(--pw); display: block; line-height: 0;
-  transform-origin: top left;
-  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), box-shadow 220ms ease;
+/* While an image is up, names go quiet behind it (row numbers stay). */
+body.viewing-media .row.entry:not(.is-open) .t-name a.open { color: transparent; }
+
+@keyframes cv-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Phones: the card is a bottom sheet, the image (if any) sits above it */
+@media (max-width: 720px) {
+  .viewer-media {
+    top: 0; left: 0; right: 0; bottom: auto;
+    width: 100%; height: 40vh;
+  }
+  .comment {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: 100%; max-width: none;
+    max-height: 72vh; max-height: 72dvh;
+    border-width: 1px 0 0;
+    padding: 1rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+  }
+  body.viewing-media .comment { max-height: 60vh; max-height: 60dvh; }
 }
-/* Hover: the photo lifts out a bit bigger, then folds back in */
-@media (hover: hover) {
-  .top .gutter.corner .portrait:hover { transform: scale(1.8); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
-}
+
+/* ======================================================================
+   Reduced motion: everything holds still, nothing else changes
+   ====================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  .viewer-media, .comment { animation: none; }
   .top .gutter.corner .portrait { transition: none; }
-}
-.top .gutter.corner img { width: 100%; height: auto; display: block; outline: 1px solid var(--line); }
-/* Stack the corner column's cells into one: no lines under the photo */
-.top .trow:not(.head) > .gutter { border-top: 0; }
-.top .trow.head > .gutter, .top .trow.sub > .gutter, .top .trow.fact > .gutter { border-bottom-color: transparent; }
-/* Same look as the 'cv: ...' subtitle row */
-.trow.fact .title { font-style: italic; font-size: 1rem; }
-.trow.fact .fact-label { margin-right: 0; }
-@media (max-width: 720px) {
-  .top { --pw: 3.75rem; --tabsh: 2.25rem; }
-  .trow.fact, .trow.fact > .cell { height: auto; min-height: var(--row); }
-  .trow.fact .title { font-size: 0.875rem; white-space: normal; line-height: 1.25; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  .art-track { animation: none; }
+  .hire-dot::after { animation: none; }
 }
 
-/* ---------- Upper header: [photo + name block] [bio] [nav + zoom] ---------- */
-.top-upper { display: flex; align-items: stretch; }
-.top-col { display: flex; flex-direction: column; }
-/* Text width is fixed (photo column added on top), so wrapping can't feed back into the photo size */
-.top-col.a { flex: 0 0 calc(var(--pw) + 2 * var(--pp) + clamp(24rem, 34vw, 34rem)); min-width: 0; }
-.top-col.a .trow > .title { flex: 1 1 auto; border-right-color: var(--line); padding-right: 0.6rem; }
-/* Long info rows (e.g. likely fit for) wrap instead of widening the column */
-.top-col.a .trow.fact, .top-col.a .trow.fact > .cell { height: auto; min-height: var(--row); }
-.top-col.a .trow.fact > .title { white-space: normal; line-height: 1.25; padding-top: 0.2rem; padding-bottom: 0.2rem; }
-.top-col.c { flex: none; }
-.top-col.c .trow { justify-content: flex-end; }
-.top-col.c .trow > .fill { flex: 1 1 auto; }
-.top-col.c .trow.rest { flex: 1 1 auto; height: auto; }
-.top-col.c .trow.rest > .fill { height: auto; }
-.cell.bio {
-  flex: 1 1 24rem; min-width: 16rem; height: auto;
-  display: block; white-space: normal; overflow: visible;
-  padding: 0.45rem 0.9rem 0.5rem; font-size: 0.9375rem; line-height: 1.4;
-}
-.cell.bio p + p { margin-top: 0.5em; }
-/* Narrower screens: bio drops below as a full-width cell */
-@media (max-width: 1180px) {
-  .top-upper { flex-wrap: wrap; }
-  .top-col.a { flex: 1 1 0; min-width: 0; }
-  .top-col.a .trow > .title { padding-right: 0.3rem; }
-  .cell.bio { order: 3; flex: 1 1 100%; padding: 0.6rem 0.9rem 0.7rem calc(var(--pw) + 2 * var(--pp) + 0.3rem); }
-}
-@media (max-width: 720px) {
-  .top-col.c .trow.sub, .top-col.c .trow.rest { display: none; }
-  .top-col.a, .top-col.c { flex: 1 1 100%; }
-  .top-col.c .trow.head { justify-content: flex-start; padding-left: calc(var(--pw) + 2 * var(--pp)); }
-  .top-upper { position: relative; }
-  .cell.bio { padding-left: 0.6rem; font-size: 0.875rem; }
-}
+/* ======================================================================
+   Print: a plain CV with everything
+   ====================================================================== */
 
+.print-cv { display: none; }
 
-/* "likely fit for" titles: hover (or tap) for a card of fitting work */
-.hat { cursor: help; text-decoration: underline dotted; text-decoration-color: #aaa; text-underline-offset: 0.2em; }
-.hat:hover, .hat:focus-visible { color: var(--link); text-decoration-color: currentColor; outline: none; }
-.hat-pop {
-  position: fixed; z-index: 60; max-width: 22rem; min-width: 15rem;
-  background: #fff; border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  padding: 0.6rem 0.8rem 0.7rem; font-size: 0.9375rem; line-height: 1.35; font-style: normal;
-  white-space: normal;
+@media print {
+  body.cv { background: #fff; font-size: 10.5pt; line-height: 1.3; }
+  .top, .intro, .sheet-wrap, .viewer, .hat-pop { display: none !important; }
+  .print-cv { display: block; }
+  .print-cv h1 { font-size: 16pt; font-weight: normal; }
+  .print-cv h2 { font-size: 10.5pt; font-style: italic; font-weight: normal; margin: 1.1em 0 0.3em; border-bottom: 0.5pt solid #999; }
+  .print-cv .p-item { display: grid; grid-template-columns: 7.5em 1fr; gap: 0.6em; margin-bottom: 0.35em; break-inside: avoid; }
+  .print-cv strong { font-weight: normal; }
 }
-.hat-pop .hp-title { font-style: italic; }
-.hat-pop .hp-blurb { color: #666; margin: 0.15rem 0 0.45rem; }
-.hat-pop ul { list-style: none; margin: 0; padding: 0; }
-.hat-pop li { padding: 0.12rem 0; }
-.hat-pop li span { color: #888; font-size: 0.875em; }
-
-/* ---------- Featured work tab ---------- */
-body[data-tab='featured'] .top .zoom { visibility: hidden; }
-.sheet.is-featured { display: block; min-width: 0; }
-.ft-case {
-  display: grid;
-  grid-template-columns: var(--gutter) minmax(18rem, 30rem) minmax(0, 1fr);
-  border-bottom: 1px solid var(--line);
-}
-.ft-num { height: auto; align-items: flex-start; padding-top: 0.9rem; }
-.ft-text { padding: 1.1rem 1.3rem 1.4rem; border-right: 1px solid var(--line); white-space: normal; }
-.ft-kicker { color: #777; font-size: 0.875rem; }
-.ft-title { font-size: 1.5rem; line-height: 1.15; margin: 0.35rem 0 0.25rem; font-weight: normal; }
-.ft-role { margin-bottom: 0.8rem; }
-.ft-body { line-height: 1.45; font-size: 1rem; max-width: 62ch; }
-.ft-points { list-style: '– '; padding-left: 1rem; margin: 0.8rem 0; display: grid; gap: 0.3rem; line-height: 1.35; }
-.ft-links { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin-top: 0.9rem; }
-.ft-visuals { display: grid; gap: 0; grid-template-columns: minmax(0, 1fr); }
-.ft-visuals.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.ft-visual { margin: 0; border-right: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
-.ft-stage { position: relative; flex: 1; min-height: 26rem; overflow: hidden; background: #e8e8e8; }
-.ft-visual figcaption { border-top: 1px solid var(--line); padding: 0.3rem 0.6rem; font-size: 0.8125rem; color: #777; }
-.ft-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #999; font-size: 0.875rem; }
-@media (max-width: 1100px) {
-  .ft-case { grid-template-columns: var(--gutter) minmax(0, 1fr); }
-  .ft-visuals { grid-column: 1 / -1; border-top: 1px solid var(--line); }
-  .ft-text { border-right: 0; }
-}
-@media (max-width: 720px) {
-  .ft-visuals.two { grid-template-columns: minmax(0, 1fr); }
-  .ft-stage { min-height: 20rem; }
-}
-
-/* Bio cell: text on top, a slow strip of work artifacts filling the rest */
-.cell.bio { display: flex; flex-direction: column; gap: 0.6rem; }
-.artifacts { flex: none; height: 4rem; margin-top: auto; overflow: hidden; position: relative;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-.art-track { display: flex; gap: 0.6rem; height: 100%; width: max-content; animation: art-scroll 90s linear infinite; }
-.artifacts:hover .art-track { animation-play-state: paused; }
-.art-track figure { margin: 0; height: 100%; flex: none; }
-.art-track img { height: 100%; width: auto; display: block; border: 1px solid var(--line); background: #fff; }
-@keyframes art-scroll { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .art-track { animation: none; } }
-
-/* Right column: small widgets (reading / listening / elsewhere) */
-.cell.side { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0.4rem; white-space: normal; padding: 0.45rem; overflow: hidden; }
-.wg { background: #f8f8f8; border: 1px solid var(--line); padding: 0.3rem 0.45rem 0.35rem; font-size: 0.8125rem; line-height: 1.25; }
-.wg-h { color: #888; font-size: 0.6875rem; margin-bottom: 0.2rem; }
-.wg-h span { color: #aaa; }
-.wg ul { list-style: none; margin: 0; padding: 0; }
-.side-reading li span { color: #777; }
-/* listening (2x2 album covers) and reading (cover + title) side by side, same size */
-.wg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
-.wg-row .wg { display: flex; flex-direction: column; min-width: 0; }
-.side-listening { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; aspect-ratio: 1; }
-.side-listening li { min-width: 0; min-height: 0; }
-.side-listening .muted { grid-column: 1 / -1; }
-.side-listening .alb { display: block; width: 100%; height: 100%; }
-.side-listening img, .alb-blank { width: 100%; height: 100%; object-fit: cover; display: block; background: #ddd; }
-.alb-blank { font-size: 0.625rem; color: #777; padding: 0.15rem; overflow: hidden; }
-.side-listening .alb:hover img { outline: 1px solid var(--ink); outline-offset: -1px; }
-.wg-read .book { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: #ececec; }
-.wg-read .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-.book-t { margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.75rem; }
-.book-t span { color: #777; }
-.side-links { display: flex; flex-wrap: wrap; gap: 0.1rem 0.6rem; }
-.side .muted { color: #999; }
-@media (max-width: 720px) {
-  .top-col.c .trow.rest { display: flex; }
-  .artifacts { height: 5rem; flex: none; }
-}
-
-/* Layout lock (no feedback loops): name column = photo + fixed text width,
-   bio = fixed width, the right column takes whatever is left. The photo's
-   size can only change the right column, which never changes the height. */
-.cell.bio { flex: 0 0 clamp(20rem, 30vw, 34rem); align-items: stretch; }
-.artifacts { width: 100%; min-width: 0; }
-.top-col.c { flex: 1 1 auto; min-width: 18rem; }
-.top-col.c .trow.head, .top-col.c .trow.sub { justify-content: flex-end; }
-@media (max-width: 1180px) {
-  .cell.bio { flex: 1 1 100%; }
-}
-/* The last info row stretches so the name column has no blank gap under it */
-.top-col.a > .trow:last-child { flex: 1 1 auto; }
-.top-col.a > .trow:last-child > .cell { height: auto; align-items: flex-start; }
-
-/* "open to work" widget: a soft pulsing dot to catch the eye, nothing louder */
-.wg-hire { display: flex; align-items: center; gap: 0.55rem; color: inherit; background: #f3fbf5; border-color: #b9dcc3; }
-.wg-hire:hover { text-decoration: none; border-color: #2f9e56; }
-.wg-hire:hover .hire-t span { color: var(--link); }
-.hire-dot { position: relative; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #2f9e56; flex: none; }
-.hire-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #2f9e56; animation: hire-pulse 2.4s ease-out infinite; }
-@keyframes hire-pulse { 0% { transform: scale(1); opacity: 0.55; } 70%, 100% { transform: scale(2.8); opacity: 0; } }
-.hire-t { display: flex; flex-direction: column; line-height: 1.2; }
-.hire-t b { font-weight: normal; color: #1d6b39; }
-.hire-t span { color: #666; font-size: 0.75rem; }
-@media (prefers-reduced-motion: reduce) { .hire-dot::after { animation: none; } }
-
-/* ---------- Header fits the name column's height (wide screens) ----------
-   The bio and the right column don't add height: their content sits in an
-   absolutely positioned inner box that fills whatever height the name column
-   sets, and the pieces inside shrink to fit. */
-.bio-inner { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
-.bio-text { font-size: 0.875rem; line-height: 1.38; }
-.side-inner { display: flex; flex-direction: column; gap: 0.35rem; height: 100%; }
-@media (min-width: 1181px) {
-  .cell.bio, .cell.side { position: relative; overflow: hidden; }
-  .cell.bio { padding: 0; }
-  .bio-inner { position: absolute; inset: 0; padding: 0.45rem 0.9rem 0.45rem; }
-  .side-inner { position: absolute; inset: 0; padding: 0.4rem; }
-  .artifacts { flex: 1 1 0; height: auto; min-height: 0; margin-top: 0; }
-  .top-col.a > .trow:last-child { flex: 1 1 auto; }
-}
-.wg-hire { flex: none; padding-top: 0.25rem; padding-bottom: 0.25rem; }
-.wg-row { flex: 1 1 0; min-height: 0; container-type: size; display: flex; gap: 0.35rem; }
-.wg-row .wg { flex: 1 1 0; min-width: 0; padding: 0.25rem 0.35rem; overflow: hidden; }
-.wg-row .wg-h { margin-bottom: 0.15rem; white-space: nowrap; }
-/* squares sized to whatever room is left (width or height, whichever is smaller) */
-.side-listening, .wg-read .book {
-  width: min(calc(50cqw - 1rem), calc(100cqh - 2.6rem)); height: auto; aspect-ratio: 1; flex: none;
-}
-.book-t { font-size: 0.6875rem; }
-@media (max-width: 1180px) {
-  .wg-row { container-type: normal; flex: none; }
-  .wg-row .wg { flex: 1 1 0; }
-  .side-listening, .wg-read .book { width: 100%; }
-}
-/* Nav row (email · x · are.na · print): cells size to their text */
-.top-col.c .trow.head > .cell.nav { width: auto; padding: 0 0.6rem; }
-@media (max-width: 720px) {
-  .side-listening, .wg-read .book { width: min(100%, 8.5rem); }
-}
-
-/* ---------- Right column as sheet cells (replaces the floating widgets) ---------- */
-.top-col.c .trow.head > .cell.nav {
-  flex: 1 1 0; width: auto; padding: 0 0.4rem; justify-content: center;
-  color: var(--ink); font-size: 0.9375rem; text-decoration: none;
-}
-.top-col.c .trow.head > .cell.nav:hover { background: #fff; color: var(--link); text-decoration: none; }
-.ext-mark { font-size: 0.7em; color: #999; margin-left: 0.15em; }
-.top-col.c .trow.sub > .cell.hire {
-  flex: 1 1 auto; gap: 0.45rem; padding: 0 0.6rem; color: inherit; text-decoration: none;
-  background: #f1f8f3;
-}
-.cell.hire:hover { background: #e7f4eb; text-decoration: none; }
-.cell.hire:hover .hire-s { color: var(--link); }
-.cell.hire .hire-t { color: #1d6b39; font-style: italic; }
-.cell.hire .hire-s { color: #777; font-size: 0.8125rem; overflow: hidden; text-overflow: ellipsis; }
-.cell.side { padding: 0; }
-.side-inner { flex-direction: row; gap: 0; padding: 0 !important; }
-.sc { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; padding: 0.3rem 0.45rem 0.35rem; border-right: 1px solid var(--line); }
-.sc:last-child { border-right: 0; }
-.sc-h { color: #888; font-size: 0.6875rem; margin-bottom: 0.25rem; white-space: nowrap; }
-.sc-h span { color: #aaa; }
-.sq { flex: 1 1 0; min-height: 0; container-type: size; display: flex; justify-content: center; align-items: flex-start; }
-.sq .side-listening, .sq .book { width: min(100cqw, 100cqh); height: auto; aspect-ratio: 1; }
-.sq .book { background: none; }
-.sc-read .book-t { margin-top: 0.2rem; text-align: center; }
-@media (max-width: 1180px) {
-  .sq { flex: none; height: 8rem; }
-  .sc { min-height: 10rem; }
-}
-.side-listening { list-style: none; margin: 0; padding: 0; }
-.sq .book { display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.sq .book img { height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-.cell.hire .hire-t { font-size: 0.9375rem; }
-
-/* Book a call: a solid little button cell at the end of the open-to-work row */
-.top-col.c .trow.sub > .cell.book-call {
-  flex: none; padding: 0 0.75rem; justify-content: center; text-decoration: none;
-  background: #1d6b39; color: #fff; font-size: 0.875rem; border-right-color: #1d6b39;
-}
-.top-col.c .trow.sub > .cell.book-call:hover { background: #155a2e; text-decoration: none; }
-.cell.book-call .ext-mark { color: #cfe8d7; }
-
-/* Open to work, inline after "previously at MOMENT" */
-.otw-inline { color: #1d6b39; text-decoration: none; white-space: nowrap; }
-.otw-inline:hover { color: var(--link); text-decoration: none; }
-.otw-inline .hire-dot { width: 0.45rem; height: 0.45rem; display: inline-block; margin-right: 0.35rem; vertical-align: 0.08em; }
-.otw-sep { color: #999; }

@@ -212,26 +212,37 @@
     hatPop.innerHTML = `<p class="hp-title">${esc(h.label)}</p><p class="hp-blurb">${esc(h.blurb)}</p><ul>` +
       items.map((it) => `<li><a href="#${esc(it.id)}">${esc(plain(it.title))}</a> <span>${esc(plain(it.sub || ''))}</span></li>`).join('') + '</ul>';
     hatPop.hidden = false;
+    // Under the title's cell, kept inside the viewport: flips above the
+    // title when there's no room below (short phone screens).
     const r = span.getBoundingClientRect();
-    const w = hatPop.offsetWidth;
-    hatPop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + 'px';
+    const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+    const pw = hatPop.offsetWidth, ph = hatPop.offsetHeight;
+    hatPop.style.left = Math.max(8, Math.min(r.left, vw - pw - 8)) + 'px';
     const cellBottom = (span.closest('.cell') || span).getBoundingClientRect().bottom;
-    hatPop.style.top = (cellBottom - 1) + 'px';
+    let y = cellBottom - 1;
+    if (y + ph > vh - 8 && r.top - ph - 4 >= 8) y = r.top - ph - 4;
+    hatPop.style.top = Math.max(8, Math.min(y, vh - ph - 8)) + 'px';
   }
   function hideHatSoon() {
     clearTimeout(hatTimer);
     hatTimer = setTimeout(() => { hatPop.hidden = true; hatOn = null; }, 160);
   }
+  // A tap fires mouseover and then click; without this the card would open
+  // on the mouseover and the click would close it straight away.
+  let touchTap = false;
+  document.addEventListener('pointerdown', (e) => { touchTap = e.pointerType !== 'mouse'; }, true);
   document.addEventListener('mouseover', (e) => {
+    if (touchTap) return;
     const span = e.target.closest && e.target.closest('.hat');
     if (span) showHat(span);
     else if (e.target.closest && e.target.closest('.hat-pop')) clearTimeout(hatTimer);
   });
   document.addEventListener('mouseout', (e) => {
+    if (touchTap) return;
     if (e.target.closest && (e.target.closest('.hat') || e.target.closest('.hat-pop'))) hideHatSoon();
   });
-  document.addEventListener('focusin', (e) => { if (e.target.classList && e.target.classList.contains('hat')) showHat(e.target); });
-  document.addEventListener('focusout', (e) => { if (e.target.classList && e.target.classList.contains('hat')) hideHatSoon(); });
+  document.addEventListener('focusin', (e) => { if (!touchTap && e.target.classList && e.target.classList.contains('hat')) showHat(e.target); });
+  document.addEventListener('focusout', (e) => { if (!touchTap && e.target.classList && e.target.classList.contains('hat')) hideHatSoon(); });
   // Touch: tap a title to toggle its card; tap a work item to open it.
   document.addEventListener('click', (e) => {
     const span = e.target.closest('.hat');
@@ -239,7 +250,11 @@
     if (e.target.closest('.hat-pop a')) { hatPop.hidden = true; hatOn = null; return; }
     if (!e.target.closest('.hat-pop')) { hatPop.hidden = true; hatOn = null; }
   });
-  window.addEventListener('scroll', () => { if (!hatPop.hidden) { hatPop.hidden = true; hatOn = null; } }, true);
+  window.addEventListener('scroll', (e) => {
+    if (hatPop.hidden || (e.target && e.target.nodeType === 1 && hatPop.contains(e.target))) return;
+    hatPop.hidden = true; hatOn = null;
+  }, true);
+  window.addEventListener('resize', () => { if (!hatPop.hidden) { hatPop.hidden = true; hatOn = null; } });
 
   // Last.fm: top albums this week (falls back to the latest track).
   async function loadListening(ul) {
@@ -283,6 +298,19 @@
     const mail = ((CV.nav || []).find(([l]) => l === 'email') || [])[1] || '#';
     return `<span class="otw-sep"> · </span><a class="otw-inline" href="${esc(mail)}"><span class="hire-dot" aria-hidden="true"></span>open to work, full-time or projects</a>`;
   };
+
+  let tabStrip = null, tabEdges = () => {};
+  // Scroll the tab strip (only the strip, never the page) so the picked tab is in view.
+  function showActiveTab() {
+    const on = tabLinks.find((a) => a.classList.contains('on'));
+    if (!tabStrip || !on) return;
+    const gut = tabStrip.firstElementChild ? tabStrip.firstElementChild.offsetWidth : 0;
+    const l = on.offsetLeft - tabStrip.offsetLeft, r = l + on.offsetWidth;
+    const sl = tabStrip.scrollLeft, w = tabStrip.clientWidth;
+    if (l < sl + gut) tabStrip.scrollLeft = Math.max(0, l - gut - 24);
+    else if (r > sl + w) tabStrip.scrollLeft = r - w + 24;
+    tabEdges();
+  }
 
   function buildTop() {
     // Upper header = three side-by-side columns so the bio can be one merged
@@ -358,15 +386,31 @@
     top.append(upper, r3);
     // Size the photo to the header's real height (rows can wrap), so it always
     // runs from the top edge down through the tabs.
+    // Desktop: the photo runs down through the tabs. Tablet: the bio wraps
+    // below the name block, so the photo fills just the name column. Phones
+    // use a fixed small photo (CSS).
+    const desk = window.matchMedia('(min-width: 1181px)');
+    const tablet = window.matchMedia('(min-width: 721px) and (max-width: 1180px)');
     const fit = () => {
       const pp = parseFloat(getComputedStyle(top).getPropertyValue('--pp')) * 16 || 6;
-      const h = upper.offsetHeight + r3.offsetHeight;
+      const h = desk.matches ? upper.offsetHeight + r3.offsetHeight : tablet.matches ? colA.offsetHeight : 0;
       // Safety bounds only; the text column width is fixed, so this settles in one pass.
-      if (window.innerWidth > 720 && h) top.style.setProperty('--pw', Math.max(72, Math.min(240, (h - 2 * pp) / 1.47)) + 'px');
+      if (h) top.style.setProperty('--pw', Math.max(72, Math.min(240, (h - 2 * pp) / 1.47)) + 'px');
       else top.style.removeProperty('--pw');
     };
+    [desk, tablet].forEach((m) => m.addEventListener && m.addEventListener('change', fit));
+    // Tab strip: fade whichever edge has more tabs past it.
+    const edges = () => {
+      const max = r3.scrollWidth - r3.clientWidth;
+      r3.classList.toggle('more-l', r3.scrollLeft > 2);
+      r3.classList.toggle('more-r', r3.scrollLeft < max - 2);
+    };
+    tabStrip = r3;
+    tabEdges = edges;
+    r3.addEventListener('scroll', edges, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(edges).observe(r3);
     fit();
-    if ('ResizeObserver' in window) new ResizeObserver(fit).observe(upper);
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(fit); ro.observe(upper); ro.observe(colA); }
     if (document.fonts) document.fonts.ready.then(fit);
   }
 
@@ -438,7 +482,12 @@
     });
     sheet.replaceChildren(frag);
     intro.hidden = true;
-    tabLinks.forEach((a) => a.classList.toggle('on', a.dataset.tab === tab.id));
+    tabLinks.forEach((a) => {
+      const on = a.dataset.tab === tab.id;
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    showActiveTab();
   }
 
   function render() {
@@ -582,6 +631,7 @@
       a.classList.toggle('on', on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
+    showActiveTab();
     Object.entries(zoomLinks).forEach(([k, a]) => {
       a.href = hashFor(tab.id, null, k);
       a.classList.toggle('on', k === zoom);
