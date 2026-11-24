@@ -501,7 +501,7 @@
         if (mount) { try { mount(stage); } catch (err) { console.error(err); } }
         else stage.append(el('div', 'ft-placeholder', `visual: ${esc(v.name)}`));
       });
-      sec.append(el('div', 'cell gutter ft-num', String(i + 1)), text, vis);
+      sec.append(el('div', 'cell gutter ft-num', `<span class="ft-star">${i + 1}</span>`), text, vis);
       frag.append(sec);
     });
     sheet.replaceChildren(frag);
