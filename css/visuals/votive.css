@@ -104,13 +104,13 @@
 .v-votive-system .vv-invoice.paid .vv-stamp { opacity: 1; transform: rotate(-8deg) scale(1); }
 
 /* rail + stubs */
-.v-votive-system .vv-rail { left: 236px; top: 38px; width: 1px; height: 208px; background: #a9a69c; }
+.v-votive-system .vv-rail { left: 236px; top: 46px; width: 1px; height: 200px; background: #a9a69c; }
 .v-votive-system .vv-stub { left: 236px; width: 16px; height: 1px; background: #a9a69c; }
 .v-votive-system .vv-stub-store { left: 224px; top: 196px; width: 12px; }
 
 /* service chips */
 .v-votive-system .vv-chip {
-  left: 252px; width: 276px; height: 60px; background: #fff; border: 1px solid #c9c7bf; padding: 7px 10px;
+  left: 252px; width: 276px; height: 68px; background: #fff; border: 1px solid #c9c7bf; padding: 9px 10px;
   transition: border-color .25s, box-shadow .25s;
 }
 .v-votive-system .vv-chip-h { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #80868b; white-space: nowrap; }
@@ -131,6 +131,7 @@
 .v-votive-system .vv-packet {
   left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: #202124;
   box-shadow: 0 0 0 3px rgba(32, 33, 36, .14); opacity: 0; z-index: 5;
+  transition: opacity .3s ease; will-change: transform; /* fades between hops instead of popping */
 }
 
 /* google sheet */

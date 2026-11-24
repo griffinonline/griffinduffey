@@ -41,7 +41,7 @@ window.CV = {
   lastfm: { user: 'griffinduffey', key: '9a77942fe3dca583972d56be9e7629b5' },
   elsewhere: [
     ['email', '@nav'], // reuses the email link from nav above
-    ['linkedin', ''],  // check: Griffin's LinkedIn URL
+    ['linkedin', 'https://www.linkedin.com/in/griffin-duffey-a5b268186/'],
     ['x', 'https://x.com/griffinonline'],
     ['are.na', 'https://www.are.na/griffin-duffey'],
   ],

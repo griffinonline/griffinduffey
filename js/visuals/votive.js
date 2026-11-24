@@ -211,7 +211,8 @@ window.CVVisuals = window.CVVisuals || {};
 
   // Packet rail (design px). Store button → rail → chips → sheet.
   const RAIL = 236;
-  const CHIP_Y = [38, 108, 178];
+  // Chip connector y's. Chips are 68px tall and span the store card exactly (12 → 234).
+  const CHIP_Y = [46, 123, 200];
   const SHEET_Y = 246;
   const rowTop = (i) => SHEET_Y + 22 + HEAD + ROW * i; // i: 0 = first data row
   const cellPt = (row, col) => [12 + colX[col] + COLS[col][1] / 2, rowTop(row) + ROW / 2];
@@ -225,7 +226,8 @@ window.CVVisuals = window.CVVisuals || {};
     }
     return pts[0];
   };
-  const ease = (u) => (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+  // Gentle sine ease so the packet glides instead of darting.
+  const ease = (u) => -(Math.cos(Math.PI * u) - 1) / 2;
 
   window.CVVisuals['votive-system'] = function (el) {
     const { cvs, cleanup } = setup(el, 'system');
@@ -253,7 +255,7 @@ window.CVVisuals = window.CVVisuals || {};
       <div class="vv-rail"></div>
       <div class="vv-stub vv-stub-store"></div>
       ${CHIP_Y.map((y) => `<div class="vv-stub" style="top:${y}px"></div>`).join('')}
-      ${['stripe', 'webhook', 'shippo'].map((n, i) => `<section class="vv-chip vv-chip-${n}" style="top:${CHIP_Y[i] - 30}px">
+      ${['stripe', 'webhook', 'shippo'].map((n, i) => `<section class="vv-chip vv-chip-${n}" style="top:${CHIP_Y[i] - 34}px">
         <div class="vv-chip-h"><i></i><b>${n}</b><span>${['payments', 'drinkvotive.com/api/webhook', 'ups labels'][i]}</span></div>
         <div class="vv-chip-m"></div><div class="vv-chip-s"></div></section>`).join('')}
       <div class="vv-packet"></div>
