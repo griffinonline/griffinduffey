@@ -725,3 +725,9 @@ body[data-tab='featured'] .top .zoom { visibility: hidden; }
 }
 .top-col.c .trow.sub > .cell.book-call:hover { background: #155a2e; text-decoration: none; }
 .cell.book-call .ext-mark { color: #cfe8d7; }
+
+/* Open to work, inline after "previously at MOMENT" */
+.otw-inline { color: #1d6b39; text-decoration: none; white-space: nowrap; }
+.otw-inline:hover { color: var(--link); text-decoration: none; }
+.otw-inline .hire-dot { width: 0.45rem; height: 0.45rem; display: inline-block; margin-right: 0.35rem; vertical-align: 0.08em; }
+.otw-sep { color: #999; }

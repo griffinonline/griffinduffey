@@ -278,6 +278,12 @@
     });
     return z;
   }
+  // Open-to-work note that sits right after "previously at MOMENT".
+  const otwHtml = () => {
+    const mail = ((CV.nav || []).find(([l]) => l === 'email') || [])[1] || '#';
+    return `<span class="otw-sep"> · </span><a class="otw-inline" href="${esc(mail)}"><span class="hire-dot" aria-hidden="true"></span>open to work, full-time or projects</a>`;
+  };
+
   function buildTop() {
     // Upper header = three side-by-side columns so the bio can be one merged
     // cell spanning every row: [photo + name/subtitle/facts] [bio] [nav/zoom].
@@ -291,7 +297,7 @@
       row('head', corner, el('h1', 'cell title', esc(CV.title))),
       row('sub', el('div', 'cell gutter'), el('div', 'cell title', `<em>${esc(CV.subtitle)}</em>`)),
       ...facts.map(([label, value]) => row('fact', el('div', 'cell gutter'),
-        el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${value === '@hats' ? hatsHtml() : rich(value)}</span>`))),
+        el('div', 'cell title', `<span class="fact-text"><span class="fact-label">${esc(label)}</span> ${value === '@hats' ? hatsHtml() : rich(value.replace(' @otw', '')) + (value.includes('@otw') ? otwHtml() : '')}</span>`))),
     );
 
     const colC = el('div', 'top-col c');
@@ -305,7 +311,7 @@
     navRow.querySelectorAll('a.nav').forEach((a, k) => { const h = navLinks[k][1]; a.href = h; if (/^https?:/.test(h)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; } });
     // "open to work" takes the second row (no zoom control any more).
     const navHref = (label) => ((CV.nav || []).find(([l]) => l === label) || [])[1] || '';
-    const subRow = row('sub', el('a', 'cell hire', `<span class="hire-dot" aria-hidden="true"></span><span class="hire-t">open to work</span><span class="hire-s">full-time or projects</span>`));
+    const subRow = row('sub', el('div', 'cell fill'));
     // Book a call: its own cell at the end of the row. Until CV.bookCall is set
     // (cal.com link), it falls back to an email asking for a call.
     const callHref = CV.bookCall || (navHref('email').split('?')[0] + '?subject=call');
@@ -313,7 +319,6 @@
     call.href = callHref;
     if (CV.bookCall) { call.target = '_blank'; call.rel = 'noopener noreferrer'; }
     subRow.append(call);
-    subRow.querySelector('a.hire').href = navHref('email');
     // Listening + reading: two plain cells side by side under that.
     const side = el('div', 'cell fill side', `<div class="side-inner">
       <section class="sc sc-listen"><p class="sc-h">listening <span>this month</span></p>

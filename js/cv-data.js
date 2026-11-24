@@ -116,7 +116,7 @@ window.CV = {
   // Info rows under the subtitle, next to the photo. [moment] becomes a link.
   facts: [
     ['currently based in', 'greenville, sc'],
-    ['previously at', '[MOMENT]'],
+    ['previously at', '[MOMENT] @otw'], // @otw = the open-to-work note (cv.js)
     ['skills', 'figma · web dev (next.js, astro, sanity) · ai-assisted building · client success · project leadership · brand + identity · integrations + automations'],
     ['likely fit for', '@hats'],
   ],
