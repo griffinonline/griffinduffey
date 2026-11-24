@@ -67,8 +67,8 @@ window.CV = {
     {
       id: 'ft-moment',
       kicker: '[oratory] → [MOMENT] · mar → nov 2026',
-      title: 'brand + site sprints for ai and software companies',
-      role: 'project manager + main builder',
+      title: 'brand + site sprints for software companies',
+      role: 'project lead, design + site development',
       body: [
         "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to 30+ sites.",
       ],
