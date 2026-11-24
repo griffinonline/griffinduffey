@@ -118,7 +118,7 @@ h1 { font-size: inherit; font-weight: normal; }
 }
 .top .trow.head > .gutter, .top .trow.sub > .gutter, .top .trow.fact > .gutter { border-bottom-color: transparent; }
 
-/* "likely fit for" titles: hover (or tap) for a card of fitting work */
+/* "good fit for" titles: hover (or tap) for a card of fitting work */
 .hat { cursor: help; text-decoration: underline dotted; text-decoration-color: #aaa; text-underline-offset: 0.2em; }
 .hat:hover, .hat:focus-visible { color: var(--link); text-decoration-color: currentColor; outline: none; }
 .hat-pop {

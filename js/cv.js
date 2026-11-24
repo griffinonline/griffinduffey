@@ -196,7 +196,7 @@
         '</ul>').join('') + '</div>';
   }
 
-  // ---------- Hats: "likely fit for" titles with a hover card of fitting work ----------
+  // ---------- Hats: "good fit for" titles with a hover card of fitting work ----------
   const hatsHtml = () => (CV.hats || []).map((h, i) =>
     `<span class="hat" tabindex="0" data-hat="${i}">${esc(h.label)}</span>`).join('<span class="hat-sep"> · </span>');
   const hatPop = el('div', 'hat-pop');

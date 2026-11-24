@@ -117,10 +117,10 @@ window.CV = {
   facts: [
     ['currently based in', 'greenville, sc'],
     ['previously at', '[MOMENT] @otw'], // @otw = the open-to-work note (cv.js)
-    ['skills', 'figma · web dev (next.js, astro, sanity) · ai-native building · client success · project leadership · brand + identity · integrations + automations'],
-    ['likely fit for', '@hats'],
+    ['skills:', 'figma · web dev (next.js, astro, sanity) · ai-native building · client success · project leadership · brand + identity · integrations + automations'],
+    ['good fit for:', '@hats'],
   ],
-  // The 'likely fit for' titles. Hovering one shows the work that fits it.
+  // The 'good fit for' titles. Hovering one shows the work that fits it.
   hats: [
     { label: 'design engineer', blurb: 'figma to production: real sites with a cms, forms and deploys.',
       ids: ['allobrain', 'g360', 'handled', 'suppli', 'less', 'musubi', 'devinci', 'throw', 'votive-site', 'wescarroll'] },
