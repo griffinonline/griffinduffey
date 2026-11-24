@@ -117,7 +117,7 @@ window.CV = {
   facts: [
     ['currently based in', 'greenville, sc'],
     ['previously at', '[MOMENT] @otw'], // @otw = the open-to-work note (cv.js)
-    ['skills', 'figma · web dev (next.js, astro, sanity) · ai-assisted building · client success · project leadership · brand + identity · integrations + automations'],
+    ['skills', 'figma · web dev (next.js, astro, sanity) · ai-native building · client success · project leadership · brand + identity · integrations + automations'],
     ['likely fit for', '@hats'],
   ],
   // The 'likely fit for' titles. Hovering one shows the work that fits it.
@@ -126,8 +126,6 @@ window.CV = {
       ids: ['allobrain', 'g360', 'handled', 'suppli', 'less', 'musubi', 'devinci', 'throw', 'votive-site', 'wescarroll'] },
     { label: 'forward-deployed engineer', blurb: 'sitting with a client, finding the real problem, shipping the fix.',
       ids: ['tahoe', 'allobrain', 'g360', 'nps-prism', 'votive-back-office', 'handoff-checklist'] },
-    { label: 'ai implementation', blurb: 'putting ai to work inside a team or a business.',
-      ids: ['sheaf', 'pm-app', 'oratory-ops', 'intake', 'votive-back-office', 'money-mode'] },
     { label: 'technical project lead', blurb: 'scope, timelines, client calls and the handoff.',
       ids: ['moment-job', 'tahoe', 'nps-prism', 'scite', 'qase', 'netbird', 'emdash'] },
   ],
