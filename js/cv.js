@@ -349,9 +349,9 @@
     subRow.append(call);
     // Listening + reading: two plain cells side by side under that.
     const side = el('div', 'cell fill side', `<div class="side-inner">
-      <section class="sc sc-listen"><p class="sc-h">listening <span>this month</span></p>
+      <section class="sc sc-listen"><p class="sc-h">top albums&nbsp;<span>this month</span></p>
         <div class="sq"><ul class="side-listening"><li class="muted">…</li></ul></div></section>
-      <section class="sc sc-read"><p class="sc-h">reading</p>
+      <section class="sc sc-read"><p class="sc-h">currently reading</p>
         ${(CV.reading || []).slice(0, 1).map(([t, a, cover]) => `<div class="sq"><div class="book">${cover ? `<img src="${esc(cover)}" alt="${esc(t)}, ${esc(a)}" loading="lazy">` : ''}</div></div><p class="book-t"><em>${esc(t)}</em> <span>${esc(a)}</span></p>`).join('')}</section>
     </div>`);
     colC.append(navRow, subRow, row('rest', side));
