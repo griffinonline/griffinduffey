@@ -577,12 +577,11 @@ h1 { font-size: inherit; font-weight: normal; }
 .ft-visuals { display: grid; gap: 0; grid-template-columns: minmax(0, 1fr); min-width: 0; }
 .ft-visuals.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ft-visual { margin: 0; border-right: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
-.ft-stage { position: relative; flex: 1; min-height: 26rem; overflow: hidden; background: #e8e8e8; }
+/* The case text sets the section height; visuals fill it (min keeps them legible). */
+.ft-stage { position: relative; flex: 1; min-height: 22rem; overflow: hidden; background: #e8e8e8; }
 .ft-visual figcaption { border-top: 1px solid var(--line); padding: 0.3rem 0.6rem; font-size: 0.8125rem; color: #777; }
 .ft-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #999; font-size: 0.875rem; }
 /* Very wide screens: the stages get taller so the visuals don't just get wider */
-@media (min-width: 1680px) { .ft-stage { min-height: 30rem; } }
-@media (min-width: 2200px) { .ft-stage { min-height: 36rem; } }
 /* Tablets: text on top (two columns of points beside the body when there's room), visuals below */
 @media (max-width: 1100px) {
   .ft-case { grid-template-columns: var(--gutter) minmax(0, 1fr); }
