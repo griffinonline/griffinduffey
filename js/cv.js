@@ -734,7 +734,8 @@
   }
 
   function close() {
-    if (current < 0) return;
+    // Always hide, even if a re-render already reset `current` (tab switches).
+    if (current < 0 && viewer.hidden) return;
     flat.forEach((f) => f.rowEl.classList.remove('is-open'));
     current = -1;
     viewer.hidden = true;
