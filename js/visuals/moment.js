@@ -287,7 +287,8 @@ window.CVVisuals = window.CVVisuals || {};
     scroll: (c) => {
       const top = c.reveal('cta');
       const pv = c.fit('pv', 'chat', 46), ra = c.fit('ra', 'term', 46);
-      return [[0, top], [3.7, top], [4.7, pv], [9.5, pv], [10.5, ra], [14.2, ra], [15.2, 0]];
+      // ends where it starts (hero) so the loop has no jump
+      return [[0, top], [3.7, top], [4.7, pv], [9.5, pv], [10.5, ra], [14.2, ra], [15.2, top]];
     },
     cursor: [
       { t: 0.9, at: [640, 420] }, { t: 2.0, at: 'cta' }, { t: 3.6, at: 'cta', ax: 0.8 },
@@ -319,12 +320,13 @@ window.CVVisuals = window.CVVisuals || {};
       c.typed.insertBefore(c.typedNode, c.typed.querySelector('.g-caret'));
     },
     frame(c, t) {
-      // hero chips: staggered fade-up, then a slow float
+      // hero chips: a slow float that completes whole cycles per loop, so the
+      // wrap from the end back to t=0 is seamless (no fade out/in)
+      const w = (2 * Math.PI * 3) / G.loop;
       c.chips.forEach((ch, i) => {
-        const a = ease(seg(t, 0.15 + i * 0.22, 0.75 + i * 0.22)) * (1 - seg(t, 14.0, 14.5));
-        const f = Math.sin(t * 1.1 + i * 1.7) * 2.5;
-        ch.style.opacity = a.toFixed(3);
-        ch.style.transform = `translate3d(0,${(f + (1 - a) * 10).toFixed(2)}px,0)`;
+        const f = Math.sin(t * w + i * 1.7) * 2.5;
+        ch.style.opacity = '1';
+        ch.style.transform = `translate3d(0,${f.toFixed(2)}px,0)`;
       });
       on(c.cta, 'is-hover', t > 1.95 && t < 3.7);
       // PromptVault: type, send, flag, mask
@@ -525,7 +527,8 @@ window.CVVisuals = window.CVVisuals || {};
         if (r.a == null) return;
         const lit = r.nodes.map(() => false);
         r.packets.forEach((p, i) => {
-          const ph = ((t * 0.42 + ri * 0.33 + i * 0.5) % 1);
+          // whole laps per loop (7), so packets don't jump when the loop wraps
+          const ph = ((t * (7 / L.loop) + ri * 0.33 + i * 0.5) % 1);
           const x = r.a + (r.b - r.a) * ph;
           p.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
           p.style.opacity = Math.min(1, Math.min(ph, 1 - ph) * 12).toFixed(2);
@@ -533,7 +536,9 @@ window.CVVisuals = window.CVVisuals || {};
         });
         r.nodes.forEach((n, j) => on(n, 'lit', lit[j]));
       });
-      txt(c.count, Math.round(1204 * ease(seg(t, 3.6, 6.2)) * (1 - ease(seg(t, 14.6, 15.3)))).toLocaleString('en-US'));
+      // counts up while in view; resets to 0 while scrolled away (features), so it's
+      // already back at its start state when the page returns to the hero
+      txt(c.count, Math.round(1204 * ease(seg(t, 3.6, 6.2)) * (t < 9 ? 1 : 0)).toLocaleString('en-US'));
       // Get the data: wires draw in, then Combine goes solid
       c.draws.forEach((d, i) => {
         const p = ease(seg(t, L.getA + i * 0.28, L.getA + i * 0.28 + 0.8));
