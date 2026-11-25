@@ -73,11 +73,12 @@ window.CV = {
         "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to 30+ sites.",
       ],
       points: [
-        'g360 technologies: an ai security company. project lead and main builder, figma to a live next.js site.',
-        'less: a data workflow tool, and one of the sprints i’m proudest of. ran it end to end.',
-        'tahoe: designed and built the launch page for tara, their data tool for ai agents: the visuals, the layout, the story.',
+        // [name](url) links the project's name to its live site.
+        '[g360 technologies](https://www.g360technologies.com): an ai security company. project lead and main builder, figma to a live next.js site.',
+        '[less](https://www.less.tech): a data workflow tool, and one of the sprints i’m proudest of. ran it end to end.',
+        '[tahoe](https://www.tahoelabs.ai/tara): designed and built the launch page for tara, their data tool for ai agents: the visuals, the layout, the story.',
       ],
-      links: [['g360technologies.com', 'https://g360technologies.com'], ['less.tech', 'https://less.tech'], ['all 37 projects →', '#moment']],
+      links: [['all 37 projects →', '#moment']],
       visuals: [{ name: 'g360', caption: 'g360 technologies' }, { name: 'less', caption: 'less' }],
     },
     {

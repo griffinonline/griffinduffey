@@ -115,6 +115,8 @@
   const TOKEN = /\[(oratory|moment)\]/gi;
   const brandLink = (w) => `<a class="ext brand" href="${BRANDS[w.toLowerCase()]}" target="_blank" rel="noopener noreferrer">${esc(w)}</a>`;
   const rich = (s) => esc(s).replace(TOKEN, (_, w) => brandLink(w));
+  // Featured points: [name](https://…) becomes an outside link (11/25).
+  const pointHtml = (s) => rich(s).replace(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g, (_, t, h) => `<a href="${h}" target="_blank" rel="noopener noreferrer">${t}</a>`);
   const plain = (s) => String(s == null ? '' : s).replace(TOKEN, '$1');
   // A row's name: the first part opens the entry; any later brand token
   // is its own link ("MOMENT (formerly Oratory)").
@@ -487,7 +489,7 @@
         <h2 class="ft-title">${esc(c.title)}</h2>
         <p class="ft-role"><em>${esc(c.role)}</em></p>
         ${(c.body || []).map((p) => `<p class="ft-body">${rich(p)}</p>`).join('')}
-        ${c.points ? `<ul class="ft-points">${c.points.map((p) => `<li>${rich(p)}</li>`).join('')}</ul>` : ''}
+        ${c.points ? `<ul class="ft-points">${c.points.map((p) => `<li>${pointHtml(p)}</li>`).join('')}</ul>` : ''}
         ${c.links ? `<p class="ft-links">${c.links.map(([l, h]) => `<a href="${esc(h)}"${ext(h)}>${esc(l)}</a>`).join('')}</p>` : ''}`;
       const vis = el('div', 'ft-visuals' + ((c.visuals || []).length > 1 ? ' two' : ''));
       (c.visuals || []).forEach((v) => {
