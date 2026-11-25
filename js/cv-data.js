@@ -70,7 +70,7 @@ window.CV = {
       title: 'brand + site sprints for software companies',
       role: 'project lead, design + site development',
       body: [
-        "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to 30+ sites.",
+        "[oratory], which became [MOMENT], sold short brand + site sprints: a few weeks from kickoff to a live site. i ran the projects and did most of the building: scoping, client calls, figma to production in next.js or astro with a real cms, then a handoff the client could run without us. over about nine months that added up to nearly 30 launched sites.",
       ],
       points: [
         // [name](url) links the project's name to its live site.
@@ -201,7 +201,7 @@ window.CV = {
           start: '2026-03', end: '2026-11',
           body: [
             'A design studio making brands and websites for AI and software companies. [Oratory] became [MOMENT] in the fall of 2026.',
-            'As project lead, I ran about 30 client projects from kickoff to handoff: scoping, timelines, client calls, reviews. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
+            'As project lead, I ran 32 client projects: scoping, timelines, client calls, reviews. 29 made it to launch or handoff, and the last three were still in their first weeks when I left. On most of them I also built pages and QA\'d before launch, and I was the main AI-assisted builder on AlloBrain, G360, Suppli, Handled, Scite and NPS Prism.',
             'Between client work I built the tools the studio ran on: a project dashboard, an ops system that reads scope and timelines from Slack and the repos, the intake and launch docs, and sales decks.',
           ],
           links: [['every project, with my role', '#moment'], ['moment.so', 'https://moment.so']],
