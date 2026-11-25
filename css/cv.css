@@ -657,7 +657,11 @@ h1 { font-size: inherit; font-weight: normal; }
 .comment .c-sub { margin-top: 0.15rem; }
 .comment .c-facts { color: #444; }
 .comment .c-also { color: #666; }
-.comment .c-stack { color: #666; }
+.comment .c-stack { margin-top: 1rem; }
+.comment .c-label { margin: 0 0 0.3rem; color: #888; font-size: 0.75rem; }
+/* tool chips: small cells, like the sheet */
+.comment .c-stack ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.comment .c-stack li { padding: 0.05rem 0.4rem; border: 1px solid var(--line); background: var(--bg); color: #444; font-size: 0.8125rem; white-space: nowrap; }
 .comment .c-len { color: #666; }
 .comment .c-site, .comment .c-links { overflow-wrap: anywhere; }
 .comment .c-nav { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 0.6rem; }

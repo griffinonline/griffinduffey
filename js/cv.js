@@ -750,7 +750,7 @@
       ${siteLink}
       ${(item.body || []).map((p) => `<p>${rich(p)}</p>`).join('')}
       ${booksHtml(item)}
-      ${item.stack ? `<p class="c-stack">built with ${esc(item.stack)}</p>` : ''}
+      ${item.stack ? `<div class="c-stack"><p class="c-label">tools</p><ul>${String(item.stack).split(',').map((t) => t.trim()).filter(Boolean).map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
       ${links.length ? `<p class="c-links">${links.join('<br>')}</p>` : ''}
       <p class="c-nav"><button type="button" data-step="-1">&larr; prev</button><button type="button" data-step="1">next &rarr;</button></p>`;
     viewer.hidden = false;
