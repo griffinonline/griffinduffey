@@ -84,7 +84,7 @@ window.CV = {
     {
       id: 'ft-sheaf',
       kicker: 'my own product · 2026 → now',
-      title: 'sheaf: a calm front end for ai coding agents',
+      title: 'sheaf: a calm front end for working with agents',
       role: 'designer + builder',
       body: [
         "sheaf is how i work every day. it's a web app and server that runs claude code on my home server, so i can start, steer and review agent work from my phone or laptop: chats, a terminal, files, docs, background jobs and notifications. i design it in figma and build it with the agents it runs, which keeps me honest about what actually works. it's in closed beta at sheaf.to.",
